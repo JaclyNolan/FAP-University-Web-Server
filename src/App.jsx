@@ -4,13 +4,15 @@ import useUser from "./helpers/hooks/useUser";
 import classes from './App.module.scss'
 import {Routes, Route} from 'react-router-dom'
 import {routers} from './helpers/constants'
+import ScreenLoader from "./components/common/ScreenLoader/ScreenLoader";
+import AuthContext from './helpers/Context/AuthContext';
 function App() {
   const user = useUser()
-  return (
+  return user.isFetching ? <ScreenLoader/> : (<AuthContext.Provider value={{user: user}}>
     <main className={classes['main']}>
       {user.user && <Header/>}
       <div className={classes['main-container']}>
-       {user.user &&  <Sidebar/>}
+      {user.user &&  <Sidebar/>}
         <div className={classes['main-main']}>
           <Routes>
             {routers.map((routeItem, index) => {
@@ -20,7 +22,7 @@ function App() {
         </div>
       </div>
     </main>
-  );
+  </AuthContext.Provider>)
 }
 
 export default App;
