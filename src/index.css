@@ -7,3 +7,6 @@
 body{
   font-family: 'Inter', sans-serif;
 }
+.ant-collapse-header{
+  border-radius: 0px 0px 0px 0px !important;
+}
