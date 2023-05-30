@@ -1,8 +1,7 @@
-import { logDOM } from '@testing-library/react'
 import { useState, useEffect } from 'react'
 
 const useUser = () => {
-    const [user, setUser] = useState(false)
+    const [user, setUser] = useState(null)
     const [fetchingUser, setFetchingUser] = useState(true)
     useEffect(() => {
         (async() => {
@@ -12,7 +11,10 @@ const useUser = () => {
             }, 1000)
             const user = localStorage.getItem("loggedin");
             if(user){
-                setUser(true)
+                setUser({
+                    userName: '',
+                    role: 'staff'
+                })
             }
         })()
     }, [])

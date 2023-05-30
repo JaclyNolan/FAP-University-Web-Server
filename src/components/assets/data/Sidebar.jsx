@@ -1,4 +1,6 @@
-export const sidebar = [
+import { Link } from "react-router-dom"
+
+export const adminSidebar = [
     {
         title: 'User Management',
         items: [
@@ -11,8 +13,8 @@ export const sidebar = [
                 path: '/user/add'
             },
             {
-                title: 'modify',
-                path: '/user/modify'
+                title: 'Edit',
+                path: '/user/edit'
             }
         ]
     },
@@ -28,8 +30,8 @@ export const sidebar = [
                 path: '/student/add'
             },
             {
-                title: 'modify',
-                path: '/student/modify'
+                title: 'Edit',
+                path: '/student/edit'
             }
         ]
     },
@@ -45,8 +47,8 @@ export const sidebar = [
                 path: '/teacher/add'
             },
             {
-                title: 'modify',
-                path: '/teacher/modify'
+                title: 'Edit',
+                path: '/teacher/edit'
             }
         ]
     },
@@ -62,8 +64,8 @@ export const sidebar = [
                 path: '/staff/add'
             },
             {
-                title: 'modify',
-                path: '/staff/modify'
+                title: 'Edit',
+                path: '/staff/edit'
             }
         ]
     },
@@ -79,8 +81,8 @@ export const sidebar = [
                 path: '/course/add'
             },
             {
-                title: 'modify',
-                path: '/course/modify'
+                title: 'Edit',
+                path: '/course/edit'
             }
         ]
     },
@@ -96,8 +98,8 @@ export const sidebar = [
                 path: '/class/add'
             },
             {
-                title: 'modify',
-                path: '/class/modify'
+                title: 'Edit',
+                path: '/class/edit'
             }
         ]
     },
@@ -113,8 +115,8 @@ export const sidebar = [
                 path: '/class-course/add'
             },
             {
-                title: 'modify',
-                path: '/class-course/modify'
+                title: 'Edit',
+                path: '/class-course/edit'
             }
         ]
     },
@@ -130,8 +132,8 @@ export const sidebar = [
                 path: '/enroll/add'
             },
             {
-                title: 'modify',
-                path: '/enroll/modify'
+                title: 'Edit',
+                path: '/enroll/edit'
             }
         ]
     },
@@ -147,8 +149,8 @@ export const sidebar = [
                 path: '/grade/add'
             },
             {
-                title: 'modify',
-                path: '/grade/modify'
+                title: 'Edit',
+                path: '/grade/edit'
             }
         ]
     },
@@ -164,8 +166,8 @@ export const sidebar = [
                 path: '/schedule/add'
             },
             {
-                title: 'modify',
-                path: '/schedule/modify'
+                title: 'Edit',
+                path: '/schedule/edit'
             }
         ]
     },
@@ -181,8 +183,8 @@ export const sidebar = [
                 path: '/fee/add'
             },
             {
-                title: 'modify',
-                path: '/fee/modify'
+                title: 'Edit',
+                path: '/fee/edit'
             }
         ]
     },
@@ -198,8 +200,261 @@ export const sidebar = [
                 path: '/Feedback/add'
             },
             {
-                title: 'modify',
-                path: '/Feedback/modify'
+                title: 'Edit',
+                path: '/Feedback/edit'
+            }
+        ]
+    },
+    {
+        title: 'News Management',
+        items: [
+            {
+                title: 'List',
+                path: '/news/list'
+            },
+            {
+                title: 'Add',
+                path: '/news/add'
+            },
+            {
+                title: 'Edit',
+                path: '/news/edit'
+            }
+        ]
+    }
+]
+
+export const studentSidebar = [
+    {
+        title: 'Home',
+        items: [
+            {
+                title: "Home",
+                path: '/'
+            }
+        ]
+    },
+    {
+        title: 'Information Access',
+        items: [
+            {
+                title: 'Weekly time table',
+                path: '/weeklytimetable'
+            },
+            {
+                title: 'Course list',
+                path: '/courses'
+            },
+            {
+                title: 'Class list',
+                path: '/classes'
+            }
+        ]
+    },
+    {
+        title: 'Report',
+        items: [
+            {
+                title: 'Attendance Report',
+                path: '/attendance'
+            },
+            {
+                title: 'Mark report',
+                path: '/mark'
+            },
+            {
+                title: 'Feedback',
+                path: '/feedback'
+            }
+        ]
+    }
+]
+
+export const staffSidebar = [
+    {
+        title: 'Student Management',
+        items: [
+            {
+                title: 'List',
+                path: '/student/list'
+            },
+            {
+                title: 'Add',
+                path: '/student/add'
+            },
+            {
+                title: 'Edit',
+                path: '/student/edit'
+            }
+        ]
+    },
+    {
+        title: 'Teacher Management',
+        items: [
+            {
+                title: 'List',
+                path: '/teacher/list'
+            },
+            {
+                title: 'Add',
+                path: '/teacher/add'
+            },
+            {
+                title: 'Edit',
+                path: '/teacher/edit'
+            }
+        ]
+    },
+    {
+        title: 'Course Management',
+        items: [
+            {
+                title: 'List',
+                path: '/course/list'
+            },
+            {
+                title: 'Add',
+                path: '/course/add'
+            },
+            {
+                title: 'Edit',
+                path: '/course/edit'
+            }
+        ]
+    },
+    {
+        title: 'Class Management',
+        items: [
+            {
+                title: 'List',
+                path: '/class/list'
+            },
+            {
+                title: 'Add',
+                path: '/class/add'
+            },
+            {
+                title: 'Edit',
+                path: '/class/edit'
+            }
+        ]
+    },
+    {
+        title: 'Class course Management',
+        items: [
+            {
+                title: 'List',
+                path: '/class-course/list'
+            },
+            {
+                title: 'Add',
+                path: '/class-course/add'
+            },
+            {
+                title: 'Edit',
+                path: '/class-course/edit'
+            }
+        ]
+    },
+    {
+        title: 'Class Enrollment',
+        items: [
+            {
+                title: 'List',
+                path: '/enroll/list'
+            },
+            {
+                title: 'Add',
+                path: '/enroll/add'
+            },
+            {
+                title: 'Edit',
+                path: '/enroll/edit'
+            }
+        ]
+    },
+    {
+        title: 'Grade Management',
+        items: [
+            {
+                title: 'List',
+                path: '/grade/list'
+            },
+            {
+                title: 'Add',
+                path: '/grade/add'
+            },
+            {
+                title: 'Edit',
+                path: '/grade/edit'
+            }
+        ]
+    },
+    {
+        title: 'Schedule Management',
+        items: [
+            {
+                title: 'List',
+                path: '/schedule/list'
+            },
+            {
+                title: 'Add',
+                path: '/schedule/add'
+            },
+            {
+                title: 'Edit',
+                path: '/schedule/edit'
+            }
+        ]
+    },
+    {
+        title: 'Fee Management',
+        items: [
+            {
+                title: 'List',
+                path: '/fee/list'
+            },
+            {
+                title: 'Add',
+                path: '/fee/add'
+            },
+            {
+                title: 'Edit',
+                path: '/fee/edit'
+            }
+        ]
+    },
+    {
+        title: 'Feedback Management',
+        items: [
+            {
+                title: 'List',
+                path: '/Feedback/list'
+            },
+            {
+                title: 'Add',
+                path: '/Feedback/add'
+            },
+            {
+                title: 'Edit',
+                path: '/Feedback/edit'
+            }
+        ]
+    },
+    {
+        title: 'News Management',
+        items: [
+            {
+                title: 'List',
+                path: '/news/list'
+            },
+            {
+                title: 'Add',
+                path: '/news/add'
+            },
+            {
+                title: 'Edit',
+                path: '/news/edit'
             }
         ]
     }
