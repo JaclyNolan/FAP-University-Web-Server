@@ -1,12 +1,32 @@
 import React from 'react'
 import classes from './Header.module.scss'
-import { Breadcrumb, Avatar, Space } from 'antd';
+import { Breadcrumb, Avatar, Space, Dropdown} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import InvisibleButton from '../Button/InvisibleButton';
 import { useMediaQuery } from '../../../helpers/hooks/useMediaQuery';
 const Header = ({onToggleSidebar}) => {
   const isMobileView = useMediaQuery("(max-width: 850px)")
+  const items = [
+    {
+      key: '1',
+      label: (
+        <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+          Nguyen Van A
+        </a>
+      ),
+    },
+    {
+      key: '2',
+      label: (
+        <InvisibleButton>
+          <span style={{
+            paddingRight: '15px'
+          }}>Logout</span> <i className="fas fa-sign-out-alt"></i>
+        </InvisibleButton>
+      ),
+    }
+  ];
   return (
     <header className={classes['header']}>
       <div className={classes['header-left']}>
@@ -39,6 +59,11 @@ const Header = ({onToggleSidebar}) => {
               <i className="fas fa-sign-out-alt"></i>
             </button>
           </div>
+      </div>
+      <div className={classes['header-user']}>
+        <Dropdown menu={{ items }} placement="bottomLeft">
+          <i className="fas fa-user"></i>
+        </Dropdown>
       </div>
     </header>
   )
