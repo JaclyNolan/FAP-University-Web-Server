@@ -1,12 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import classes from './Header.module.scss'
-import { Breadcrumb, Avatar, Space, Dropdown} from 'antd';
+import { Breadcrumb, Avatar, Dropdown} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import InvisibleButton from '../Button/InvisibleButton';
 import { useMediaQuery } from '../../../helpers/hooks/useMediaQuery';
 const Header = ({onToggleSidebar}) => {
   const isMobileView = useMediaQuery("(max-width: 850px)")
+  const [breadcrumbData, setBreadcrumbData] = useState([])
+  const location = useLocation()
+  console.log(location);
+  useEffect(() => {
+    const splitedUrl = window.location.href.split('/')
+    const url = splitedUrl.splice(splitedUrl.length - 2, splitedUrl.length)
+    let data = []
+    let concatedUrl = ''
+    for(let i in url){
+      concatedUrl += `/${url[i]}`
+      data.push({
+        title: <Link style={{
+          textTransform: 'capitalize'
+        }} to={concatedUrl}>{url[i]}</Link>,
+      })
+    }
+    setBreadcrumbData(data)
+  }, [location.pathname])
+  const logoutHandler = () => {
+    localStorage.removeItem("loggedin")
+    window.location.reload()
+  }
   const items = [
     {
       key: '1',
@@ -19,7 +41,7 @@ const Header = ({onToggleSidebar}) => {
     {
       key: '2',
       label: (
-        <InvisibleButton>
+        <InvisibleButton onclick={logoutHandler}>
           <span style={{
             paddingRight: '15px'
           }}>Logout</span> <i className="fas fa-sign-out-alt"></i>
@@ -34,17 +56,7 @@ const Header = ({onToggleSidebar}) => {
           <i className="fas fa-bars"></i>
         </InvisibleButton>}
         <Breadcrumb
-          items={[
-            {
-              title: 'Home',
-            },
-            {
-              title: <a href="">Application Center</a>,
-            },
-            {
-              title: 'An Application',
-            },
-          ]}
+          items={breadcrumbData}
         />
       </div>
       <div className={classes['header-right']}>
@@ -55,9 +67,9 @@ const Header = ({onToggleSidebar}) => {
             <span>Nguyen Van A</span>
           </div>
           <div className={classes['header-signout']}>
-            <button>
+            <InvisibleButton onclick={logoutHandler}>
               <i className="fas fa-sign-out-alt"></i>
-            </button>
+            </InvisibleButton>
           </div>
       </div>
       <div className={classes['header-user']}>

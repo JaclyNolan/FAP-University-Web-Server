@@ -1,0 +1,42 @@
+.list{
+    padding: 10px 30px;
+    @media screen and (max-width: 600px){
+        padding: 10px;
+    }
+    &__nav{
+        display: flex;
+        justify-content: space-between;
+        @media screen and (max-width: 500px){
+            flex-direction: column;
+        }
+        &-right{
+            display: flex;
+            @media screen and (max-width: 500px){
+                margin-top: 10px;
+            }
+            &__add{
+                button{
+                    margin-left: 10px;
+                    i {
+                        padding-right: 5px;
+                    }
+                }
+            }
+        }
+    }
+    &__main{
+        
+    }
+    &__title{
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+    &__table{
+        margin-top: 20px;
+        &__actions{
+            &-edit{
+                margin-right: 10px;
+            }
+        }
+    }
+}

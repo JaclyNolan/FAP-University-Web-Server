@@ -13,7 +13,7 @@ const useUser = () => {
             if(user){
                 setUser({
                     userName: '',
-                    role: 'staff'
+                    role: 'admin'
                 })
             }
         })()

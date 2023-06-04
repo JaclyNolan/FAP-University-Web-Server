@@ -3,15 +3,20 @@ import classes from './Sidebar.module.scss'
 import {Collapse} from 'antd'
 import logo from '../../assets/Images/btec-logo.png'
 import { adminSidebar, staffSidebar, studentSidebar } from '../../assets/data/Sidebar'
-import { Link } from 'react-router-dom'
-import { useMediaQuery } from '../../../helpers/hooks/useMediaQuery'
+import { Link, useLocation } from 'react-router-dom'
 import AuthContext from '../../../helpers/Context/AuthContext'
 const Sidebar = ({sidebarStyle}) => {
+  const [currentUrl, setCurrentUrl] = useState([])
   const {Panel} = Collapse
   const [sidebarData, setSidebarData] = useState([])
   const authCtx = useContext(AuthContext)
-  const isMobileView = useMediaQuery("(max-width: 850px)");
-
+  const location = useLocation()
+  useEffect(() => {
+    const splitedUrl = window.location.href.split('/')
+    const url = splitedUrl.splice(splitedUrl.length - 2, splitedUrl.length)
+    url.splice(0,0,'')
+    setCurrentUrl(url)
+  }, [location.pathname])
   const onChange = (key) => {
     console.log(key);
   };
@@ -28,7 +33,12 @@ const Sidebar = ({sidebarStyle}) => {
         break
     }
   }, [authCtx.user.user])
-  console.log(sidebarData);
+  const activeStyle = {
+    fontWeight: '600',
+    fontSize: '16px',
+    color: '#000'
+  }
+  console.log(currentUrl);
   return (
     <div className={classes['sidebar']} style={sidebarStyle}>
       <div className={classes['sidebar-logo']}>
@@ -38,7 +48,7 @@ const Sidebar = ({sidebarStyle}) => {
         {sidebarData.map((sidebarItem, index) => {
           return  <Panel header={sidebarItem.title} key={index}>
             {sidebarItem?.items?.map((item, index) => {
-              return <Link to={item.path} key={index}>{item.title} <i className="fas fa-chevron-right"></i></Link>
+              return <Link style={item.path ===currentUrl.join('/') ? activeStyle : {}} to={item.path} key={index}>{item.title} <i className="fas fa-chevron-right" style={item.path === currentUrl.join('/') ? activeStyle : {}}></i></Link>
             })}
         </Panel>
         })}
