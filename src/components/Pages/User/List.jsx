@@ -1,6 +1,6 @@
 import React from 'react'
 import classes from './User.module.scss'
-import { Select, Input , Button, Space, Tag, Table} from 'antd'
+import { Select, Input , Button, Popconfirm, Tag, Table} from 'antd'
 import Link from 'antd/es/typography/Link'
 import Image from '../../common/Image/Image'
 const List = () => {
@@ -74,14 +74,22 @@ const List = () => {
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link href={`/user/edit/id=${text.id}`}>
+                <Link href={`/user/edit?id=${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
                     </Button>
                 </Link>
-                <Button type='primary' onClick={() => deleteUserHandler(text.id)}>
-                    <i className="fas fa-trash-alt"></i>
-                </Button>
+                <Popconfirm
+                    title="Delete the user"
+                    description="Are you sure to delete this user?"
+                    onConfirm={() => deleteUserHandler(text.id)}
+                    okText="Confirm"
+                    cancelText="Cancel"
+                >
+                    <Button danger type='primary'>
+                        <i className="fas fa-trash-alt"></i>
+                    </Button>
+                </Popconfirm>
             </div>
         },
 
@@ -320,7 +328,7 @@ const List = () => {
     ]
   return (
     <div className={classes['list']}>
-        <p className={classes['list__title']}>User List</p>
+        <p className={classes['user__title']}>User List</p>
         <div className={classes['list__main']}>
             <div className={classes['list__nav']}>
                 <div className={classes['list__nav-left']}>

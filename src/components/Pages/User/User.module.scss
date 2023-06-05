@@ -1,8 +1,11 @@
-.list{
-    padding: 10px 30px;
-    @media screen and (max-width: 600px){
-        padding: 10px;
+.user{
+    &__title{
+        margin-bottom: 10px;
+        font-weight: 600;
     }
+}
+
+.list{
     &__nav{
         display: flex;
         justify-content: space-between;
@@ -27,15 +30,55 @@
     &__main{
         
     }
-    &__title{
-        margin-bottom: 10px;
-        font-weight: 600;
-    }
     &__table{
         margin-top: 20px;
         &__actions{
             &-edit{
                 margin-right: 10px;
+            }
+        }
+    }
+}
+
+
+.add, .edit {
+    &__main{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        @media screen and (max-width: 550px){
+            flex-direction: column;
+        }
+    }
+    &__form{
+        display: flex;
+        flex-direction: column;
+        &-left{
+            width: calc(50% - 50px);
+        }   
+        &-right{
+            width: calc(50% - 50px);
+        }
+        @media screen and (max-width: 550px){
+            &-left{
+                width: 100%;
+            }   
+            &-right{
+                width: 100%;
+            }
+        }
+        &-row{
+            margin: 20px 0;
+            @media screen and (max-width: 550px) {
+                margin: 5px 0;
+            }
+            input, div{
+                margin-top: 5px;
+            }
+        }
+        button {
+            @media screen and (max-width: 550px){
+                margin-top: 20px;
             }
         }
     }
