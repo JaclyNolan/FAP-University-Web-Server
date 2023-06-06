@@ -71,7 +71,7 @@ const ListStudent = () => {
                     cancelText="Cancel"
                 >
                     <Button danger type='primary'>
-                        <i className="fas fa-trash-alt"></i>
+                        <i className="fas fa-trash-alt">xx</i>
                     </Button>
                 </Popconfirm>
             </div>
