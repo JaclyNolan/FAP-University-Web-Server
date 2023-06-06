@@ -7,7 +7,7 @@ const ListStudent = () => {
     const {Search} = Input
 
     const handleChange = () => {
-        console.log('changing');
+        console.log('changingg');
     }
     const onSearch = () => {
 
