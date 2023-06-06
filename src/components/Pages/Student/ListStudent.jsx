@@ -101,7 +101,7 @@ const ListStudent = () => {
     ]
   return (
     <div className={classes['list']}>
-        <p className={classes['page__title']}>Student List</p>
+        <p className={classes['page__title']}>Student List Test</p>
         <div className={classes['list__main']}>
             <div className={classes['list__nav']}>
                 <div className={classes['list__nav-left']}>
