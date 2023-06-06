@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './User.module.scss'
+import classes from '../Page.module.scss'
 import {Button, Input, Select} from 'antd'
 const Add = () => {
   const handleChange = (value) => {
@@ -7,7 +7,7 @@ const Add = () => {
   }
   return (
     <div>
-      <p className={classes['user__title']}>Add user</p>
+      <p className={classes['page__title']}>Add user</p>
       <form className={classes['add__form']}>
         <div className={classes['add__main']}>
           <div className={classes['add__form-left']}>

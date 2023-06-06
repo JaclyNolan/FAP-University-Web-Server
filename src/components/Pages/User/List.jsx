@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './User.module.scss'
+import classes from '../Page.module.scss'
 import { Select, Input , Button, Popconfirm, Tag, Table} from 'antd'
 import Link from 'antd/es/typography/Link'
 import Image from '../../common/Image/Image'
@@ -328,7 +328,7 @@ const List = () => {
     ]
   return (
     <div className={classes['list']}>
-        <p className={classes['user__title']}>User List</p>
+        <p className={classes['page__title']}>User List</p>
         <div className={classes['list__main']}>
             <div className={classes['list__nav']}>
                 <div className={classes['list__nav-left']}>
