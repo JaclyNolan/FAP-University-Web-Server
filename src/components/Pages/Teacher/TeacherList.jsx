@@ -3,7 +3,7 @@ import {Input, Button, Popconfirm, Select, Table} from 'antd'
 import { Link } from 'react-router-dom'
 import Image from '../../common/Image/Image'
 import classes from '../Page.module.scss'
-const ListStudent = () => {
+const TeacherList = () => {
     const {Search} = Input
 
     const handleChange = () => {
@@ -57,8 +57,8 @@ const ListStudent = () => {
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/student/details/${text.id}`} style={{marginRight: '10px'}}>Details</Link>
-                <Link to={`/student/edit/${text.id}`}>
+                <Link to={`/teacher/details/${text.id}`} style={{marginRight: '10px'}}>Details</Link>
+                <Link to={`/teacher/edit/${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
                     </Button>
@@ -97,7 +97,7 @@ const ListStudent = () => {
     ]
   return (
     <div className={classes['list']}>
-        <p className={classes['page__title']}>Student List Test</p>
+        <p className={classes['page__title']}>Teacher List</p>
         <div className={classes['list__main']}>
             <div className={classes['list__nav']}>
                 <div className={classes['list__nav-left']}>
@@ -169,4 +169,4 @@ const ListStudent = () => {
   )
 }
 
-export default ListStudent
+export default TeacherList

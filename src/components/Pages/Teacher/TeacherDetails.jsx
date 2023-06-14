@@ -4,14 +4,14 @@ import Image from '../../common/Image/Image'
 import { Button } from 'antd'
 import { Link } from 'react-router-dom'
 import AuthContext from '../../../helpers/Context/AuthContext'
-const StudentDetails = () => {
+const TeacherDetails = () => {
   const ctx = useContext(AuthContext)
   return (
     <div className={classes['details']}>
-      <p className={classes['page__title']}>Student details</p>
+      <p className={classes['page__title']}>Teacher details</p>
       <div className={classes['details__main']}>
         <div className={classes['details__left']}>
-          <p className={classes['details__left-title']}>About <b>Nguyen Van A</b></p>
+          <p className={classes['details__left-title']}>About <b>Nguyen Thi B</b></p>
           <div className={classes['details__left-image']}>
             <Image className={classes['details__left-image-img']} alt="Nguyen Van A" src="https://smilemedia.vn/wp-content/uploads/2022/09/cach-chup-hinh-the-dep.jpeg" width={100} height={100}/>
           </div>
@@ -46,12 +46,8 @@ const StudentDetails = () => {
             <p className={classes['details__right-value']}>Ha Noi - VN</p>
           </div>
           <div className={classes['details__right-row']}>
-            <p className={classes['details__right-title']}>Major</p>
-            <p className={classes['details__right-value']}>IT</p>
-          </div>
-          <div className={classes['details__right-row']}>
-            <p className={classes['details__right-title']}>Admission Year</p>
-            <p className={classes['details__right-value']}>2024</p>
+            <p className={classes['details__right-title']}>Position</p>
+            <p className={classes['details__right-value']}>Full-time teacher</p>
           </div>
         </div>
       </div>
@@ -73,4 +69,4 @@ const StudentDetails = () => {
   )
 }
 
-export default StudentDetails
+export default TeacherDetails
