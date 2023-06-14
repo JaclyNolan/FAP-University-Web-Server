@@ -2,6 +2,8 @@
     &__title{
         margin-bottom: 10px;
         font-weight: 600;
+        border-bottom: 1px solid #e7e7e7;
+        padding-bottom: 10px;
     }
 }
 
@@ -87,11 +89,85 @@
             & label {
                 margin-bottom: 5px;
             }
+            &-row{
+                display: flex;
+                align-items: center;
+                & > span{
+                    width: 50%;
+                    margin-right: 20px;
+                }
+            }
         }
         button {
             @media screen and (max-width: 550px){
                 margin-top: 20px;
             }
+        }
+    }
+}
+.details{
+    &__main{
+        display: flex;
+        margin-top: 20px;
+        @media screen and (max-width: 768px){
+            flex-direction: column;
+        }
+    }
+    &__left{
+        width: 30%;
+        @media screen and (max-width: 768px){
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        &-title{
+            text-align: center;
+            @media screen and (max-width: 768px){
+                text-align: left;
+            }
+        }
+        &-image{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            @media screen and (max-width: 768px){
+                justify-content: flex-start;
+            }
+            &-img{
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
+    }
+    &__right{
+        width: 70%;
+        @media screen and (max-width: 768px){
+            width: 100%;
+        }
+        &-row{
+            display: flex;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            transition: all .3s;
+            &:hover{
+                cursor: pointer;
+                border-bottom-color: #007cff;
+            }
+        }
+        &-title{
+            width: 20%;
+        }
+        &-value{
+            width: 80%;
+        }
+    }
+    &__actions{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 50px;
+        &-btn{
+            margin: 0 10px;
         }
     }
 }

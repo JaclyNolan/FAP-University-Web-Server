@@ -4,7 +4,7 @@ import Image from '../../common/Image/Image'
 import { Button } from 'antd'
 import { Link } from 'react-router-dom'
 import AuthContext from '../../../helpers/Context/AuthContext'
-const StudentDetails = () => {
+const Details = () => {
   const ctx = useContext(AuthContext)
   return (
     <div className={classes['details']}>
@@ -73,4 +73,4 @@ const StudentDetails = () => {
   )
 }
 
-export default StudentDetails
+export default Details

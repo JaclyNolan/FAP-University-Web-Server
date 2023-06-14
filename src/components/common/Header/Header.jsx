@@ -12,7 +12,7 @@ const Header = ({onToggleSidebar}) => {
   console.log(location);
   useEffect(() => {
     const splitedUrl = window.location.href.split('/')
-    const url = splitedUrl.splice(splitedUrl.length - 2, splitedUrl.length)
+    const url = splitedUrl.splice(3, splitedUrl.length)
     let data = []
     let concatedUrl = ''
     for(let i in url){
