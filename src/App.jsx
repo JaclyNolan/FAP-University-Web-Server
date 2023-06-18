@@ -6,11 +6,13 @@ import ScreenLoader from "./components/common/ScreenLoader/ScreenLoader";
 import AuthContext from './helpers/Context/AuthContext';
 import { useEffect, useState } from "react";
 import { useMediaQuery, useUser } from "./helpers/hooks";
+import LoaderModal from "./components/common/ScreenLoader/LoaderModal";
 function App() {
   const user = useUser()
   const isMobileView = useMediaQuery("(max-width: 850px)");
   const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobileView);
   const [isShowBackdrop, setIsShowBackdrop] = useState(false)
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsSidebarOpen(!isMobileView)
@@ -36,8 +38,9 @@ function App() {
   console.log(user)
   return user.isFetching
     ? <ScreenLoader />
-    : (<AuthContext.Provider value={{ user: user }}>
+    : (<AuthContext.Provider value={{ user: user, isLoading, setLoading }}>
       {isShowBackdrop && <Backdrop parentComponent={getBackdropParent()} backdropClick={backdropClick} />}
+      {isLoading && <LoaderModal />}
       <main className={classes['main']}>
         {user.token && <Sidebar sidebarStyle={sidebarStyle} />}
         <div className={classes['main-container']}>

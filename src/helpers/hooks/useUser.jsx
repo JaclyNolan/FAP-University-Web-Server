@@ -40,7 +40,7 @@ const useUser = () => {
             if (token) {
                 console.log('token: ' + token);
                 // Fetch user data using access token
-                axiosClient.get('/check-token')
+                await axiosClient.get('/check-token')
                 .then((response) => {
                     // Store the fetched user data in AuthContext
                     console.log(response);

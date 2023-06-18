@@ -11,7 +11,9 @@ const AuthContext = createContext({
         token: null,
         setToken: () => { },
         isFetching: true,
-    }
+    },
+    isloading: false,
+    setLoading: () => {},
 })
 
 export const useAuthContext = () => useContext(AuthContext);

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import classes from './Header.module.scss'
 import { Breadcrumb, Avatar, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
 import InvisibleButton from '../Button/InvisibleButton';
 import { useMediaQuery } from '../../../helpers/hooks/useMediaQuery';
-import { useAuthContext } from '../../../helpers/Context/AuthContext';
+import AuthContext from '../../../helpers/Context/AuthContext';
 import axiosClient from '../../../axios-client';
 const Header = ({ onToggleSidebar }) => {
   const isMobileView = useMediaQuery("(max-width: 850px)")
   const [breadcrumbData, setBreadcrumbData] = useState([])
-  const { user } = useAuthContext();
+  const { user, setLoading } = useContext(AuthContext);
   const location = useLocation()
   console.log(location);
 
@@ -30,8 +30,9 @@ const Header = ({ onToggleSidebar }) => {
     setBreadcrumbData(data)
   }, [location.pathname])
 
-  const logoutHandler = () => {
-    axiosClient.post('/logout')
+  const logoutHandler = async () => {
+    setLoading(true);
+    await axiosClient.post('/logout')
       .then((response) => {
         // Store the fetched user data in AuthContext
         console.log(response);
