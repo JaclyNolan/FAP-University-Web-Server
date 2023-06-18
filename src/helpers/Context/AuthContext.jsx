@@ -1,11 +1,18 @@
-import {createContext} from 'react'
+import { createContext, useContext } from 'react'
 
 const AuthContext = createContext({
     user: {
-        user: null,
-        isFetching: true
+        user: {
+            username: null,
+            email: null,
+            role: null
+        },
+        setUser: () => { },
+        token: null,
+        setToken: () => { },
+        isFetching: true,
     }
 })
 
-
-export default AuthContext
+export const useAuthContext = () => useContext(AuthContext);
+export default AuthContext;

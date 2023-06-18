@@ -1,7 +1,7 @@
-import {Header, Sidebar, Backdrop} from "./components/common"
+import { Header, Sidebar, Backdrop } from "./components/common"
 import classes from './App.module.scss'
-import {Routes, Route} from 'react-router-dom'
-import {routers} from './helpers/constants'
+import { Routes, Route } from 'react-router-dom'
+import { routers } from './helpers/constants'
 import ScreenLoader from "./components/common/ScreenLoader/ScreenLoader";
 import AuthContext from './helpers/Context/AuthContext';
 import { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(!isMobileView);
   const [isShowBackdrop, setIsShowBackdrop] = useState(false)
 
-  useEffect(() =>{
+  useEffect(() => {
     setIsSidebarOpen(!isMobileView)
   }, [isMobileView])
 
@@ -24,7 +24,7 @@ function App() {
     left: isSidebarOpen ? '0%' : '-100%'
   }
   const getBackdropParent = () => {
-    if(isSidebarOpen){
+    if (isSidebarOpen) {
       return 'sidebar'
     }
     return 'header'
@@ -33,22 +33,25 @@ function App() {
     setIsSidebarOpen(false)
     setIsShowBackdrop(false)
   }
-  return user.isFetching ? <ScreenLoader/> : (<AuthContext.Provider value={{user: user}}>
-    {isShowBackdrop && <Backdrop parentComponent={getBackdropParent()} backdropClick={backdropClick}/>}
-    <main className={classes['main']}>
-      {user.user &&  <Sidebar sidebarStyle={sidebarStyle}/>}
-      <div className={classes['main-container']}>
-        {user.user && <Header onToggleSidebar = {onToggleSidebar}/>}
-        <div className={classes['main-main']}>
-          <Routes>
-            {routers.map((routeItem, index) => {
-              return <Route path={routeItem.path} key={index} element={routeItem.render()}/>
-            })}
-          </Routes>
+  console.log(user)
+  return user.isFetching
+    ? <ScreenLoader />
+    : (<AuthContext.Provider value={{ user: user }}>
+      {isShowBackdrop && <Backdrop parentComponent={getBackdropParent()} backdropClick={backdropClick} />}
+      <main className={classes['main']}>
+        {user.token && <Sidebar sidebarStyle={sidebarStyle} />}
+        <div className={classes['main-container']}>
+          {user.token && <Header onToggleSidebar={onToggleSidebar} />}
+          <div className={classes['main-main']}>
+            <Routes>
+              {routers.map((routeItem, index) => {
+                return <Route path={routeItem.path} key={index} element={routeItem.render()} />
+              })}
+            </Routes>
+          </div>
         </div>
-      </div>
-    </main>
-  </AuthContext.Provider>)
+      </main>
+    </AuthContext.Provider>)
 }
 
 export default App;
