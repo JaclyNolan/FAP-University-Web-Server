@@ -22,14 +22,16 @@ const Sidebar = ({sidebarStyle}) => {
   };
   useEffect(() => {
     switch(authCtx.user.user.role){
-      case 'admin':
+      case 'Admin':
         setSidebarData(adminSidebar)
         break
-      case 'staff':
+      case 'Staff':
         setSidebarData(staffSidebar)
         break
-      default:
+      case 'Student':
         setSidebarData(studentSidebar)
+        break
+      default:
         break
     }
   }, [authCtx.user.user])

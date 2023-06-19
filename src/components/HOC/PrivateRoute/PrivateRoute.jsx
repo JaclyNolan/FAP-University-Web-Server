@@ -1,11 +1,12 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import {Navigate} from 'react-router-dom'
-import AuthContext from '../../../helpers/Context/AuthContext'
+import { useAuthContext } from '../../../helpers/Context/AuthContext'
 const PrivateRoute = (props) => {
-  const {To, ElseTo,authRequire, roles} = props
-  const userCtx = useContext(AuthContext)
+  const {To, ElseTo, authRequire, roles} = props
+  const userCtx = useAuthContext();
+
   if(!userCtx.user.isFetching){
-    if((!userCtx.user.user && authRequire) || (userCtx.user.user && !authRequire) || (roles.length > 0 && !roles.includes(userCtx.user.user.role))){
+    if((!userCtx.user.user.username && authRequire) || (userCtx.user.user.username && !authRequire) || (roles.length > 0 && !roles.includes(userCtx.user.user.role))){
       return <Navigate to={ElseTo}/>
     }
     return <To/>
