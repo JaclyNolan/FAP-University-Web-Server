@@ -6,7 +6,8 @@ const useUser = () => {
     const [user, _setUser] = useState({
         username: null,
         email: null,
-        role: null
+        role: null,
+        picture: null
     });
     const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
     const [fetchingUser, setFetchingUser] = useState(true)
@@ -16,7 +17,8 @@ const useUser = () => {
             _setUser({
                 username: null,
                 email: null,
-                role: null
+                role: null,
+                picture: null
             })
         } else {
             _setUser(user);

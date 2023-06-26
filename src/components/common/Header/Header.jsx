@@ -32,7 +32,7 @@ const Header = ({ onToggleSidebar }) => {
 
   const logoutHandler = async () => {
     setLoading(true);
-    await axiosClient.post('/logout')
+    await axiosClient.delete('/logout')
       .then((response) => {
         // Store the fetched user data in AuthContext
         console.log(response);
