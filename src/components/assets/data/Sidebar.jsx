@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom"
-
 export const adminSidebar = [
     {
         title: 'User Management',
@@ -12,10 +10,6 @@ export const adminSidebar = [
                 title: 'Add',
                 path: '/user/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/user/edit'
-            // }
         ]
     },
     {
@@ -29,10 +23,6 @@ export const adminSidebar = [
                 title: 'Add',
                 path: '/student/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/student/edit'
-            // }
         ]
     },
     {
@@ -46,10 +36,6 @@ export const adminSidebar = [
                 title: 'Add',
                 path: '/teacher/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/teacher/edit'
-            // }
         ]
     },
     {
@@ -63,10 +49,6 @@ export const adminSidebar = [
                 title: 'Add',
                 path: '/staff/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/staff/edit'
-            // }
         ]
     },
     {
@@ -80,10 +62,6 @@ export const adminSidebar = [
                 title: 'Add',
                 path: '/course/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/course/edit'
-            // }
         ]
     },
     {
@@ -97,10 +75,6 @@ export const adminSidebar = [
                 title: 'Add',
                 path: '/class/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/class/edit'
-            // }
         ]
     },
     {
@@ -108,16 +82,12 @@ export const adminSidebar = [
         items: [
             {
                 title: 'List',
-                path: '/class-course/list'
+                path: '/classcourse/list'
             },
             {
                 title: 'Add',
-                path: '/class-course/add'
+                path: '/classcourse/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/class-course/edit'
-            // }
         ]
     },
     {
@@ -131,27 +101,6 @@ export const adminSidebar = [
                 title: 'Add',
                 path: '/enroll/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/enroll/edit'
-            // }
-        ]
-    },
-    {
-        title: 'Grade Management',
-        items: [
-            {
-                title: 'List',
-                path: '/grade/list'
-            },
-            {
-                title: 'Add',
-                path: '/grade/add'
-            },
-            // {
-            //     title: 'Edit',
-            //     path: '/grade/edit'
-            // }
         ]
     },
     {
@@ -165,10 +114,19 @@ export const adminSidebar = [
                 title: 'Add',
                 path: '/schedule/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/schedule/edit'
-            // }
+        ]
+    },
+    {
+        title: 'Grade Management',
+        items: [
+            {
+                title: 'List',
+                path: '/grade/list'
+            },
+            {
+                title: 'Add',
+                path: '/grade/add'
+            },
         ]
     },
     {
@@ -182,10 +140,6 @@ export const adminSidebar = [
                 title: 'Add',
                 path: '/fee/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/fee/edit'
-            // }
         ]
     },
     {
@@ -195,14 +149,6 @@ export const adminSidebar = [
                 title: 'List',
                 path: '/Feedback/list'
             },
-            {
-                title: 'Add',
-                path: '/Feedback/add'
-            },
-            // {
-            //     title: 'Edit',
-            //     path: '/Feedback/edit'
-            // }
         ]
     },
     {
@@ -216,12 +162,17 @@ export const adminSidebar = [
                 title: 'Add',
                 path: '/news/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/news/edit'
-            // }
         ]
-    }
+    },
+    {
+        title: 'Attendance Management',
+        items: [
+            {
+                title: 'List',
+                path: '/attendance/list'
+            }
+        ]
+    },
 ]
 
 export const studentSidebar = [
@@ -245,10 +196,6 @@ export const studentSidebar = [
                 title: 'Course list',
                 path: '/courses'
             },
-            // {
-            //     title: 'Class list',
-            //     path: '/classes'
-            // }
         ]
     },
     {
@@ -262,10 +209,6 @@ export const studentSidebar = [
                 title: 'Mark report',
                 path: '/mark'
             },
-            // {
-            //     title: 'Feedback',
-            //     path: '/feedback'
-            // }
         ]
     }
 ]
@@ -282,10 +225,6 @@ export const staffSidebar = [
                 title: 'Add',
                 path: '/student/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/student/edit'
-            // }
         ]
     },
     {
@@ -299,10 +238,6 @@ export const staffSidebar = [
                 title: 'Add',
                 path: '/teacher/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/teacher/edit'
-            // }
         ]
     },
     {
@@ -316,10 +251,6 @@ export const staffSidebar = [
                 title: 'Add',
                 path: '/course/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/course/edit'
-            // }
         ]
     },
     {
@@ -333,10 +264,6 @@ export const staffSidebar = [
                 title: 'Add',
                 path: '/class/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/class/edit'
-            // }
         ]
     },
     {
@@ -350,10 +277,6 @@ export const staffSidebar = [
                 title: 'Add',
                 path: '/class-course/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/class-course/edit'
-            // }
         ]
     },
     {
@@ -367,10 +290,6 @@ export const staffSidebar = [
                 title: 'Add',
                 path: '/enroll/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/enroll/edit'
-            // }
         ]
     },
     {
@@ -384,27 +303,6 @@ export const staffSidebar = [
                 title: 'Add',
                 path: '/grade/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/grade/edit'
-            // }
-        ]
-    },
-    {
-        title: 'Schedule Management',
-        items: [
-            {
-                title: 'List',
-                path: '/schedule/list'
-            },
-            {
-                title: 'Add',
-                path: '/schedule/add'
-            },
-            // {
-            //     title: 'Edit',
-            //     path: '/schedule/edit'
-            // }
         ]
     },
     {
@@ -418,10 +316,6 @@ export const staffSidebar = [
                 title: 'Add',
                 path: '/fee/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/fee/edit'
-            // }
         ]
     },
     {
@@ -435,10 +329,6 @@ export const staffSidebar = [
                 title: 'Add',
                 path: '/Feedback/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/Feedback/edit'
-            // }
         ]
     },
     {
@@ -452,10 +342,15 @@ export const staffSidebar = [
                 title: 'Add',
                 path: '/news/add'
             },
-            // {
-            //     title: 'Edit',
-            //     path: '/news/edit'
-            // }
         ]
-    }
+    },
+    {
+        title: 'Attendance Management',
+        items: [
+            {
+                title: 'List',
+                path: '/attendance/list'
+            }
+        ]
+    },
 ]

@@ -3,7 +3,7 @@ import {Input, Button, Popconfirm, Select, Table} from 'antd'
 import { Link } from 'react-router-dom'
 import Image from '../../common/Image/Image'
 import classes from '../Page.module.scss'
-const TeacherList = () => {
+const CourseList = () => {
     const {Search} = Input
 
     const handleChange = () => {
@@ -22,50 +22,38 @@ const TeacherList = () => {
             key: 'id',
         },
         {
-            title: 'Image',
-            dataIndex: 'image',
-            key: 'image',
-            render : (text) => <Image src={text.src} alt={text.alt} width = {30} height = {30}/>
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name'
         },
         {
-            title: 'Full Name',
-            dataIndex: 'fullname',
-            key: 'fullname'
+            title: 'Major',
+            dataIndex: 'major',
+            key: 'major',
         },
         {
-            title: 'DOB',
-            dataIndex: 'dob',
-            key: 'dob',
+            title: 'Credit',
+            dataIndex: 'credit',
+            key: 'credit',
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: 'Phone',
-            dataIndex: 'phone',
-            key: 'phone'
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
+            title: 'Tution fee',
+            dataIndex: 'tutionfee',
+            key: 'tutionfee'
         },
         {
             title: '',
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/teacher/details/${text.id}`} style={{marginRight: '10px'}}>Details</Link>
-                <Link to={`/teacher/edit/${text.id}`}>
+                <Link to={`/course/edit/${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
                     </Button>
                 </Link>
                 <Popconfirm
-                    title="Delete the student"
-                    description="Are you sure to delete this this student?"
+                    title="Delete the course"
+                    description="Are you sure to delete this course?"
                     onConfirm={() => deleteUserHandler(text.id)}
                     okText="Confirm"
                     cancelText="Cancel"
@@ -81,15 +69,10 @@ const TeacherList = () => {
     const tableData = [
         {
             key: '1',
-            image: {
-                src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
-                alt: 'user'
-            },
-            fullname: 'Nguyen Van A',
-            email: 'anvbhaf190345@fpt.edu.vn',
-            dob: '01/01/2023',
-            phone: '012345678',
-            address: 'Ha Noi - Viet Nam',
+            name: 'programing',
+            major: 'Information and Technology',
+            credit: 'credit 1',
+            tutionfee: '123.234vnd',
             actions: {
                 id: 1
             }
@@ -97,7 +80,7 @@ const TeacherList = () => {
     ]
   return (
     <div className={classes['list']}>
-        <p className={classes['page__title']}>Teacher List</p>
+        <p className={classes['page__title']}>Course List</p>
         <div className={classes['list__main']}>
             <div className={classes['list__nav']}>
                 <div className={classes['list__nav-left']}>
@@ -108,7 +91,7 @@ const TeacherList = () => {
                         <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
                     </div>
                     <div className={classes['list__nav-right__add']}>
-                        <Link to='/teacher/add'>
+                        <Link to='/course/add'>
                             <Button type='primary'>
                                 <i className="fas fa-plus"></i>
                                 <span>Add</span>
@@ -119,45 +102,22 @@ const TeacherList = () => {
             </div>
             <div className={classes['list__filters']}>
                     <Select
-                        defaultValue="Course"
+                        defaultValue="Major"
                         style={{ width: 120 }}
                         onChange={handleChange}
                         options={[
-                            { value: 'Programing', label: 'Programing' },
-                            { value: 'Networking', label: 'Networking' },
-                            { value: 'DSA', label: 'DSA' },
-                            { value: 'Software lifecycle', label: 'Software lifecycle' },
+                            { value: 'IT', label: 'IT' },
+                            { value: 'Design', label: 'Design' },
+                            { value: 'Business', label: 'Business' }
                         ]}
                     />
                     <Select
-                        defaultValue="Gender"
+                        defaultValue="Credit"
                         style={{ width: 120 }}
                         onChange={handleChange}
                         options={[
-                            { value: 'Male', label: 'Male' },
-                            { value: 'Female', label: 'Female' },
-                        ]}
-                    />
-                    <Select
-                        defaultValue="Admission Year"
-                        style={{ width: 120 }}
-                        onChange={handleChange}
-                        options={[
-                            { value: '2019', label: '2019' },
-                            { value: '2020', label: '2020' },
-                            { value: '2019', label: '2019' },
-                            { value: '2021', label: '2021' },
-                            { value: '2022', label: '2022' },
-                            { value: '2023', label: '2023' },
-                        ]}
-                    />
-                    <Select
-                        defaultValue="Status"
-                        style={{ width: 120 }}
-                        onChange={handleChange}
-                        options={[
-                            { value: 'In Progress', label: 'In Progress' },
-                            { value: 'Completed', label: 'Completed' },
+                            { value: 'Credit 1', label: 'Credit 1' },
+                            { value: 'Credit 2', label: 'Credit 2' },
                         ]}
                     />
             </div>
@@ -169,4 +129,4 @@ const TeacherList = () => {
   )
 }
 
-export default TeacherList
+export default CourseList

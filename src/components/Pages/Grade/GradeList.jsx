@@ -1,9 +1,8 @@
 import React from 'react'
 import {Input, Button, Popconfirm, Select, Table} from 'antd'
 import { Link } from 'react-router-dom'
-import Image from '../../common/Image/Image'
 import classes from '../Page.module.scss'
-const TeacherList = () => {
+const GradeList = () => {
     const {Search} = Input
 
     const handleChange = () => {
@@ -22,50 +21,43 @@ const TeacherList = () => {
             key: 'id',
         },
         {
-            title: 'Image',
-            dataIndex: 'image',
-            key: 'image',
-            render : (text) => <Image src={text.src} alt={text.alt} width = {30} height = {30}/>
+            title: 'Student Name',
+            dataIndex: 'studentName',
+            key: 'studentName'
         },
         {
-            title: 'Full Name',
-            dataIndex: 'fullname',
-            key: 'fullname'
+            title: 'Class',
+            dataIndex: 'class',
+            key: 'class',
         },
         {
-            title: 'DOB',
-            dataIndex: 'dob',
-            key: 'dob',
+            title: 'Course',
+            dataIndex: 'course',
+            key: 'course',
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status'
         },
         {
-            title: 'Phone',
-            dataIndex: 'phone',
-            key: 'phone'
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
+            title: 'score',
+            dataIndex: 'score',
+            key: 'score',
         },
         {
             title: '',
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/teacher/details/${text.id}`} style={{marginRight: '10px'}}>Details</Link>
-                <Link to={`/teacher/edit/${text.id}`}>
+                <Link to={`/grade/edit/${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
                     </Button>
                 </Link>
-                <Popconfirm
-                    title="Delete the student"
-                    description="Are you sure to delete this this student?"
+                {/* <Popconfirm
+                    title="Delete the grade"
+                    description="Are you sure to delete this grade?"
                     onConfirm={() => deleteUserHandler(text.id)}
                     okText="Confirm"
                     cancelText="Cancel"
@@ -73,7 +65,7 @@ const TeacherList = () => {
                     <Button danger type='primary'>
                         <i className="fas fa-trash-alt"></i>
                     </Button>
-                </Popconfirm>
+                </Popconfirm> */}
             </div>
         },
 
@@ -81,14 +73,10 @@ const TeacherList = () => {
     const tableData = [
         {
             key: '1',
-            image: {
-                src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
-                alt: 'user'
-            },
-            fullname: 'Nguyen Van A',
-            email: 'anvbhaf190345@fpt.edu.vn',
-            dob: '01/01/2023',
-            phone: '012345678',
+            studentName: 'Nguyen Van A',
+            class: 'BHAF123',
+            course: 'Programing',
+            status: 'in progress',
             address: 'Ha Noi - Viet Nam',
             actions: {
                 id: 1
@@ -97,7 +85,7 @@ const TeacherList = () => {
     ]
   return (
     <div className={classes['list']}>
-        <p className={classes['page__title']}>Teacher List</p>
+        <p className={classes['page__title']}>Grade List</p>
         <div className={classes['list__main']}>
             <div className={classes['list__nav']}>
                 <div className={classes['list__nav-left']}>
@@ -108,7 +96,7 @@ const TeacherList = () => {
                         <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
                     </div>
                     <div className={classes['list__nav-right__add']}>
-                        <Link to='/teacher/add'>
+                        <Link to='/grade/add'>
                             <Button type='primary'>
                                 <i className="fas fa-plus"></i>
                                 <span>Add</span>
@@ -130,34 +118,12 @@ const TeacherList = () => {
                         ]}
                     />
                     <Select
-                        defaultValue="Gender"
+                        defaultValue="Class"
                         style={{ width: 120 }}
                         onChange={handleChange}
                         options={[
-                            { value: 'Male', label: 'Male' },
-                            { value: 'Female', label: 'Female' },
-                        ]}
-                    />
-                    <Select
-                        defaultValue="Admission Year"
-                        style={{ width: 120 }}
-                        onChange={handleChange}
-                        options={[
-                            { value: '2019', label: '2019' },
-                            { value: '2020', label: '2020' },
-                            { value: '2019', label: '2019' },
-                            { value: '2021', label: '2021' },
-                            { value: '2022', label: '2022' },
-                            { value: '2023', label: '2023' },
-                        ]}
-                    />
-                    <Select
-                        defaultValue="Status"
-                        style={{ width: 120 }}
-                        onChange={handleChange}
-                        options={[
-                            { value: 'In Progress', label: 'In Progress' },
-                            { value: 'Completed', label: 'Completed' },
+                            { value: 'BHAF123', label: 'BHAF123' },
+                            { value: 'BHAF124', label: 'BHAF124' },
                         ]}
                     />
             </div>
@@ -169,4 +135,4 @@ const TeacherList = () => {
   )
 }
 
-export default TeacherList
+export default GradeList

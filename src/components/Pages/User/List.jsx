@@ -67,7 +67,7 @@ const List = () => {
             title: 'Detail',
             dataIndex: 'detail',
             key: 'detail',
-            render: (text) => <Link href={`/user/details?id=${text.id}`}>{text.text}</Link>,
+            render: (text) => <Link href={`/user/details/${text.id}`}>{text.text}</Link>,
         },
         {
             title: '',

@@ -1,9 +1,8 @@
 import React from 'react'
 import {Input, Button, Popconfirm, Select, Table} from 'antd'
 import { Link } from 'react-router-dom'
-import Image from '../../common/Image/Image'
 import classes from '../Page.module.scss'
-const TeacherList = () => {
+const ClassCourseList = () => {
     const {Search} = Input
 
     const handleChange = () => {
@@ -17,55 +16,43 @@ const TeacherList = () => {
     }
     const tableColumns = [
         {
-            title: 'Id',
+            title: 'Class Course ID',
             dataIndex: 'key',
             key: 'id',
         },
         {
-            title: 'Image',
-            dataIndex: 'image',
-            key: 'image',
-            render : (text) => <Image src={text.src} alt={text.alt} width = {30} height = {30}/>
+            title: 'Teacher',
+            dataIndex: 'teacher',
+            key: 'teacher'
         },
         {
-            title: 'Full Name',
-            dataIndex: 'fullname',
-            key: 'fullname'
+            title: 'Course',
+            dataIndex: 'course',
+            key: 'course',
         },
         {
-            title: 'DOB',
-            dataIndex: 'dob',
-            key: 'dob',
+            title: 'Class',
+            dataIndex: 'class',
+            key: 'class',
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: 'Phone',
-            dataIndex: 'phone',
-            key: 'phone'
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
+            title: 'Major',
+            dataIndex: 'major',
+            key: 'major'
         },
         {
             title: '',
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/teacher/details/${text.id}`} style={{marginRight: '10px'}}>Details</Link>
-                <Link to={`/teacher/edit/${text.id}`}>
+                <Link to={`/classcourse/edit/${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
                     </Button>
                 </Link>
                 <Popconfirm
-                    title="Delete the student"
-                    description="Are you sure to delete this this student?"
+                    title="Delete the class course"
+                    description="Are you sure to delete this this class course?"
                     onConfirm={() => deleteUserHandler(text.id)}
                     okText="Confirm"
                     cancelText="Cancel"
@@ -81,15 +68,10 @@ const TeacherList = () => {
     const tableData = [
         {
             key: '1',
-            image: {
-                src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
-                alt: 'user'
-            },
-            fullname: 'Nguyen Van A',
-            email: 'anvbhaf190345@fpt.edu.vn',
-            dob: '01/01/2023',
-            phone: '012345678',
-            address: 'Ha Noi - Viet Nam',
+            teacher: 'Nguyen Van A',
+            course: 'Programing',
+            class: 'bhaf12345',
+            major: 'Information and Technology',
             actions: {
                 id: 1
             }
@@ -97,7 +79,7 @@ const TeacherList = () => {
     ]
   return (
     <div className={classes['list']}>
-        <p className={classes['page__title']}>Teacher List</p>
+        <p className={classes['page__title']}>Class course List</p>
         <div className={classes['list__main']}>
             <div className={classes['list__nav']}>
                 <div className={classes['list__nav-left']}>
@@ -108,7 +90,7 @@ const TeacherList = () => {
                         <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
                     </div>
                     <div className={classes['list__nav-right__add']}>
-                        <Link to='/teacher/add'>
+                        <Link to='/classcourse/add'>
                             <Button type='primary'>
                                 <i className="fas fa-plus"></i>
                                 <span>Add</span>
@@ -118,6 +100,15 @@ const TeacherList = () => {
                 </div>
             </div>
             <div className={classes['list__filters']}>
+                    <Select
+                        defaultValue="Major"
+                        style={{ width: 120 }}
+                        onChange={handleChange}
+                        options={[
+                            { value: 'Information and Technology', label: 'Information and Technology' },
+                            { value: 'Design', label: 'Design' },
+                        ]}
+                    />
                     <Select
                         defaultValue="Course"
                         style={{ width: 120 }}
@@ -130,34 +121,20 @@ const TeacherList = () => {
                         ]}
                     />
                     <Select
-                        defaultValue="Gender"
+                        defaultValue="Class"
                         style={{ width: 120 }}
                         onChange={handleChange}
                         options={[
-                            { value: 'Male', label: 'Male' },
-                            { value: 'Female', label: 'Female' },
+                            { value: 'BHAF1234', label: 'BHAF1234' },
                         ]}
                     />
                     <Select
-                        defaultValue="Admission Year"
+                        defaultValue="Teacher"
                         style={{ width: 120 }}
                         onChange={handleChange}
                         options={[
-                            { value: '2019', label: '2019' },
-                            { value: '2020', label: '2020' },
-                            { value: '2019', label: '2019' },
-                            { value: '2021', label: '2021' },
-                            { value: '2022', label: '2022' },
-                            { value: '2023', label: '2023' },
-                        ]}
-                    />
-                    <Select
-                        defaultValue="Status"
-                        style={{ width: 120 }}
-                        onChange={handleChange}
-                        options={[
-                            { value: 'In Progress', label: 'In Progress' },
-                            { value: 'Completed', label: 'Completed' },
+                            { value: 'Nguyen Thai Cuong', label: 'Nguyen Thai Cuong' },
+                            { value: 'Ngo Thi Mai Loan', label: 'Ngo Thi Mai Loan' },
                         ]}
                     />
             </div>
@@ -169,4 +146,4 @@ const TeacherList = () => {
   )
 }
 
-export default TeacherList
+export default ClassCourseList
