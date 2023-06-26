@@ -3,7 +3,6 @@ import classes from '../Page.module.scss';
 import { Select, Input, Button, Popconfirm, Tag, Table, Spin, Alert } from 'antd';
 import Link from 'antd/es/typography/Link';
 import Image from '../../common/Image/Image';
-import axios from 'axios';
 import axiosClient from '../../../axios-client';
 import AuthContext from '../../../helpers/Context/AuthContext';
 
@@ -11,18 +10,17 @@ const List = () => {
     const { Search } = Input
 
     const [userData, setUserData] = useState([]);
+    const [tableData, setTableData] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
     const { setLoading } = useContext(AuthContext);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        fetchUserData();
-    }, []);
-
-    const fetchUserData = async () => {
+    const fetchUserData = async (page) => {
         setLoading(true);
-        await axiosClient.get('/users')
+        await axiosClient.get('/users?page='.concat(page))
             .then((response) => {
-                const { users } = response.data;
+                const { users, total_pages } = response.data;
+                setTotalPages(total_pages);
                 setUserData(users);
             })
             .catch((error) => {
@@ -30,6 +28,45 @@ const List = () => {
             })
         setLoading(false);
     }
+
+    useEffect(() => {
+        fetchUserData(1);
+    }, []);
+
+    useEffect(() => {
+        console.log(userData);
+        const arr = [];
+        userData.forEach((user, index) => {
+            const row = {
+                key: index + 1,
+                image: {
+                    src: user.image,
+                    alt: user.username
+                },
+                username: {
+                    text: user.username,
+                    id: user.id
+                },
+                email: user.email,
+                role: {
+                    text: user.role_name,
+                    role: user.role_name
+                },
+                detail: {
+                    id: user.id,
+                    text: 'Details'
+                },
+                actions: {
+                    id: user.id
+                }
+            };
+            arr.push(row);
+        });
+        setTableData(arr);
+        console.log(arr);
+    }, [userData])
+
+    
 
     const handleChange = () => {
 
@@ -120,31 +157,31 @@ const List = () => {
 
     ]
 
-    const tableData = [
-        {
-            key: '1',
-            image: {
-                src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
-                alt: 'user'
-            },
-            username: {
-                text: 'Nguyen Van A',
-                id: 1
-            },
-            email: 'anvbhaf190345@fpt.edu.vn',
-            role: {
-                text: 'Admin',
-                role: 'Admin'
-            },
-            detail: {
-                id: 1,
-                text: 'Details'
-            },
-            actions: {
-                id: 1
-            }
-        }
-    ]
+    // const tableData = [
+    //     {
+    //         key: '1',
+    //         image: {
+    //             src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
+    //             alt: 'user'
+    //         },
+    //         username: {
+    //             text: 'Nguyen Van A',
+    //             id: 1
+    //         },
+    //         email: 'anvbhaf190345@fpt.edu.vn',
+    //         role: {
+    //             text: 'Admin',
+    //             role: 'Admin'
+    //         },
+    //         detail: {
+    //             id: 1,
+    //             text: 'Details'
+    //         },
+    //         actions: {
+    //             id: 1
+    //         }
+    //     }
+    // ]
 
     return (
         <div className={classes['list']}>
@@ -180,7 +217,10 @@ const List = () => {
                     </div>
                 </div>
                 <div className={classes['list__table']}>
-                    <Table columns={tableColumns} pagination={{ pageSize: 6 }} dataSource={tableData} />
+                    {!error
+                        ? <Table columns={tableColumns} pagination={{ total: totalPages }} dataSource={tableData} />
+                        : <span>{error}</span>
+                    }
                 </div>
             </div>
         </div>
