@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import classes from '../Page.module.scss';
 import { Select, Input, Button, Popconfirm, Tag, Table, Spin, Alert } from 'antd';
 import Link from 'antd/es/typography/Link';
 import Image from '../../common/Image/Image';
 import axios from 'axios';
+import axiosClient from '../../../axios-client';
+import AuthContext from '../../../helpers/Context/AuthContext';
 
 const List = () => {
     const { Search } = Input
 
     const [userData, setUserData] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const { setLoading } = useContext(AuthContext);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -17,25 +19,17 @@ const List = () => {
     }, []);
 
     const fetchUserData = async () => {
-        setIsLoading(true);
-        try {
-            const response = await axios.get('http://127.0.0.1:8000/api/users', {
-                headers: {
-                    Authorization: 'Bearer 4|7HBDxuzXMwqobkHDqzN16dhsoJ3PcK8hC9NJpJWa',
-                },
-            });
-            const { status, message, users } = response.data;
-
-            if (status === 200) {
+        setLoading(true);
+        await axiosClient.get('/users')
+            .then((response) => {
+                const { users } = response.data;
                 setUserData(users);
-            } else {
-                setError(message);
-            }
-        } catch (error) {
-            setError('Error fetching user data');
-        }
-        setIsLoading(false);
-    };
+            })
+            .catch((error) => {
+                setError(error.message);
+            })
+        setLoading(false);
+    }
 
     const handleChange = () => {
 
@@ -124,6 +118,32 @@ const List = () => {
             </div>
         },
 
+    ]
+
+    const tableData = [
+        {
+            key: '1',
+            image: {
+                src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
+                alt: 'user'
+            },
+            username: {
+                text: 'Nguyen Van A',
+                id: 1
+            },
+            email: 'anvbhaf190345@fpt.edu.vn',
+            role: {
+                text: 'Admin',
+                role: 'Admin'
+            },
+            detail: {
+                id: 1,
+                text: 'Details'
+            },
+            actions: {
+                id: 1
+            }
+        }
     ]
 
     return (
