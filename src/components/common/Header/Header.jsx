@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import classes from './Header.module.scss'
 import { Breadcrumb, Avatar, Dropdown } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
 import InvisibleButton from '../Button/InvisibleButton';
 import { useMediaQuery } from '../../../helpers/hooks/useMediaQuery';
@@ -32,7 +31,7 @@ const Header = ({ onToggleSidebar }) => {
 
   const logoutHandler = async () => {
     setLoading(true);
-    await axiosClient.post('/logout')
+    await axiosClient.delete('/logout')
       .then((response) => {
         // Store the fetched user data in AuthContext
         console.log(response);
@@ -77,7 +76,7 @@ const Header = ({ onToggleSidebar }) => {
       <div className={classes['header-right']}>
         <div className={classes['header-avatar']}>
           <Link to="/profile">
-            <Avatar size="medium" icon={<UserOutlined />} />
+            <Avatar size="medium" src={user.user.picture} />
           </Link>
           <span>{user.user.username}</span>
         </div>

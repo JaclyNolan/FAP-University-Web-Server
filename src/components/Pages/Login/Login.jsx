@@ -32,13 +32,13 @@ const Login = () => {
                 console.log(error);
                 setUser(null);
                 setToken(null);
-                if (error.response.status <= 500)
-                    setErrorMessage(error.response.data.message);
+                if (error.status <= 500)
+                    setErrorMessage(error.data.message);
                 else
                     setErrorMessage('Internal Error');
             });
-            setLoading(false);
-        
+        setLoading(false);
+
     }
     const onLoginFailed = () => {
         setErrorMessage("LoginFailed");
