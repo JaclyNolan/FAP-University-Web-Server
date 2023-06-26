@@ -72,14 +72,6 @@ const FeedbackList = () => {
                     <div className={classes['list__nav-right__search']}>
                         <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
                     </div>
-                    <div className={classes['list__nav-right__add']}>
-                        <Link to='/feedback/add'>
-                            <Button type='primary'>
-                                <i className="fas fa-plus"></i>
-                                <span>Add</span>
-                            </Button>
-                        </Link>
-                    </div>
                 </div>
             </div>
             <div className={classes['list__filters']}>

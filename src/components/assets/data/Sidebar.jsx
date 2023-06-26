@@ -173,6 +173,19 @@ export const adminSidebar = [
             }
         ]
     },
+    {
+        title: 'Enrollment',
+        items: [
+            {
+                title: 'List',
+                path: '/enrollment/list'
+            },
+            {
+                title: 'Add',
+                path: '/enrollment/add'
+            }
+        ]
+    },
 ]
 
 export const studentSidebar = [
@@ -350,6 +363,19 @@ export const staffSidebar = [
             {
                 title: 'List',
                 path: '/attendance/list'
+            }
+        ]
+    },
+    {
+        title: 'Enrollment',
+        items: [
+            {
+                title: 'List',
+                path: '/enrollment/list'
+            },
+            {
+                title: 'Add',
+                path: '/enrollment/add'
             }
         ]
     },

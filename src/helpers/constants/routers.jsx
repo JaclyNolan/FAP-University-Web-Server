@@ -12,7 +12,7 @@ import {GradeAdd, GradeEdit, GradeList} from '../../components/Pages/Grade'
 import {FeedbackDetails, FeedbackList} from '../../components/Pages/Feedback'
 import { AttendanceEdit, AttendanceList } from '../../components/Pages/Attendance'
 import {NewsAdd, NewsDetails, NewsEdit, NewsList} from '../../components/Pages/News'
-
+import {EnrollmentEdit, EnrollmentList} from '../../components/Pages/Enrollment'
 
 
 
@@ -194,6 +194,14 @@ export const routers = [
     {
         path: '/news/details/:id',
         render: () => <PrivateRoute To = {NewsDetails} roles = {['admin', 'staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/enrollment/edit/:id',
+        render: () => <PrivateRoute To = {EnrollmentEdit} roles = {['admin', 'staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/enrollment/list',
+        render: () => <PrivateRoute To = {EnrollmentList} roles = {['admin', 'staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
         path: '*',
