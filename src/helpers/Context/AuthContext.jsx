@@ -5,7 +5,8 @@ const AuthContext = createContext({
         user: {
             username: null,
             email: null,
-            role: null
+            role: null,
+            picture: null
         },
         setUser: () => { },
         token: null,
