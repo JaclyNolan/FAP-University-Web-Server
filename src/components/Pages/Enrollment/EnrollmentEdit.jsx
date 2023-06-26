@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, Input, Select, InputNumber, Upload, message, DatePicker} from 'antd'
 import classes from '../Page.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
-const NewsAdd = () => {
+const EnrollmentEdit = () => {
     const handleChange = (value) => {
         console.log(value);
     }
@@ -25,21 +25,19 @@ const NewsAdd = () => {
       };
   return (
     <div>
-      <p className={classes['page__title']}>Add News</p>
+      <p className={classes['page__title']}>Add Student</p>
       <form className={classes['add__form']}>
         <div className={classes['add__main']}>
             <div className={classes['add__form-left']}>
                 <div className={classes['add__form-row']}>
-                    <label htmlFor="title">Title</label>
-                    <Input id='title'/>
+                    <label htmlFor="id">Enrollment ID</label>
+                    <Input id='id' disabled value={'e43'}/>
                 </div>
                 <div className={classes['add__form-row']}>
-                    <label htmlFor="author">Author</label>
-                    <Input id='author'/>
+                    <label htmlFor="sname">Student name</label>
+                    <Input id='sname' value={'Nguyen Van A'} disabled/>
                 </div>
-            </div>
-          <div className={classes['add__form-right']}>
-            <div className={classes['add__form-row']}>
+                <div className={classes['add__form-row']}>
                     <label htmlFor="status">Status:</label>
                     <Select
                         defaultValue="Choose status"
@@ -47,20 +45,26 @@ const NewsAdd = () => {
                         onChange={handleChange}
                         id='status'
                         options={[
-                        { value: 'active', label: 'active' },
-                        { value: 'expire', label: 'expire' },
+                        { value: 'In Progress', label: 'In Progress' },
+                        { value: 'Closed', label: 'Closed' },
                         ]}
                     />
                 </div>
+            </div>
+          <div className={classes['add__form-right']}>
+                <div className={classes['add__form-row']}>
+                    <label htmlFor="sid">Student ID</label>
+                    <Input id='sid' disabled value={'bhaf1234'}/>
+                </div>
             <div className={classes['add__form-row']}>
-              <label htmlFor="postDate">Post Date</label>
-              <DatePicker id='postDate'/>
+              <label htmlFor="semail">Student Email</label>
+              <Input id='semail' disabled value={'nabhaf123@fpt.edu.vn'}/>
+            </div>
+            <div className={classes['add__form-row']}>
+              <label htmlFor="course">Course</label>
+              <Input value={'Programing'} id='course' disabled/>
             </div>
           </div>
-        </div>
-        <div className={classes['add__details']}>
-            <label htmlFor="details">Details</label>
-            <Input.TextArea id='details'></Input.TextArea>
         </div>
         <div>
           <Button type='primary'>SUBMIT</Button>
@@ -70,4 +74,4 @@ const NewsAdd = () => {
   )
 }
 
-export default NewsAdd
+export default EnrollmentEdit
