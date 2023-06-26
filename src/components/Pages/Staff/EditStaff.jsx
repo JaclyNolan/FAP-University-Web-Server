@@ -2,7 +2,8 @@ import React from 'react'
 import {Button, Input, Select, InputNumber, Upload, message, DatePicker} from 'antd'
 import classes from '../Page.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
-const AddStudent = () => {
+import Image from '../../common/Image/Image';
+const EditStaff= () => {
     const handleChange = (value) => {
         console.log(value);
     }
@@ -25,13 +26,13 @@ const AddStudent = () => {
       };
   return (
     <div>
-      <p className={classes['page__title']}>Add Student</p>
+      <p className={classes['page__title']}>Edit Staff</p>
       <form className={classes['add__form']}>
         <div className={classes['add__main']}>
             <div className={classes['add__form-left']}>
                 <div className={classes['add__form-row']}>
-                    <label htmlFor="fullname">Full name</label>
-                    <Input id='fullname'/>
+                    <label htmlFor="id">Staff ID</label>
+                    <Input id='id' value={'bhaf12345'} disabled/>
                 </div>
                 <div className={classes['add__form-row']}>
                     <label htmlFor="Gender">Gender:</label>
@@ -47,26 +48,22 @@ const AddStudent = () => {
                     />
                 </div>
                 <div className={classes['add__form-row']}>
-                    <label htmlFor="gpa">GPA</label>
-                    <Input id='gpa'/>
+                    <label htmlFor="email">Email</label>
+                    <Input id='email' disabled/>
                 </div>
                 <div className={classes['add__form-row']}>
                     <label htmlFor="address">Address</label>
                     <Input id='address'/>
                 </div>
                 <div className={classes['add__form-row']}>
-                    <label htmlFor="status">Status</label>
-                    <Input id='status'/>
-                </div>
-                <div className={classes['add__form-row']}>
-                    <label htmlFor="academicyear">Academic Year</label>
-                    <InputNumber id='academicyear' min={2018}/>
+                    <label htmlFor="department">Department</label>
+                    <Input id='department'/>
                 </div>
             </div>
           <div className={classes['add__form-right']}>
             <div className={classes['add__form-row']}>
-              <label htmlFor="email">Email</label>
-              <Input id='email'/>
+                <label htmlFor="fullname">Full name</label>
+                <Input id='fullname'/>
             </div>
             <div className={classes['add__form-row']}>
               <label htmlFor="dob">Date Of Birth</label>
@@ -76,26 +73,20 @@ const AddStudent = () => {
               <label htmlFor="img" style={{
                 marginRight: '10px'
               }}>Image</label>
-                <Upload {...props} id='img'>
-                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                </Upload>
+                <div  className={classes['add__form-row-row']}>
+                    <Upload {...props} id='img'>
+                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Upload>
+                    <Image alt='user' src='https://img.freepik.com/free-icon/user_318-159711.jpg' width={50} height={50}/>
+                </div>
             </div>
             <div className={classes['add__form-row']}>
               <label htmlFor="phone">Phone number</label>
               <InputNumber id='phone' min={0}/>
             </div>
             <div className={classes['add__form-row']}>
-                <label htmlFor="Major">Major:</label>
-                <Select
-                    defaultValue="Choose Major"
-                    style={{ width: '100%' }}
-                    onChange={handleChange}
-                    id='Major'
-                    options={[
-                    { value: 'Information and Technology', label: 'Information and Technology' },
-                    { value: 'Design', label: 'Design' },
-                    ]}
-                />
+                <label htmlFor="position">Position</label>
+                <Input id='position'/>
             </div>
           </div>
         </div>
@@ -107,4 +98,4 @@ const AddStudent = () => {
   )
 }
 
-export default AddStudent
+export default EditStaff

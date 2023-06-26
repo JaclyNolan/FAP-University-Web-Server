@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, Input, Select, InputNumber, Upload, message, DatePicker} from 'antd'
 import classes from '../Page.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
-const AddStudent = () => {
+const AddStaff= () => {
     const handleChange = (value) => {
         console.log(value);
     }
@@ -25,13 +25,13 @@ const AddStudent = () => {
       };
   return (
     <div>
-      <p className={classes['page__title']}>Add Student</p>
+      <p className={classes['page__title']}>Add Staff</p>
       <form className={classes['add__form']}>
         <div className={classes['add__main']}>
             <div className={classes['add__form-left']}>
                 <div className={classes['add__form-row']}>
-                    <label htmlFor="fullname">Full name</label>
-                    <Input id='fullname'/>
+                  <label htmlFor="email">Email</label>
+                  <Input id='email' disabled value={'anvbhaf123@fpt.edu.vn'}/>
                 </div>
                 <div className={classes['add__form-row']}>
                     <label htmlFor="Gender">Gender:</label>
@@ -47,26 +47,22 @@ const AddStudent = () => {
                     />
                 </div>
                 <div className={classes['add__form-row']}>
-                    <label htmlFor="gpa">GPA</label>
-                    <Input id='gpa'/>
+                  <label htmlFor="department">Department</label>
+                  <Input id='department' disabled/>
                 </div>
                 <div className={classes['add__form-row']}>
                     <label htmlFor="address">Address</label>
                     <Input id='address'/>
                 </div>
                 <div className={classes['add__form-row']}>
-                    <label htmlFor="status">Status</label>
-                    <Input id='status'/>
-                </div>
-                <div className={classes['add__form-row']}>
-                    <label htmlFor="academicyear">Academic Year</label>
-                    <InputNumber id='academicyear' min={2018}/>
+                    <label htmlFor="position">Position</label>
+                    <Input id='position'/>
                 </div>
             </div>
-          <div className={classes['add__form-right']}>
-            <div className={classes['add__form-row']}>
-              <label htmlFor="email">Email</label>
-              <Input id='email'/>
+            <div className={classes['add__form-right']}>
+              <div className={classes['add__form-row']}>
+                <label htmlFor="fullname">Full name</label>
+                <Input id='fullname'/>
             </div>
             <div className={classes['add__form-row']}>
               <label htmlFor="dob">Date Of Birth</label>
@@ -84,19 +80,6 @@ const AddStudent = () => {
               <label htmlFor="phone">Phone number</label>
               <InputNumber id='phone' min={0}/>
             </div>
-            <div className={classes['add__form-row']}>
-                <label htmlFor="Major">Major:</label>
-                <Select
-                    defaultValue="Choose Major"
-                    style={{ width: '100%' }}
-                    onChange={handleChange}
-                    id='Major'
-                    options={[
-                    { value: 'Information and Technology', label: 'Information and Technology' },
-                    { value: 'Design', label: 'Design' },
-                    ]}
-                />
-            </div>
           </div>
         </div>
         <div>
@@ -107,4 +90,4 @@ const AddStudent = () => {
   )
 }
 
-export default AddStudent
+export default AddStaff

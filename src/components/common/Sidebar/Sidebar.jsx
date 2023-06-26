@@ -44,7 +44,7 @@ const Sidebar = ({sidebarStyle}) => {
       <div className={classes['sidebar-logo']}>
         <img src={logo} alt="Btec FPT" />
       </div>
-      <Collapse defaultActiveKey={['0']} onChange={onChange} className={classes['sidebar-collapse']}>
+      <Collapse accordion defaultActiveKey={['0']} onChange={onChange} className={classes['sidebar-collapse']}>
         {sidebarData.map((sidebarItem, index) => {
           return  <Panel header={sidebarItem.title} key={index}>
             {sidebarItem?.items?.map((item, index) => {

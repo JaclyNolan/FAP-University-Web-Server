@@ -1,0 +1,32 @@
+.feedback{
+    &__details{
+        padding: 20px;
+        &-row{
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        &-detail{
+            display: flex;
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+        &-title{
+            margin-right: 10px;
+        }
+        &-details{
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            p{
+                margin-bottom: 5px;
+            }
+        }
+        &-content{
+            padding: 5px;
+            border: 1px solid #e9e8e8;
+            border-radius: 3px;
+        }
+    }
+}
