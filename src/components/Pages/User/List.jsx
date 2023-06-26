@@ -24,6 +24,7 @@ const List = () => {
                 setUserData(users);
             })
             .catch((error) => {
+                console.log(error);
                 setError(error.message);
             })
         setLoading(false);
