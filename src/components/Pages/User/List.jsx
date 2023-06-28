@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import classes from '../Page.module.scss';
 import { Select, Input, Button, Popconfirm, Tag, Table } from 'antd';
-import Link from 'antd/es/typography/Link';
 import Image from '../../common/Image/Image';
 import axiosClient from '../../../axios-client';
+import { Link } from 'react-router-dom';
 
 const List = () => {
     const { Search } = Input
@@ -147,7 +147,7 @@ const List = () => {
             title: 'User Name',
             dataIndex: 'username',
             key: 'username',
-            render: (text) => <Link href={`/user/details?id=${text.id}`}>{text.text}</Link>,
+            render: (text) => <Link to={`/user/details?id=${text.id}`}>{text.text}</Link>,
         },
         {
             title: 'Email',
@@ -164,14 +164,14 @@ const List = () => {
             title: 'Detail',
             dataIndex: 'detail',
             key: 'detail',
-            render: (text) => <Link href={`/user/details?id=${text.id}`}>{text.text}</Link>,
+            render: (text) => <Link to={`/user/details?id=${text.id}`}>{text.text}</Link>,
         },
         {
             title: '',
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link href={`/user/edit?id=${text.id}`}>
+                <Link to={`/user/edit?id=${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
                     </Button>
@@ -250,7 +250,7 @@ const List = () => {
                             />
                         </div>
                         <div className={classes['list__nav-right__add']}>
-                            <Link href='/user/add'>
+                            <Link to='/user/add'>
                                 <Button type='primary'>
                                     <i className="fas fa-plus"></i>
                                     <span>Add</span>
