@@ -129,19 +129,19 @@ export const adminSidebar = [
             },
         ]
     },
-    {
-        title: 'Fee Management',
-        items: [
-            {
-                title: 'List',
-                path: '/fee/list'
-            },
-            {
-                title: 'Add',
-                path: '/fee/add'
-            },
-        ]
-    },
+    // {
+    //     title: 'Fee Management',
+    //     items: [
+    //         {
+    //             title: 'List',
+    //             path: '/fee/list'
+    //         },
+    //         {
+    //             title: 'Add',
+    //             path: '/fee/add'
+    //         },
+    //     ]
+    // },
     {
         title: 'Feedback Management',
         items: [
@@ -180,12 +180,42 @@ export const adminSidebar = [
                 title: 'List',
                 path: '/enrollment/list'
             },
+            // {
+            //     title: 'Add',
+            //     path: '/enrollment/add'
+            // }
+        ]
+    },
+]
+
+export const teacherSidebar = [
+    {
+        title: 'Home',
+        items: [
             {
-                title: 'Add',
-                path: '/enrollment/add'
+                title: 'Home',
+                path: '/'
             }
         ]
     },
+    {
+        title: 'Lesson Schedule',
+        items: [
+            {
+                title: 'List',
+                path: '/lesson/list'
+            }
+        ]
+    },
+    {
+        title: 'Feedback',
+        items: [
+            {
+                title: 'List',
+                path: '/teacherfeedback/list'
+            }
+        ]
+    }
 ]
 
 export const studentSidebar = [
@@ -318,19 +348,19 @@ export const staffSidebar = [
             },
         ]
     },
-    {
-        title: 'Fee Management',
-        items: [
-            {
-                title: 'List',
-                path: '/fee/list'
-            },
-            {
-                title: 'Add',
-                path: '/fee/add'
-            },
-        ]
-    },
+    // {
+    //     title: 'Fee Management',
+    //     items: [
+    //         {
+    //             title: 'List',
+    //             path: '/fee/list'
+    //         },
+    //         {
+    //             title: 'Add',
+    //             path: '/fee/add'
+    //         },
+    //     ]
+    // },
     {
         title: 'Feedback Management',
         items: [
@@ -373,10 +403,10 @@ export const staffSidebar = [
                 title: 'List',
                 path: '/enrollment/list'
             },
-            {
-                title: 'Add',
-                path: '/enrollment/add'
-            }
+            // {
+            //     title: 'Add',
+            //     path: '/enrollment/add'
+            // }
         ]
     },
 ]
