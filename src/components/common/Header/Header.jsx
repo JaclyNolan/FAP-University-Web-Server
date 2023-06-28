@@ -11,8 +11,6 @@ const Header = ({ onToggleSidebar }) => {
   const [breadcrumbData, setBreadcrumbData] = useState([])
   const { user } = useContext(AuthContext);
   const location = useLocation()
-  console.log(location);
-
   useEffect(() => {
     const splitedUrl = window.location.href.split('/')
     const url = splitedUrl.splice(3, splitedUrl.length)
