@@ -6,7 +6,7 @@ const PrivateRoute = (props) => {
   const userCtx = useAuthContext();
 
   if(!userCtx.user.isFetching){
-    if((!userCtx.user.user.username && authRequire) || (userCtx.user.user.username && !authRequire) || (roles.length > 0 && !roles.includes(userCtx.user.user.role))){
+    if((userCtx.user.user === null && authRequire) || (userCtx.user.user !== null && !authRequire) || (roles.length > 0 && !roles.includes(userCtx.user.user.role))){
       return <Navigate to={ElseTo}/>
     }
     return <To/>

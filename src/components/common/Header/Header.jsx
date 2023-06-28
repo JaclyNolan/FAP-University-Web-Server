@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import classes from './Header.module.scss'
 import { Breadcrumb, Avatar, Dropdown } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import { Link, useLocation } from 'react-router-dom';
 import InvisibleButton from '../Button/InvisibleButton';
 import { useMediaQuery } from '../../../helpers/hooks/useMediaQuery';
@@ -10,7 +9,7 @@ import axiosClient from '../../../axios-client';
 const Header = ({ onToggleSidebar }) => {
   const isMobileView = useMediaQuery("(max-width: 850px)")
   const [breadcrumbData, setBreadcrumbData] = useState([])
-  const { user, setLoading } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const location = useLocation()
   console.log(location);
 
@@ -31,10 +30,11 @@ const Header = ({ onToggleSidebar }) => {
   }, [location.pathname])
 
   const logoutHandler = async () => {
-    setLoading(true);
-    await axiosClient.post('/logout')
+    await axiosClient.delete('/logout')
       .then((response) => {
         // Store the fetched user data in AuthContext
+        user.setToken(null);
+        user.setUser(null);
         console.log(response);
       })
       .catch((error) => {
@@ -77,7 +77,7 @@ const Header = ({ onToggleSidebar }) => {
       <div className={classes['header-right']}>
         <div className={classes['header-avatar']}>
           <Link to="/profile">
-            <Avatar size="medium" icon={<UserOutlined />} />
+            <Avatar size="medium" src={user.user.picture} />
           </Link>
           <span>{user.user.username}</span>
         </div>
