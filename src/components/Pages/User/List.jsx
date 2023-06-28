@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import classes from '../Page.module.scss';
-import { Select, Input, Button, Popconfirm, Tag, Table } from 'antd';
+import { Select, Input, Button, Popconfirm, Tag, Table, Alert } from 'antd';
 import Image from '../../common/Image/Image';
 import axiosClient from '../../../axios-client';
 import { Link } from 'react-router-dom';
+import ContentContext from '../../../helpers/Context/ContentContext';
 
 const List = () => {
     const { Search } = Input
@@ -11,17 +12,27 @@ const List = () => {
     const [userData, setUserData] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
-    const [loading, setLoading] = useState(true);
+    const { setContentLoading } = useContext(ContentContext);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
     const [role, setRole] = useState('all');
 
-    const [error, setError] = useState(null);
+    const [errorMessage, _setErrorMessage] = useState("");
+    const [successMessage, _setSuccessMessage] = useState("");
+
+    const setErrorMessage = (value) => {
+        _setErrorMessage(value);
+        _setSuccessMessage("");
+    }
+    const setSuccessMessage = (value) => {
+        _setErrorMessage("");
+        _setSuccessMessage(value);
+    }
 
     useEffect(() => {
         (async () => {
-            setLoading(true);
+            setContentLoading(true);
             const url = `/users?page=${currentPage}` + (role !== 'all' ? `&role_id=${role}` : '') + (search !== "" ? `&keyword=${search}` : ``);
             console.log(url);
             await axiosClient.get(url)
@@ -29,12 +40,12 @@ const List = () => {
                     const { users, total_pages } = response.data;
                     setTotalPages(total_pages);
                     setUserData(users);
-                    setLoading(false);
+                    setContentLoading(false);
                 })
                 .catch((error) => {
                     console.log(error);
-                    setError(error.message);
-                    setLoading(false);
+                    setErrorMessage(error.message);
+                    setContentLoading(false);
                 })
         })()
     }, [currentPage, search, role]);
@@ -86,29 +97,18 @@ const List = () => {
     }
     const deleteUserHandler = (id) => {
         (async () => {
+            setContentLoading(true);
             await axiosClient.put(`/users/delete-user/${id}`)
                 .then((response) => {
-                    alert('Successfully delete user with id ' + id);
+                    setContentLoading(false);
+                    setSuccessMessage('Successfully delete user with id ' + id)
                 })
                 .catch((error) => {
-                    setError(error.message);
+                    setContentLoading(false);
+                    setErrorMessage(error.message);
                 })
-            if (!error) {
-                setLoading(true);
-                const url = `/users?page=${currentPage}` + (role !== 'all' ? `&role_id=${role}` : '') + (search !== "" ? `&keyword=${search}` : ``);
-                console.log(url);
-                await axiosClient.get(url)
-                    .then((response) => {
-                        const { users, total_pages } = response.data;
-                        setTotalPages(total_pages);
-                        setUserData(users);
-                        setLoading(false);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        setError(error.message);
-                        setLoading(false);
-                    })
+            if (!errorMessage) {
+                setCurrentPage(1);
             }
         })()
     }
@@ -192,34 +192,10 @@ const List = () => {
 
     ]
 
-    // const tableData = [
-    //     {
-    //         key: '1',
-    //         image: {
-    //             src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
-    //             alt: 'user'
-    //         },
-    //         username: {
-    //             text: 'Nguyen Van A',
-    //             id: 1
-    //         },
-    //         email: 'anvbhaf190345@fpt.edu.vn',
-    //         role: {
-    //             text: 'Admin',
-    //             role: 'Admin'
-    //         },
-    //         detail: {
-    //             id: 1,
-    //             text: 'Details'
-    //         },
-    //         actions: {
-    //             id: 1
-    //         }
-    //     }
-    // ]
-
-    return !error ? (
+    return (
         <div className={classes['list']}>
+            {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
+            {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
             <p className={classes['page__title']}>User List</p>
             <div className={classes['list__main']}>
                 <div className={classes['list__nav']}>
@@ -260,7 +236,8 @@ const List = () => {
                     </div>
                 </div>
                 <div className={classes['list__table']}>
-                    <Table loading={loading} columns={tableColumns} pagination={{
+                    <Table columns={tableColumns} pagination={{
+                        current: currentPage,
                         total: totalPages * 5,
                         pageSize: 5,
                         defaultCurrent: 1,
@@ -270,7 +247,7 @@ const List = () => {
                 </div>
             </div>
         </div>
-    ) : <span>{error}</span>
+    )
 }
 
 export default List
