@@ -108,7 +108,25 @@ const List = () => {
                     setErrorMessage(error.message);
                 })
             if (!errorMessage) {
-                setCurrentPage(1);
+                if (currentPage === 1) {
+                    setContentLoading(true);
+                    const url = `/users?page=${currentPage}` + (role !== 'all' ? `&role_id=${role}` : '') + (search !== "" ? `&keyword=${search}` : ``);
+                    console.log(url);
+                    await axiosClient.get(url)
+                        .then((response) => {
+                            const { users, total_pages } = response.data;
+                            setTotalPages(total_pages);
+                            setUserData(users);
+                            setContentLoading(false);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            setErrorMessage(error.message);
+                            setContentLoading(false);
+                        })
+                } else {
+                    setCurrentPage(1);
+                }
             }
         })()
     }
