@@ -13,6 +13,8 @@ import {FeedbackDetails, FeedbackList} from '../../components/Pages/Feedback'
 import { AttendanceEdit, AttendanceList } from '../../components/Pages/Attendance'
 import {NewsAdd, NewsDetails, NewsEdit, NewsList} from '../../components/Pages/News'
 import {EnrollmentEdit, EnrollmentList} from '../../components/Pages/Enrollment'
+import {List as LessonList, Class, Attendance} from '../../components/Pages/Lesson'
+import {TeacherFeedback, TeacherFeedbackDetails} from '../../components/Pages/TeacherFeedback'
 
 
 
@@ -202,6 +204,26 @@ export const routers = [
     {
         path: '/enrollment/list',
         render: () => <PrivateRoute To = {EnrollmentList} roles = {['admin', 'staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/lesson/list',
+        render: () => <PrivateRoute To = {LessonList} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/lesson/class/:id',
+        render: () => <PrivateRoute To = {Class} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/lesson/attendance/:classId',
+        render: () => <PrivateRoute To = {Attendance} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/teacherfeedback/list',
+        render: () => <PrivateRoute To = {TeacherFeedback} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/teacherfeedback/details/:id',
+        render: () => <PrivateRoute To = {TeacherFeedbackDetails} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
         path: '*',
