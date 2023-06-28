@@ -6,21 +6,20 @@ import { GoogleLogin } from '@react-oauth/google';
 // import jwtDecode from 'jwt-decode';
 import AuthContext from '../../../helpers/Context/AuthContext';
 import axiosClient from '../../../axios-client';
+import { Alert } from 'antd';
 
 const Login = () => {
     const [errorMessage, setErrorMessage] = useState('');
-    const { user, setLoading } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const { setUser, setToken } = user;
 
-    // const [user, setUser] = useState();
-    // const [token, setToken] = useState();
+    console.log("Rendering Login.jsx");
 
     const onLoginSuccess = async (credentialResponse) => {
         // const data = jwtDecode(credentialResponse.credential);
         const idToken = credentialResponse.credential;
 
-        setLoading(true);
-        setErrorMessage(null);
+        // setLoading(true);
         await axiosClient.post('/google-login', { idToken: idToken })
             .then((response) => {
                 console.log(response);
@@ -32,16 +31,21 @@ const Login = () => {
                 console.log(error);
                 setUser(null);
                 setToken(null);
-                if (error.status <= 500)
-                    setErrorMessage(error.data.message);
-                else
-                    setErrorMessage('Internal Error');
+                try {
+                    if (error.response.status <= 500)
+                        setErrorMessage(error.response.data.message);
+                    else
+                        setErrorMessage('Internal Error');
+                } catch (e) {
+                    setErrorMessage(e.message);
+                }
+
             });
-        setLoading(false);
+        // setLoading(false);
 
     }
     const onLoginFailed = () => {
-        setErrorMessage("LoginFailed");
+        setErrorMessage("Login Failed");
     }
     return <>
         <div className={classes['login']}>
@@ -57,10 +61,10 @@ const Login = () => {
                         onError={onLoginFailed}
                     />
                 </div>
-                {/* add CSS Error message here */}
-                <div className={classes['login-error']}>
-                    {errorMessage}
-                </div>
+                {errorMessage !== "" ? <>
+                    <br />
+                    <Alert message={errorMessage} type='error' showIcon />
+                </> : <></>}
             </div>
             <div className={classes['login-right']}>
                 <div className={classes['login-img']}>

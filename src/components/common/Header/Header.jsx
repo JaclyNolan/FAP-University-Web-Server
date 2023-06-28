@@ -9,7 +9,7 @@ import axiosClient from '../../../axios-client';
 const Header = ({ onToggleSidebar }) => {
   const isMobileView = useMediaQuery("(max-width: 850px)")
   const [breadcrumbData, setBreadcrumbData] = useState([])
-  const { user, setLoading } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const location = useLocation()
   console.log(location);
 
@@ -30,10 +30,11 @@ const Header = ({ onToggleSidebar }) => {
   }, [location.pathname])
 
   const logoutHandler = async () => {
-    setLoading(true);
     await axiosClient.delete('/logout')
       .then((response) => {
         // Store the fetched user data in AuthContext
+        user.setToken(null);
+        user.setUser(null);
         console.log(response);
       })
       .catch((error) => {

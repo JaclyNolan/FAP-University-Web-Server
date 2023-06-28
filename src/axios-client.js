@@ -14,14 +14,6 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use((response) => {
   return response
 }, (error) => {
-  const {response} = error;
-  if (response.status === 401) {
-    localStorage.removeItem('ACCESS_TOKEN')
-    // window.location.reload();
-  } else if (response.status === 404) {
-    //Show not found
-  }
-
   throw error;
 })
 
