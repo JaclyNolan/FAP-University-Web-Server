@@ -3,7 +3,7 @@ import {Input, Button, Popconfirm, Select, Table} from 'antd'
 import { Link } from 'react-router-dom'
 import Image from '../../common/Image/Image'
 import classes from '../Page.module.scss'
-const ListStudent = () => {
+const EnrollmentList = () => {
     const {Search} = Input
 
     const handleChange = () => {
@@ -17,25 +17,19 @@ const ListStudent = () => {
     }
     const tableColumns = [
         {
-            title: 'Id',
+            title: 'ID',
             dataIndex: 'key',
             key: 'id',
         },
         {
-            title: 'Image',
-            dataIndex: 'image',
-            key: 'image',
-            render : (text) => <Image src={text.src} alt={text.alt} width = {30} height = {30}/>
+            title: 'Student ID',
+            dataIndex: 'studentId',
+            key: 'studentId'
         },
         {
-            title: 'Full Name',
-            dataIndex: 'fullname',
-            key: 'fullname'
-        },
-        {
-            title: 'DOB',
-            dataIndex: 'dob',
-            key: 'dob',
+            title: 'Student',
+            dataIndex: 'student',
+            key: 'student',
         },
         {
             title: 'Email',
@@ -43,35 +37,44 @@ const ListStudent = () => {
             key: 'email',
         },
         {
-            title: 'Phone',
-            dataIndex: 'phone',
-            key: 'phone'
+            title: 'Major',
+            dataIndex: 'major',
+            key: 'major'
         },
         {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
+            title: 'Course',
+            dataIndex: 'course',
+            key: 'course',
+        },
+        {
+            title: 'GPA',
+            dataIndex: 'gpa',
+            key: 'gpa',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
         },
         {
             title: '',
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/student/details/${text.id}`} style={{marginRight: '10px'}}>Details</Link>
-                <Link to={`/student/edit/${text.id}`}>
+                <Link to={`/enrollment/edit/${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
                     </Button>
                 </Link>
                 <Popconfirm
-                    title="Delete the student"
-                    description="Are you sure to delete this this student?"
+                    title="Delete the enrollment"
+                    description="Are you sure to delete this this enrollment?"
                     onConfirm={() => deleteUserHandler(text.id)}
                     okText="Confirm"
                     cancelText="Cancel"
                 >
                     <Button danger type='primary'>
-                        <i className="fas fa-trash-alt">xx</i>
+                        <i className="fas fa-trash-alt"></i>
                     </Button>
                 </Popconfirm>
             </div>
@@ -81,15 +84,13 @@ const ListStudent = () => {
     const tableData = [
         {
             key: '1',
-            image: {
-                src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
-                alt: 'user'
-            },
-            fullname: 'Nguyen Van A',
+            student: 'Nguyen Van A',
+            studentId: 'bhaf123',
             email: 'anvbhaf190345@fpt.edu.vn',
-            dob: '01/01/2023',
-            phone: '012345678',
-            address: 'Ha Noi - Viet Nam',
+            major: 'IT',
+            course: 'Programing',
+            gpa: '4.0',
+            status: 'In progress',
             actions: {
                 id: 1
             }
@@ -97,7 +98,7 @@ const ListStudent = () => {
     ]
   return (
     <div className={classes['list']}>
-        <p className={classes['page__title']}>Student List</p>
+        <p className={classes['page__title']}>Enrollment List</p>
         <div className={classes['list__main']}>
             <div className={classes['list__nav']}>
                 <div className={classes['list__nav-left']}>
@@ -108,7 +109,7 @@ const ListStudent = () => {
                         <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
                     </div>
                     <div className={classes['list__nav-right__add']}>
-                        <Link to='/student/add'>
+                        <Link to='/enrollment/add'>
                             <Button type='primary'>
                                 <i className="fas fa-plus"></i>
                                 <span>Add</span>
@@ -169,4 +170,4 @@ const ListStudent = () => {
   )
 }
 
-export default ListStudent
+export default EnrollmentList
