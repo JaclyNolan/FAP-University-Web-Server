@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'; //
-import { Input, Button, Popconfirm, Select, Table } from 'antd' //
+import React, { useState, useEffect, useContext} from 'react'; //
+import { Input, Button, Popconfirm, Select, Table, Alert } from 'antd' //
 import { Link } from 'react-router-dom' //
 import Image from '../../common/Image/Image' //
 import classes from '../Page.module.scss' //
 import axiosClient from '../../../axios-client';
+import ContentContext from '../../../helpers/Context/ContentContext';
 
 const ListStudent = () => {
     const { Search } = Input
@@ -12,6 +13,7 @@ const ListStudent = () => {
     const [tableData, setTableData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);
+    const { setContentLoading } = useContext(ContentContext);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
@@ -20,7 +22,24 @@ const ListStudent = () => {
     const [academic_year, setAcademicYear] = useState('all');
     const [status, setStatus] = useState('all');
 
-    const [error, setError] = useState(null);
+    const [errorMessage, _setErrorMessage] = useState("");
+    const [successMessage, _setSuccessMessage] = useState("");
+
+    const statusLabels = {
+        0: 'Dropout',
+        1: 'In Progress',
+        2: 'Reserve',
+        3: 'Completed',
+      };
+
+    const setErrorMessage = (value) => {
+        _setErrorMessage(value);
+        _setSuccessMessage("");
+    }
+    const setSuccessMessage = (value) => {
+        _setErrorMessage("");
+        _setSuccessMessage(value);
+    }
 
     useEffect(() => {
         (async () => {
@@ -41,7 +60,7 @@ const ListStudent = () => {
                 })
                 .catch((error) => {
                     console.log(error);
-                    setError(error.message);
+                    _setErrorMessage(error.message);
                     setLoading(false);
                 })
         })()
@@ -54,7 +73,7 @@ const ListStudent = () => {
             const row = {
                 key: student.id,
                 image: {
-                    src: student.image,
+                    src: '/uploads/images/' + student.image,
                     alt: student.full_name
                 },
                 full_name: student.full_name,
@@ -112,21 +131,25 @@ const ListStudent = () => {
         setCurrentPage(1);
     }
 
-    const deleteUserHandler = (id) => {
+    const deleteStudentHandler = (id) => {
         (async () => {
+            setContentLoading(true);
             await axiosClient.put(`/students/delete-student/${id}`)
                 .then((response) => {
-                    alert('Successfully delete student with id ' + id);
+                    setContentLoading(false);
+                    setSuccessMessage('Successfully delete student with id ' + id)
                 })
                 .catch((error) => {
-                    setError(error.message);
+                    setContentLoading(false);
+                    _setErrorMessage(error.message);
                 })
-            if (!error) {
+            if (!errorMessage) {
                 setLoading(true);
                 const url = `/students?page=${currentPage}`
                     + (gender !== 'all' ? `&gender=${gender}` : '')
                     + (major !== 'all' ? `&major=${major}` : '')
                     + (academic_year !== 'all' ? `&academic_year=${academic_year}` : '')
+                    + (status !== 'all' ? `&status=${status}` : '')
                     + (search !== "" ? `&keyword=${search}` : ``);
                 console.log(url);
                 await axiosClient.get(url)
@@ -138,7 +161,7 @@ const ListStudent = () => {
                     })
                     .catch((error) => {
                         console.log(error);
-                        setError(error.message);
+                        setErrorMessage(error.message);
                         setLoading(false);
                     })
             }
@@ -155,7 +178,7 @@ const ListStudent = () => {
             title: 'Image',
             dataIndex: 'image',
             key: 'image',
-            render: (text) => <Image src={text.src} alt={text.alt} width={30} height={30} />
+            render : (text) => <Image src={text.src} alt={text.alt} width = {30} height = {30}/>
         },
         {
             title: 'Full Name',
@@ -201,6 +224,7 @@ const ListStudent = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
+            render: (status) => statusLabels[status] || '', // Sử dụng đối tượng
         },
         {
             title: '',
@@ -216,7 +240,7 @@ const ListStudent = () => {
                 <Popconfirm
                     title="Delete the student"
                     description="Are you sure to delete this this student?"
-                    onConfirm={() => deleteUserHandler(text.id)}
+                    onConfirm={() => deleteStudentHandler(text.id)}
                     okText="Confirm"
                     cancelText="Cancel"
                 >
@@ -247,6 +271,8 @@ const ListStudent = () => {
     //]
     return (
         <div className={classes['list']}>
+            {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
+            {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
             <p className={classes['page__title']}>Student List</p>
             <div className={classes['list__main']}>
                 <div className={classes['list__nav']}>
@@ -316,10 +342,11 @@ const ListStudent = () => {
                         style={{ width: 120 }}
                         onChange={handleStatusChange}
                         options={[
+                            { value: 'all', label: 'Status' },
                             { value: '0', label: 'Dropout' },
                             { value: '1', label: 'In Progress' },
-                            { value: '1', label: 'Reserve' },
-                            { value: '2', label: 'Completed' },
+                            { value: '2', label: 'Reserve' },
+                            { value: '3', label: 'Completed' },
                         ]}
                     />
                 </div>
