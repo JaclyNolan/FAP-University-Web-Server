@@ -1,6 +1,5 @@
 import React from 'react'
 import classes from './Feedback.module.scss'
-import { Input } from 'antd'
 const FeedbackDetails = () => {
   return (
     <div className={classes['feedback__details']}>

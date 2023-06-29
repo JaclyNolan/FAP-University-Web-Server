@@ -1,0 +1,61 @@
+.attendance{
+    & table{
+        width: 100%;
+        border-collapse: collapse;
+        &>tr{
+            border: 1px solid #000;
+            padding: 10px 0;
+            & th{
+                border: 1px solid #000;
+                padding: 10px 0;
+            }
+        }
+    }
+    & tbody{
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        & tr{
+            & td{
+                border-right: 1px solid black;
+                border-left: 1px solid black;
+                padding: 20px 5px;
+                text-align: center;
+            }
+        }
+    }
+}
+.feedback{
+    &-header{
+        display: flex;
+        justify-content: space-between;
+        @media screen and (max-width: 768px){
+            flex-direction: column;
+        }
+        &-row{
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            & label{
+                margin-right: 10px;
+                width: 100px;
+            }
+        }
+        &-left{
+            width: 45%;
+            @media screen and (max-width: 768px){
+                width: 100%;
+            }
+        }
+        &-right{
+            @media screen and (max-width: 768px){
+                width: 100%;
+            }
+        }
+    }
+    &-actions{
+        margin-top: 10px;
+        & button{
+            margin-right: 20px;
+        }
+    }
+}

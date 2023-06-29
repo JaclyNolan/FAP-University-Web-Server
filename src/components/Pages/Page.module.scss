@@ -199,3 +199,28 @@
         }
     }
 }
+.form{
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 3px;
+    margin: 0 auto;
+    width: 60%;
+    @media screen and (max-width: 768px){
+        width: 100%;
+    }
+    &-row{
+        display: flex;
+        & label{
+            width: 100px;
+        }
+        margin: 15px 0;
+    }
+    &-actions{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        & button{
+            margin: 0 15px;
+        }
+    }
+}
