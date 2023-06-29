@@ -8,7 +8,6 @@ import debounce from 'lodash/debounce';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 
 const List = () => {
-    const { Search } = Input
 
     const [tableData, setTableData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -125,10 +124,10 @@ const List = () => {
             case 'Admin':
                 color = 'red'
                 break
-            case 'student':
+            case 'Staff':
                 color = 'magenta'
                 break
-            case 'staff':
+            case 'Instructor':
                 color = 'purple'
                 break
             default:
@@ -215,8 +214,8 @@ const List = () => {
                                 { value: 'all', label: 'All' },
                                 { value: '1', label: 'Admin' },
                                 { value: '2', label: 'Staff' },
-                                { value: '3', label: 'Student' },
-                                { value: '4', label: 'Teacher' },
+                                { value: '3', label: 'Instructor' },
+                                { value: '4', label: 'Student' },
                                 // { value: 'disabled', label: 'Disabled', disabled: true },
                             ]}
                         />
