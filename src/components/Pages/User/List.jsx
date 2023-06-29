@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import classes from '../Page.module.scss';
 import { Select, Input, Button, Popconfirm, Tag, Table, Alert } from 'antd';
 import Image from '../../common/Image/Image';
 import axiosClient from '../../../axios-client';
 import { Link } from 'react-router-dom';
-import ContentContext from '../../../helpers/Context/ContentContext';
+import debounce from 'lodash/debounce';
+import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 
 const List = () => {
     const { Search } = Input
 
-    const [userData, setUserData] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
-    const { setContentLoading } = useContext(ContentContext);
+    const [ isFetching, setFetching ] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
@@ -30,7 +30,34 @@ const List = () => {
         _setSuccessMessage(value);
     }
 
+    const getTableDataFromUserData = (userData) => {
+        return userData.map((user) => ({
+            key: user.id,
+            image: {
+                src: user.image,
+                alt: user.username
+            },
+            username: {
+                text: user.username,
+                id: user.id
+            },
+            email: user.email,
+            role: {
+                text: user.role_name,
+                role: user.role_name
+            },
+            detail: {
+                id: user.id,
+                text: 'Details'
+            },
+            actions: {
+                id: user.id
+            }
+        }))
+    }
+
     const fetchUserData = async(currentPage, search, role) => {
+        setFetching(true);
         const url = `/users?page=${currentPage}` 
         + (role !== 'all' ? `&role_id=${role}` : '') 
         + (search !== "" ? `&keyword=${search}` : ``);
@@ -39,77 +66,48 @@ const List = () => {
             .then((response) => {
                 const { users, total_pages } = response.data;
                 setTotalPages(total_pages);
-                setUserData(users);
-                setContentLoading(false);
+                setTableData(getTableDataFromUserData(users));
+                setFetching(false);
             })
             .catch((error) => {
                 console.log(error);
                 setErrorMessage(error.message);
-                setContentLoading(false);
+                setFetching(false);
             })
     }
 
     useEffect(() => {
-        setContentLoading(true);
         fetchUserData(currentPage, search, role)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, search, role]);
-
-    useEffect(() => {
-        console.log(userData);
-        const arr = [];
-        userData.forEach((user, index) => {
-            const row = {
-                key: user.id,
-                image: {
-                    src: user.image,
-                    alt: user.username
-                },
-                username: {
-                    text: user.username,
-                    id: user.id
-                },
-                email: user.email,
-                role: {
-                    text: user.role_name,
-                    role: user.role_name
-                },
-                detail: {
-                    id: user.id,
-                    text: 'Details'
-                },
-                actions: {
-                    id: user.id
-                }
-            };
-            arr.push(row);
-        });
-        setTableData(arr);
-        console.log(arr);
-    }, [userData])
 
     const handleRoleChange = (value) => {
         setRole(value);
         setCurrentPage(1);
     }
 
+    const debounceSetter = useMemo(() => {
+        const handleSearch = (e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+        }
+        return debounce(handleSearch, 700);
+    })
+
     const handlePageChange = (page, pageSize) => {
         setCurrentPage(page);
     }
-    const handleSearch = (value) => {
-        setSearch(value);
-        setCurrentPage(1);
-    }
+    
     const deleteUserHandler = (id) => {
         (async () => {
-            setContentLoading(true);
+            setFetching(true);
             await axiosClient.put(`/users/delete-user/${id}`)
                 .then((response) => {
-                    setContentLoading(false);
+                    setFetching(false);
                     setSuccessMessage('Successfully delete user with id ' + id)
                 })
                 .catch((error) => {
-                    setContentLoading(false);
+                    setFetching(false);
                     setErrorMessage(error.message);
                 })
             if (!errorMessage) {
@@ -225,12 +223,11 @@ const List = () => {
                     </div>
                     <div className={classes['list__nav-right']}>
                         <div className={classes['list__nav-right__search']}>
-                            <Search
+                            <Input
+                                prefix={isFetching ? <LoadingOutlined/> : <SearchOutlined/>}
                                 placeholder="input search text"
                                 allowClear
-                                onChange={(e) => {
-                                    handleSearch(e.target.value)
-                                }}
+                                onChange={debounceSetter}
                                 style={{ width: 200 }}
                             />
                         </div>
@@ -245,7 +242,7 @@ const List = () => {
                     </div>
                 </div>
                 <div className={classes['list__table']}>
-                    <Table columns={tableColumns} pagination={{
+                    <Table columns={tableColumns} loading={isFetching} pagination={{
                         current: currentPage,
                         total: totalPages * 5,
                         pageSize: 5,
