@@ -30,24 +30,29 @@ const List = () => {
         _setSuccessMessage(value);
     }
 
+    const fetchUserData = async(currentPage, search, role) => {
+        const url = `/users?page=${currentPage}` 
+        + (role !== 'all' ? `&role_id=${role}` : '') 
+        + (search !== "" ? `&keyword=${search}` : ``);
+        console.log(url);
+        await axiosClient.get(url)
+            .then((response) => {
+                const { users, total_pages } = response.data;
+                setTotalPages(total_pages);
+                setUserData(users);
+                setContentLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setErrorMessage(error.message);
+                setContentLoading(false);
+            })
+    }
+
     useEffect(() => {
-        (async () => {
-            setContentLoading(true);
-            const url = `/users?page=${currentPage}` + (role !== 'all' ? `&role_id=${role}` : '') + (search !== "" ? `&keyword=${search}` : ``);
-            console.log(url);
-            await axiosClient.get(url)
-                .then((response) => {
-                    const { users, total_pages } = response.data;
-                    setTotalPages(total_pages);
-                    setUserData(users);
-                    setContentLoading(false);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    setErrorMessage(error.message);
-                    setContentLoading(false);
-                })
-        })()
+        setContentLoading(true);
+        fetchUserData(currentPage, search, role)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, search, role]);
 
     useEffect(() => {
@@ -109,21 +114,7 @@ const List = () => {
                 })
             if (!errorMessage) {
                 if (currentPage === 1) {
-                    setContentLoading(true);
-                    const url = `/users?page=${currentPage}` + (role !== 'all' ? `&role_id=${role}` : '') + (search !== "" ? `&keyword=${search}` : ``);
-                    console.log(url);
-                    await axiosClient.get(url)
-                        .then((response) => {
-                            const { users, total_pages } = response.data;
-                            setTotalPages(total_pages);
-                            setUserData(users);
-                            setContentLoading(false);
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                            setErrorMessage(error.message);
-                            setContentLoading(false);
-                        })
+                    fetchUserData(currentPage, search, role);
                 } else {
                     setCurrentPage(1);
                 }
