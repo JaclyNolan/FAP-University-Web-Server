@@ -225,6 +225,10 @@ export const studentSidebar = [
             {
                 title: "Home",
                 path: '/'
+            },
+            {
+                title: 'News',
+                path: '/student/news/1'
             }
         ]
     },
@@ -233,11 +237,15 @@ export const studentSidebar = [
         items: [
             {
                 title: 'Weekly time table',
-                path: '/weeklytimetable'
+                path: '/student/weeklytable/1'
             },
             {
                 title: 'Course list',
-                path: '/courses'
+                path: '/student/courses/1'
+            },
+            {
+                title: 'Class list',
+                path: '/student/classes'
             },
         ]
     },
@@ -246,11 +254,20 @@ export const studentSidebar = [
         items: [
             {
                 title: 'Attendance Report',
-                path: '/attendance'
+                path: '/student/attendancereport'
             },
             {
                 title: 'Mark report',
-                path: '/mark'
+                path: '/student/markreport'
+            },
+        ]
+    },
+    {
+        title: 'Feedback',
+        items: [
+            {
+                title: 'Make Feedback',
+                path: '/student/feedback'
             },
         ]
     }

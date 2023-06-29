@@ -3,16 +3,15 @@ import {Input, Table} from 'antd'
 import { Link } from 'react-router-dom'
 import Image from '../../common/Image/Image'
 import classes from '../Page.module.scss'
-const Class = () => {
+const Classes = () => {
     const {Search} = Input
 
     const onSearch = () => {
 
     }
-
     const tableColumns = [
         {
-            title: 'Id',
+            title: 'No',
             dataIndex: 'key',
             key: 'id',
         },
@@ -33,6 +32,11 @@ const Class = () => {
             key: 'gender'
         },
         {
+            title: 'DOB',
+            dataIndex: 'dob',
+            key: 'dob'
+        },
+        {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
@@ -48,6 +52,7 @@ const Class = () => {
             accountName: 'ABC',
             email: 'anvbhaf190345@fpt.edu.vn',
             gender: 'Male',
+            dob: '01/01/2024'
         }
     ]
   return (
@@ -79,4 +84,4 @@ const Class = () => {
   )
 }
 
-export default Class
+export default Classes
