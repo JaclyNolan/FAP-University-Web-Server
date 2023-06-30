@@ -38,6 +38,7 @@ const List = () => {
             },
             username: {
                 text: user.username,
+                role: user.role_name,
                 id: user.id
             },
             email: user.email,
@@ -47,6 +48,7 @@ const List = () => {
             },
             detail: {
                 id: user.id,
+                role: user.role_name,
                 text: 'Details'
             },
             actions: {
@@ -153,7 +155,7 @@ const List = () => {
             title: 'User Name',
             dataIndex: 'username',
             key: 'username',
-            render: (text) => <Link to={`/user/details?id=${text.id}`}>{text.text}</Link>,
+            render: (text) => text.role !== "Admin" ? <Link to={`/${text.role.toLowerCase()}/details/${text.id}`}>{text.text}</Link> : <div>{text.text}</div>,
         },
         {
             title: 'Email',
@@ -170,7 +172,7 @@ const List = () => {
             title: 'Detail',
             dataIndex: 'detail',
             key: 'detail',
-            render: (text) => <Link to={`/user/details?id=${text.id}`}>{text.text}</Link>,
+            render: (text) => text.role !== "Admin" && <Link to={`/${text.role.toLowerCase()}/details/${text.id}`}>{text.text}</Link>,
         },
         {
             title: '',
