@@ -177,7 +177,7 @@ const List = () => {
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/user/edit?id=${text.id}`}>
+                <Link to={`/user/edit/${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
                     </Button>
@@ -243,8 +243,8 @@ const List = () => {
                 <div className={classes['list__table']}>
                     <Table columns={tableColumns} loading={isFetching} pagination={{
                         current: currentPage,
-                        total: totalPages * 5,
-                        pageSize: 5,
+                        total: totalPages * tableData.length,
+                        pageSize: tableData.length,
                         defaultCurrent: 1,
                         showQuickJumper: true,
                         onChange: handlePageChange

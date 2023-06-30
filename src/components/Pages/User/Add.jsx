@@ -5,15 +5,15 @@ import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
 import DebounceSelect from '../../../helpers/customs/DebounceSelect';
 const Add = () => {
-  const [roleId, setRoleId] = useState('2');
+  const [roleId, setRoleId] = useState(2);
   const [errorMessage, _setErrorMessage] = useState("");
   const [successMessage, _setSuccessMessage] = useState("");
   const { setContentLoading } = useContext(ContentContext);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [staffId, setStaffId] = useState(null);
-  const [instructorId, setInstructorId] = useState(null);
-  const [studentId, setStudentId] = useState(null);
+  // const [username, setUsername] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [staffId, setStaffId] = useState(null);
+  // const [instructorId, setInstructorId] = useState(null);
+  // const [studentId, setStudentId] = useState(null);
   const [form] = Form.useForm();
 
   const setErrorMessage = (value) => {
@@ -81,9 +81,9 @@ const Add = () => {
 
   const getInfoInputFromRole = () => {
     switch (roleId) {
-      case '1':
+      case 1:
         return
-      case '2':
+      case 2:
         return (
 
           <div className={classes['add__form-row']}>
@@ -97,14 +97,11 @@ const Add = () => {
               <DebounceSelect
                 placeholder="Select Staff ID"
                 fetchOptions={fetchStaffList}
-                key='staff_id'
-                onChange={(value) => {
-                  setStaffId(value);
-                }} />
+                key='staff_id'/>
             </Form.Item >
           </div >
         )
-      case '3':
+      case 3:
         return (
 
           <div className={classes['add__form-row']}>
@@ -118,14 +115,11 @@ const Add = () => {
               <DebounceSelect
                 placeholder="Select Instructor ID"
                 key='instructor_id'
-                fetchOptions={fetchInstructorList}
-                onChange={(value) => {
-                  setInstructorId(value);
-                }} />
+                fetchOptions={fetchInstructorList}/>
             </Form.Item>
           </div>
         )
-      case '4':
+      case 4:
         return (
 
           <div className={classes['add__form-row']}>
@@ -140,10 +134,7 @@ const Add = () => {
                 // value={null}
                 placeholder="Select Student ID"
                 key='student_id'
-                fetchOptions={fetchStudentList}
-                onChange={(value) => {
-                  setStudentId(value);
-                }} />
+                fetchOptions={fetchStudentList}/>
             </Form.Item>
           </div>
         )
@@ -156,23 +147,23 @@ const Add = () => {
     setRoleId(value);
   }
 
-  const onFinish = () => {
+  const onFinish = (fields) => {
     (async () => {
       setContentLoading(true);
       const data = {
-        username: username,
-        email: email,
+        username: fields.username,
+        email: fields.email,
         role_id: roleId,
-        staff_id: staffId,
-        instructor_id: instructorId,
-        student_id: studentId
+        staff_id: (roleId === 2 ? fields.staff_id : null),
+        instructor_id: (roleId === 3 ? fields.instructor_id : null),
+        student_id: (roleId === 4 ? fields.student_id : null),
       }
       console.log(data);
       await axiosClient.post('/users/add-user', data)
         .then((response) => {
           setSuccessMessage(response.data.message);
           setContentLoading(false);
-          resetValue();
+          resetForm();
         })
         .catch((error) => {
           console.log(error);
@@ -182,7 +173,7 @@ const Add = () => {
     })()
   }
 
-  const resetValue = () => {
+  const resetForm = () => {
     form.resetFields(['username']);
     form.resetFields(['email']);
     form.resetFields(['staff_id']);
@@ -197,6 +188,7 @@ const Add = () => {
   return (
     <Form
       form={form}
+      name="addUserForm"
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       scrollToFirstError
@@ -214,9 +206,7 @@ const Add = () => {
               rules={[
                 { required: true, message: 'Please input new username' }
               ]}>
-              <Input id='username' value={username} onChange={(e) => {
-                setUsername(e.target.value);
-              }} />
+              <Input id='username' />
             </Form.Item>
           </div>
           <Form.Item
@@ -232,10 +222,10 @@ const Add = () => {
                 }}
                 id='role'
                 options={[
-                  { value: '1', label: 'Admin' },
-                  { value: '2', label: 'Staff' },
-                  { value: '3', label: 'Instructor' },
-                  { value: '4', label: 'Student' },
+                  { value: 1, label: 'Admin' },
+                  { value: 2, label: 'Staff' },
+                  { value: 3, label: 'Instructor' },
+                  { value: 4, label: 'Student' },
                 ]}
               />
             </div>
@@ -251,17 +241,16 @@ const Add = () => {
                 { type: 'email', message: 'Please enter a valid email', },
                 { required: true, message: 'Please enter a new email', }
               ]}>
-              <Input value={email} onChange={(e) => {
-                setEmail(e.target.value);
-              }} />
+              <Input id='email'/>
             </Form.Item>
           </div>
           {getInfoInputFromRole()}
         </div>
       </div>
       <div>
-        <Form.Item noStyle>
+        <Form.Item>
           <Button type='primary' htmlType="submit">Submit</Button>
+          <Button type="default" onClick={resetForm}>Reset</Button>
         </Form.Item>
       </div>
     </Form >

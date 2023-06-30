@@ -3,6 +3,7 @@ import debounce from 'lodash/debounce';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 function DebounceSelect({ fetchOptions, debounceTimeout = 800, ...props }) {
+  const {value} = props;
   const [fetching, setFetching] = useState(false);
   const [options, setOptions] = useState([]);
   const fetchRef = useRef(0);
