@@ -129,19 +129,19 @@ export const adminSidebar = [
             },
         ]
     },
-    {
-        title: 'Fee Management',
-        items: [
-            {
-                title: 'List',
-                path: '/fee/list'
-            },
-            {
-                title: 'Add',
-                path: '/fee/add'
-            },
-        ]
-    },
+    // {
+    //     title: 'Fee Management',
+    //     items: [
+    //         {
+    //             title: 'List',
+    //             path: '/fee/list'
+    //         },
+    //         {
+    //             title: 'Add',
+    //             path: '/fee/add'
+    //         },
+    //     ]
+    // },
     {
         title: 'Feedback Management',
         items: [
@@ -180,12 +180,42 @@ export const adminSidebar = [
                 title: 'List',
                 path: '/enrollment/list'
             },
+            // {
+            //     title: 'Add',
+            //     path: '/enrollment/add'
+            // }
+        ]
+    },
+]
+
+export const teacherSidebar = [
+    {
+        title: 'Home',
+        items: [
             {
-                title: 'Add',
-                path: '/enrollment/add'
+                title: 'Home',
+                path: '/'
             }
         ]
     },
+    {
+        title: 'Lesson Schedule',
+        items: [
+            {
+                title: 'List',
+                path: '/lesson/list'
+            }
+        ]
+    },
+    {
+        title: 'Feedback',
+        items: [
+            {
+                title: 'List',
+                path: '/teacherfeedback/list'
+            }
+        ]
+    }
 ]
 
 export const studentSidebar = [
@@ -195,6 +225,10 @@ export const studentSidebar = [
             {
                 title: "Home",
                 path: '/'
+            },
+            {
+                title: 'News',
+                path: '/student/news/1'
             }
         ]
     },
@@ -203,11 +237,15 @@ export const studentSidebar = [
         items: [
             {
                 title: 'Weekly time table',
-                path: '/weeklytimetable'
+                path: '/student/weeklytable/1'
             },
             {
                 title: 'Course list',
-                path: '/courses'
+                path: '/student/courses/1'
+            },
+            {
+                title: 'Class list',
+                path: '/student/classes'
             },
         ]
     },
@@ -216,11 +254,20 @@ export const studentSidebar = [
         items: [
             {
                 title: 'Attendance Report',
-                path: '/attendance'
+                path: '/student/attendancereport'
             },
             {
                 title: 'Mark report',
-                path: '/mark'
+                path: '/student/markreport'
+            },
+        ]
+    },
+    {
+        title: 'Feedback',
+        items: [
+            {
+                title: 'Make Feedback',
+                path: '/student/feedback'
             },
         ]
     }
@@ -318,19 +365,19 @@ export const staffSidebar = [
             },
         ]
     },
-    {
-        title: 'Fee Management',
-        items: [
-            {
-                title: 'List',
-                path: '/fee/list'
-            },
-            {
-                title: 'Add',
-                path: '/fee/add'
-            },
-        ]
-    },
+    // {
+    //     title: 'Fee Management',
+    //     items: [
+    //         {
+    //             title: 'List',
+    //             path: '/fee/list'
+    //         },
+    //         {
+    //             title: 'Add',
+    //             path: '/fee/add'
+    //         },
+    //     ]
+    // },
     {
         title: 'Feedback Management',
         items: [
@@ -373,10 +420,10 @@ export const staffSidebar = [
                 title: 'List',
                 path: '/enrollment/list'
             },
-            {
-                title: 'Add',
-                path: '/enrollment/add'
-            }
+            // {
+            //     title: 'Add',
+            //     path: '/enrollment/add'
+            // }
         ]
     },
 ]

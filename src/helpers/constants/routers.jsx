@@ -1,7 +1,7 @@
 import PrivateRoute from "../../components/HOC/PrivateRoute/PrivateRoute"
 import {Home, Login, NotFound} from '../../components/Pages/index'
 import {List, Add, Edit} from '../../components/Pages/User'
-import {AddStudent, DetailsStudent, EditStudent, ListStudent} from '../../components/Pages/Student'
+import {AddStudent, DetailsStudent, EditStudent, ListStudent, WeeklyTimeTable, Courses, CoureRegister, Classes, MarkReport, AttendanceReport, News, Feedback} from '../../components/Pages/Student'
 import { AddInstructor, DetailsInstructor, EditInstructor, InstructorList} from '../../components/Pages/Instructor'
 import {AddStaff, DetailsStaff, EditStaff, StaffList} from '../../components/Pages/Staff'
 import {AddCourse, CourseEdit, CourseList} from '../../components/Pages/Course'
@@ -13,7 +13,8 @@ import {FeedbackDetails, FeedbackList} from '../../components/Pages/Feedback'
 import { AttendanceEdit, AttendanceList } from '../../components/Pages/Attendance'
 import {NewsAdd, NewsDetails, NewsEdit, NewsList} from '../../components/Pages/News'
 import {EnrollmentEdit, EnrollmentList} from '../../components/Pages/Enrollment'
-
+import {List as LessonList, Class, Attendance} from '../../components/Pages/Lesson'
+import {TeacherFeedback, TeacherFeedbackDetails} from '../../components/Pages/TeacherFeedback'
 import { AddClass, ClassEdit, ClassList } from "../../components/Pages/Class"
 import { Navigate } from "react-router-dom"
 export const routers = [
@@ -228,6 +229,110 @@ export const routers = [
     {
         path: '/enrollment/list',
         render: () => <PrivateRoute To = {EnrollmentList} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/lesson/list',
+        render: () => <PrivateRoute To = {LessonList} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/lesson/class/:id',
+        render: () => <PrivateRoute To = {Class} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/lesson/attendance/:classId',
+        render: () => <PrivateRoute To = {Attendance} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/teacherfeedback/list',
+        render: () => <PrivateRoute To = {TeacherFeedback} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/teacherfeedback/details/:id',
+        render: () => <PrivateRoute To = {TeacherFeedbackDetails} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/weeklytable/:id',
+        render: () => <PrivateRoute To = {WeeklyTimeTable} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/courses/:id',
+        render: () => <PrivateRoute To = {Courses} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/courseregister/:id',
+        render: () => <PrivateRoute To = {CoureRegister} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/classes',
+        render: () => <PrivateRoute To = {Classes} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/markreport',
+        render: () => <PrivateRoute To = {MarkReport} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/attendancereport',
+        render: () => <PrivateRoute To = {AttendanceReport} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/news/:id',
+        render: () => <PrivateRoute To = {News} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/feedback',
+        render: () => <PrivateRoute To = {Feedback} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/lesson/list',
+        render: () => <PrivateRoute To = {LessonList} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/lesson/class/:id',
+        render: () => <PrivateRoute To = {Class} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/lesson/attendance/:classId',
+        render: () => <PrivateRoute To = {Attendance} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/teacherfeedback/list',
+        render: () => <PrivateRoute To = {TeacherFeedback} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/teacherfeedback/details/:id',
+        render: () => <PrivateRoute To = {TeacherFeedbackDetails} roles = {['teacher']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/weeklytable/:id',
+        render: () => <PrivateRoute To = {WeeklyTimeTable} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/courses/:id',
+        render: () => <PrivateRoute To = {Courses} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/courseregister/:id',
+        render: () => <PrivateRoute To = {CoureRegister} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/classes',
+        render: () => <PrivateRoute To = {Classes} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/markreport',
+        render: () => <PrivateRoute To = {MarkReport} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/attendancereport',
+        render: () => <PrivateRoute To = {AttendanceReport} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/news/:id',
+        render: () => <PrivateRoute To = {News} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/feedback',
+        render: () => <PrivateRoute To = {Feedback} roles = {['student']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
         path: '*',

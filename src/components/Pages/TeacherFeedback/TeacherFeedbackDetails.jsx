@@ -1,13 +1,9 @@
 import React from 'react'
-import classes from './Feedback.module.scss'
-const FeedbackDetails = () => {
+import classes from '../Feedback/Feedback.module.scss'
+const TeacherFeedbackDetails = () => {
   return (
     <div className={classes['feedback__details']}>
         <div className={classes['feedback__details-row']}>
-            <div className={classes['feedback__details-detail']}>
-                <p className={classes['feedback__details-title']}>ID:</p>
-                <b className={classes['feedback__details-value']}>ID-1</b>
-            </div>
             <div className={classes['feedback__details-detail']}>
                 <p className={classes['feedback__details-title']}>Course:</p>
                 <b className={classes['feedback__details-value']}>Programing</b>
@@ -15,14 +11,6 @@ const FeedbackDetails = () => {
             <div className={classes['feedback__details-detail']}>
                 <p className={classes['feedback__details-title']}>Class:</p>
                 <b className={classes['feedback__details-value']}>BHAF123</b>
-            </div>
-            <div className={classes['feedback__details-detail']}>
-                <p className={classes['feedback__details-title']}>Student:</p>
-                <b className={classes['feedback__details-value']}>Nguyen Van A</b>
-            </div>
-            <div className={classes['feedback__details-detail']}>
-                <p className={classes['feedback__details-title']}>Teacher:</p>
-                <b className={classes['feedback__details-value']}>Nguyen Thi B</b>
             </div>
         </div>
         <div className={classes['feedback__details-details']}>
@@ -33,4 +21,4 @@ const FeedbackDetails = () => {
   )
 }
 
-export default FeedbackDetails
+export default TeacherFeedbackDetails

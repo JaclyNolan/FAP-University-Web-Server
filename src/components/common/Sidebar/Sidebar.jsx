@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import classes from './Sidebar.module.scss'
 import {Collapse} from 'antd'
 import logo from '../../assets/Images/btec-logo.png'
-import { adminSidebar, staffSidebar, studentSidebar } from '../../assets/data/Sidebar'
+import { adminSidebar, staffSidebar, studentSidebar, teacherSidebar } from '../../assets/data/Sidebar'
 import { Link, useLocation } from 'react-router-dom'
 import AuthContext from '../../../helpers/Context/AuthContext'
 const Sidebar = ({sidebarStyle}) => {
@@ -10,6 +10,7 @@ const Sidebar = ({sidebarStyle}) => {
   const {Panel} = Collapse
   const [sidebarData, setSidebarData] = useState([])
   const authCtx = useContext(AuthContext)
+  const [activeIndex, setActiveIndex] = useState(0);
   const location = useLocation()
   useEffect(() => {
     const splitedUrl = window.location.href.split('/')
@@ -18,7 +19,7 @@ const Sidebar = ({sidebarStyle}) => {
     setCurrentUrl(url)
   }, [location.pathname])
   const onChange = (key) => {
-    console.log(key);
+    // console.log(key);
   };
   useEffect(() => {
     switch(authCtx.user.user.role){
@@ -28,10 +29,11 @@ const Sidebar = ({sidebarStyle}) => {
       case 'Staff':
         setSidebarData(staffSidebar)
         break
-      case 'Student':
-        setSidebarData(studentSidebar)
-        break
+      case 'teacher':
+        setSidebarData(teacherSidebar)
+        break;
       default:
+        setSidebarData(studentSidebar)
         break
     }
   }, [authCtx.user.user])
@@ -46,7 +48,7 @@ const Sidebar = ({sidebarStyle}) => {
       <div className={classes['sidebar-logo']}>
         <img src={logo} alt="Btec FPT" />
       </div>
-      <Collapse accordion defaultActiveKey={['0']} onChange={onChange} className={classes['sidebar-collapse']}>
+      <Collapse accordion defaultActiveKey={0} onChange={onChange} className={classes['sidebar-collapse']}>
         {sidebarData.map((sidebarItem, index) => {
           return  <Panel header={sidebarItem.title} key={index}>
             {sidebarItem?.items?.map((item, index) => {
