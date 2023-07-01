@@ -2,7 +2,7 @@ import React from 'react'
 import classes from '../../Pages/Page.module.scss'
 import { Link } from 'react-router-dom'
 import { Button } from 'antd'
-const TeacherNavigation = () => {
+const InstructorNavigation = () => {
   return (
     <div className={classes['details__actions']}>
         <Link className={classes['details__actions-btn']} to='/student/attendance'>
@@ -21,4 +21,4 @@ const TeacherNavigation = () => {
   )
 }
 
-export default TeacherNavigation
+export default InstructorNavigation

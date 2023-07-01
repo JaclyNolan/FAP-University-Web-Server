@@ -1,8 +1,8 @@
 import React from 'react'
 import classes from '../Page.module.scss'
 import Image from '../../common/Image/Image'
-import {useLocation} from 'react-router-dom'
-import {StudentNavigation, TeacherNavigation} from '../../common/UserDetailsNavigations'
+import { useLocation } from 'react-router-dom'
+import { StudentNavigation, InstructorNavigation } from '../../common/UserDetailsNavigations'
 const Details = () => {
   const location = useLocation()
   console.log(location);
@@ -53,7 +53,7 @@ const Details = () => {
         <div className={classes['details__left']}>
           <p className={classes['details__left-title']}>About <b>{sampleData.user.userName}</b></p>
           <div className={classes['details__left-image']}>
-            <Image className={classes['details__left-image-img']} alt="Nguyen Van A" src={sampleData.user.profileImg} width={100} height={100}/>
+            <Image className={classes['details__left-image-img']} alt="Nguyen Van A" src={sampleData.user.profileImg} width={100} height={100} />
           </div>
         </div>
         <div className={classes['details__right']}>
@@ -65,8 +65,8 @@ const Details = () => {
           })}
         </div>
       </div>
-      {location.pathname.includes('student') && <StudentNavigation/>}
-      {location.pathname.includes('teacher') && <TeacherNavigation/>}
+      {location.pathname.includes('student') && <StudentNavigation />}
+      {location.pathname.includes('instructor') && <InstructorNavigation />}
     </div>
   )
 }

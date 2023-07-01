@@ -100,7 +100,7 @@ const Edit = () => {
       } catch (error) {
         setContentLoading(false);
         console.log(error);
-        // setErrorMessage(error.data.message);
+        setErrorMessage(error.response.data.message);
       }
     }
     fetchUserData();

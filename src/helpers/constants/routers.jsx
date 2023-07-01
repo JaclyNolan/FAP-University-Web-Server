@@ -16,6 +16,7 @@ import {EnrollmentEdit, EnrollmentList} from '../../components/Pages/Enrollment'
 
 import {Details} from '../../components/Pages/Common'
 import { AddClass, ClassEdit, ClassList } from "../../components/Pages/Class"
+import { Navigate } from "react-router-dom"
 export const routers = [
     {
         path: '/',
@@ -38,9 +39,13 @@ export const routers = [
         render: () => <PrivateRoute To = {List} roles = {['Admin']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/user/details/:id',
-        render: () => <PrivateRoute To = {Details} roles = {['Admin']} authRequire = {true} ElseTo='/'></PrivateRoute>
+        path: '/user',
+        render: () => <Navigate to='/user/list'/>
     },
+    // {
+    //     path: '/user/details/:id',
+    //     render: () => <PrivateRoute To = {Details} roles = {['Admin']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    // },
     {
         path: '/student/list',
         render: () => <PrivateRoute To = {ListStudent} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
@@ -58,19 +63,19 @@ export const routers = [
         render: () => <PrivateRoute To = {Details} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/teacher/details/:id',
+        path: '/instructor/details/:id',
         render: () => <PrivateRoute To = {Details} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/teacher/list',
+        path: '/instructor/list',
         render: () => <PrivateRoute To = {TeacherList} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/teacher/add',
+        path: '/instructor/add',
         render: () => <PrivateRoute To = {AddTeacher} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/teacher/edit/:id',
+        path: '/instructor/edit/:id',
         render: () => <PrivateRoute To = {EditTeacher} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {

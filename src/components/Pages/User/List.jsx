@@ -3,19 +3,21 @@ import classes from '../Page.module.scss';
 import { Select, Input, Button, Popconfirm, Tag, Table, Alert } from 'antd';
 import Image from '../../common/Image/Image';
 import axiosClient from '../../../axios-client';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 
 const List = () => {
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search)
 
     const [tableData, setTableData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     const [ isFetching, setFetching ] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [search, setSearch] = useState("");
-    const [role, setRole] = useState('all');
+    const [search, setSearch] = useState(searchParams.get('search') ? searchParams.get('search') : '');
+    const [role, setRole] = useState(searchParams.get('role') ? searchParams.get('role') : 'all');
 
     const [errorMessage, _setErrorMessage] = useState("");
     const [successMessage, _setSuccessMessage] = useState("");
@@ -209,7 +211,7 @@ const List = () => {
                 <div className={classes['list__nav']}>
                     <div className={classes['list__nav-left']}>
                         <Select
-                            defaultValue={'all'}
+                            defaultValue={role}
                             style={{ width: 120 }}
                             onChange={handleRoleChange}
                             options={[

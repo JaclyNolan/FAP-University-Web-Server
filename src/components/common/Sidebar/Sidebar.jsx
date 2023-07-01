@@ -40,7 +40,7 @@ const Sidebar = ({sidebarStyle}) => {
     fontSize: '16px',
     color: '#000'
   }
-  console.log(currentUrl);
+  // console.log(currentUrl);
   return (
     <div className={classes['sidebar']} style={sidebarStyle}>
       <div className={classes['sidebar-logo']}>
