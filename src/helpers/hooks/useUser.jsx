@@ -48,7 +48,8 @@ const useUser = () => {
                         setFetchingUser(false)
                     })
             } else {
-                setFetchingUser(false)
+                // console.log("fetchingUser: " + fetchingUser);
+                if (fetchingUser) setFetchingUser(false)
             }
         })()
     }, [token, user])

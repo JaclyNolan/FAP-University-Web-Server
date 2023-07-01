@@ -43,7 +43,10 @@ const List = () => {
             username: {
                 text: user.username,
                 role: user.role_name,
-                id: user.id
+                info_id: (user.role_id === 2 ? user.staff_id : 
+                    user.role_id === 3 ? user.instructor_id :
+                    user.role_id === 4 ? user.student_id :
+                    null ),
             },
             email: user.email,
             role: {
@@ -165,7 +168,7 @@ const List = () => {
             title: 'User Name',
             dataIndex: 'username',
             key: 'username',
-            render: (text) => text.role !== "Admin" ? <Link to={`/${text.role.toLowerCase()}/details/${text.id}`}>{text.text}</Link> : <div>{text.text}</div>,
+            render: (text) => text.role !== "Admin" ? <Link to={`/${text.role.toLowerCase()}/details/${text.info_id}`}>{text.text}</Link> : text.text,
         },
         {
             title: 'Email',
