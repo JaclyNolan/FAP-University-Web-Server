@@ -1,9 +1,9 @@
 import PrivateRoute from "../../components/HOC/PrivateRoute/PrivateRoute"
 import {Home, Login, NotFound} from '../../components/Pages/index'
 import {List, Add, Edit} from '../../components/Pages/User'
-import {AddStudent, EditStudent, ListStudent} from '../../components/Pages/Student'
-import {AddTeacher, EditTeacher, TeacherList} from '../../components/Pages/Teacher'
-import {AddStaff, EditStaff, StaffList} from '../../components/Pages/Staff'
+import {AddStudent, DetailsStudent, EditStudent, ListStudent} from '../../components/Pages/Student'
+import { AddInstructor, DetailsInstructor, EditInstructor, InstructorList} from '../../components/Pages/Instructor'
+import {AddStaff, DetailsStaff, EditStaff, StaffList} from '../../components/Pages/Staff'
 import {AddCourse, CourseEdit, CourseList} from '../../components/Pages/Course'
 import {ClassCourseAdd, ClassCourseEdit, ClassCourseList} from '../../components/Pages/ClassCourse'
 import {ClassEnrollAdd, ClassEnrollEdit, ClassEnrollList} from '../../components/Pages/ClassEnroll'
@@ -14,7 +14,6 @@ import { AttendanceEdit, AttendanceList } from '../../components/Pages/Attendanc
 import {NewsAdd, NewsDetails, NewsEdit, NewsList} from '../../components/Pages/News'
 import {EnrollmentEdit, EnrollmentList} from '../../components/Pages/Enrollment'
 
-import {Details} from '../../components/Pages/Common'
 import { AddClass, ClassEdit, ClassList } from "../../components/Pages/Class"
 import { Navigate } from "react-router-dom"
 export const routers = [
@@ -59,24 +58,40 @@ export const routers = [
         render: () => <PrivateRoute To = {EditStudent} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
+        path: '/student/edit/',
+        render: () => <Navigate to='/student/list'/>
+    },
+    {
         path: '/student/details/:id',
-        render: () => <PrivateRoute To = {Details} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+        render: () => <PrivateRoute To = {DetailsStudent} role_id = '4' roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/student/details/',
+        render: () => <Navigate to='/student/list'/>
     },
     {
         path: '/instructor/details/:id',
-        render: () => <PrivateRoute To = {Details} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+        render: () => <PrivateRoute To = {DetailsInstructor} role_id = '3' roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/instructor/details/',
+        render: () => <Navigate to='/instructor/list'/>
     },
     {
         path: '/instructor/list',
-        render: () => <PrivateRoute To = {TeacherList} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+        render: () => <PrivateRoute To = {InstructorList} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
         path: '/instructor/add',
-        render: () => <PrivateRoute To = {AddTeacher} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+        render: () => <PrivateRoute To = {AddInstructor} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
         path: '/instructor/edit/:id',
-        render: () => <PrivateRoute To = {EditTeacher} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+        render: () => <PrivateRoute To = {EditInstructor} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/instructor/edit/',
+        render: () => <Navigate to='/instructor/list'/>
     },
     {
         path: '/staff/add',
@@ -91,8 +106,16 @@ export const routers = [
         render: () => <PrivateRoute To = {EditStaff} roles = {['Admin']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
+        path: '/staff/edit/',
+        render: () => <Navigate to='/staff/list'/>
+    },
+    {
         path: '/staff/details/:id',
-        render: () => <PrivateRoute To = {Details} roles = {['Admin']} authRequire = {true} ElseTo='/'></PrivateRoute>
+        render: () => <PrivateRoute To = {DetailsStaff} roles = {['Admin']} authRequire = {true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/staff/details/',
+        render: () => <Navigate to='/staff/list'/>
     },
     {
         path: '/course/list',

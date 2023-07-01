@@ -6,7 +6,7 @@ import classes from '../Page.module.scss'
 import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
 
-const TeacherList = () => {
+const InstructorList = () => {
     const { Search } = Input
 
     const [insData, setInsData] = useState([]);
@@ -216,8 +216,8 @@ const TeacherList = () => {
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/teacher/details/${text.id}`} style={{ marginRight: '10px' }}>Details</Link>
-                <Link to={`/teacher/edit/${text.id}`}>
+                <Link to={`/instructor/details/${text.id}`} style={{ marginRight: '10px' }}>Details</Link>
+                <Link to={`/instructor/edit/${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
                     </Button>
@@ -258,7 +258,7 @@ const TeacherList = () => {
         <div className={classes['list']}>
             {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
             {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
-            <p className={classes['page__title']}>Teacher List</p>
+            <p className={classes['page__title']}>Instructor List</p>
             <div className={classes['list__main']}>
                 <div className={classes['list__nav']}>
                     <div className={classes['list__nav-left']}>
@@ -276,7 +276,7 @@ const TeacherList = () => {
                             />
                         </div>
                         <div className={classes['list__nav-right__add']}>
-                            <Link to='/teacher/add'>
+                            <Link to='/instructor/add'>
                                 <Button type='primary'>
                                     <i className="fas fa-plus"></i>
                                     <span>Add</span>
@@ -340,4 +340,4 @@ const TeacherList = () => {
     )
 }
 
-export default TeacherList
+export default InstructorList

@@ -26,15 +26,15 @@ export const adminSidebar = [
         ]
     },
     {
-        title: 'Teacher Management',
+        title: 'Instructor Management',
         items: [
             {
                 title: 'List',
-                path: '/teacher/list'
+                path: '/instructor/list'
             },
             {
                 title: 'Add',
-                path: '/teacher/add'
+                path: '/instructor/add'
             },
         ]
     },
@@ -241,15 +241,15 @@ export const staffSidebar = [
         ]
     },
     {
-        title: 'Teacher Management',
+        title: 'Instructor Management',
         items: [
             {
                 title: 'List',
-                path: '/teacher/list'
+                path: '/instructor/list'
             },
             {
                 title: 'Add',
-                path: '/teacher/add'
+                path: '/instructor/add'
             },
         ]
     },

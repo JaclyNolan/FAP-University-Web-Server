@@ -1,4 +1,5 @@
 import AddStudent from "./AddStudent";
 import EditStudent from "./EditStudent";
 import ListStudent from "./ListStudent";
-export {AddStudent, EditStudent, ListStudent}
+import DetailsStudent from "./DetailsStudent";
+export {AddStudent, EditStudent, ListStudent, DetailsStudent}

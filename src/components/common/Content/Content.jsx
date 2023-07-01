@@ -5,12 +5,12 @@ import { Spin } from 'antd';
 const Content = (props) => {
     const [isContentLoading, setContentLoading] = useState(false);
 
-    const { Component } = props
+    const { Component, ...args } = props
 
     return (
         <ContentContext.Provider value={{ isContentLoading: isContentLoading, setContentLoading: setContentLoading }}>
             <Spin tip="Loading" spinning={isContentLoading}>
-                <Component />
+                <Component {...args} />
             </Spin>
         </ContentContext.Provider>
     )

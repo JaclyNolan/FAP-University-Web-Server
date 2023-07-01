@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import classes from '../Page.module.scss';
 import { Select, Input, Button, Popconfirm, Tag, Table, Alert } from 'antd';
 import Image from '../../common/Image/Image';
@@ -14,6 +14,7 @@ const List = () => {
     const [tableData, setTableData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     const [ isFetching, setFetching ] = useState(false);
+    const fetchRef = useRef(0);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState(searchParams.get('search') ? searchParams.get('search') : '');
@@ -32,6 +33,7 @@ const List = () => {
     }
 
     const getTableDataFromUserData = (userData) => {
+        console.log(userData);
         return userData.map((user) => ({
             key: user.id,
             image: {
@@ -49,7 +51,10 @@ const List = () => {
                 role: user.role_name
             },
             detail: {
-                id: user.id,
+                info_id: (user.role_id === 2 ? user.staff_id : 
+                    user.role_id === 3 ? user.instructor_id :
+                    user.role_id === 4 ? user.student_id :
+                    null ),
                 role: user.role_name,
                 text: 'Details'
             },
@@ -65,8 +70,11 @@ const List = () => {
         + (role !== 'all' ? `&role_id=${role}` : '') 
         + (search !== "" ? `&keyword=${search}` : ``);
         console.log(url);
+        fetchRef.current += 1;
+        const fetchId = fetchRef.current;
         await axiosClient.get(url)
             .then((response) => {
+                if (fetchId !== fetchRef.current) return
                 const { users, total_pages } = response.data;
                 setTotalPages(total_pages);
                 setTableData(getTableDataFromUserData(users));
@@ -174,7 +182,7 @@ const List = () => {
             title: 'Detail',
             dataIndex: 'detail',
             key: 'detail',
-            render: (text) => text.role !== "Admin" && <Link to={`/${text.role.toLowerCase()}/details/${text.id}`}>{text.text}</Link>,
+            render: (text) => text.role !== "Admin" && <Link to={`/${text.role.toLowerCase()}/details/${text.info_id}`}>{text.text}</Link>,
         },
         {
             title: '',
@@ -215,7 +223,7 @@ const List = () => {
                             style={{ width: 120 }}
                             onChange={handleRoleChange}
                             options={[
-                                { value: 'all', label: 'All' },
+                                { value: 'all', label: 'Role' },
                                 { value: '1', label: 'Admin' },
                                 { value: '2', label: 'Staff' },
                                 { value: '3', label: 'Instructor' },

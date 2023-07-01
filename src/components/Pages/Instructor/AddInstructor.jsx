@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, Input, Select, InputNumber, Upload, message, DatePicker} from 'antd'
 import classes from '../Page.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
-const AddTeacher= () => {
+const AddInstructor= () => {
     const handleChange = (value) => {
         console.log(value);
     }
@@ -25,7 +25,7 @@ const AddTeacher= () => {
       };
   return (
     <div>
-      <p className={classes['page__title']}>Add user</p>
+      <p className={classes['page__title']}>Add Instructor</p>
       <form className={classes['add__form']}>
         <div className={classes['add__main']}>
             <div className={classes['add__form-left']}>
@@ -99,4 +99,4 @@ const AddTeacher= () => {
   )
 }
 
-export default AddTeacher
+export default AddInstructor
