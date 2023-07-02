@@ -6,18 +6,20 @@ import { GoogleLogin } from '@react-oauth/google';
 // import jwtDecode from 'jwt-decode';
 import AuthContext from '../../../helpers/Context/AuthContext';
 import axiosClient from '../../../axios-client';
-import { Alert } from 'antd';
+import { Alert, Spin } from 'antd';
 
 const Login = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const { user } = useContext(AuthContext);
     const { setUser, setToken } = user;
+    const [isFetching, setFetching] = useState(false);
 
     console.log("Rendering Login.jsx");
 
     const onLoginSuccess = async (credentialResponse) => {
         // const data = jwtDecode(credentialResponse.credential);
         const idToken = credentialResponse.credential;
+        setFetching(true);
 
         // setLoading(true);
         await axiosClient.post('/google-login', { idToken: idToken })
@@ -25,12 +27,14 @@ const Login = () => {
                 console.log(response);
                 setUser(response.data.user);
                 setToken(response.data.token);
+                setFetching(false);
                 // window.location.replace("/")
             })
             .catch((error) => {
                 console.log(error);
                 setUser(null);
                 setToken(null);
+                setFetching(false);
                 try {
                     if (error.response.status <= 500)
                         setErrorMessage(error.response.data.message);
@@ -55,11 +59,18 @@ const Login = () => {
                 </div>
                 <h2 className={classes['login-title']}>Login To Your Account</h2>
                 <div className={classes['login-btn']}>
-                    <GoogleLogin
-                        clientId="971766812836-re275ffnj3jnf9gcefunt2tavn29on7q.apps.googleusercontent.com"
-                        onSuccess={(credentialResponse) => onLoginSuccess(credentialResponse)}
-                        onError={onLoginFailed}
-                    />
+                    {isFetching ? <Spin>
+                        <GoogleLogin
+                            clientId="971766812836-re275ffnj3jnf9gcefunt2tavn29on7q.apps.googleusercontent.com"
+                            onSuccess={(credentialResponse) => onLoginSuccess(credentialResponse)}
+                            onError={onLoginFailed}
+                        /></Spin> :
+                        <GoogleLogin
+                            clientId="971766812836-re275ffnj3jnf9gcefunt2tavn29on7q.apps.googleusercontent.com"
+                            onSuccess={(credentialResponse) => onLoginSuccess(credentialResponse)}
+                            onError={onLoginFailed}
+                        />}
+
                 </div>
                 {errorMessage !== "" ? <>
                     <br />

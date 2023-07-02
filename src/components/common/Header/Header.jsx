@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import classes from './Header.module.scss'
-import { Breadcrumb, Avatar, Dropdown } from 'antd';
+import { Breadcrumb, Avatar, Dropdown, Spin } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import InvisibleButton from '../Button/InvisibleButton';
 import { useMediaQuery } from '../../../helpers/hooks/useMediaQuery';
@@ -10,6 +10,7 @@ const Header = ({ onToggleSidebar }) => {
   const isMobileView = useMediaQuery("(max-width: 850px)")
   const [breadcrumbData, setBreadcrumbData] = useState([])
   const { user } = useContext(AuthContext);
+  const [isFetching, setFetching] = useState(false);
   const location = useLocation()
   useEffect(() => {
     const splitedUrl = window.location.href.split('/')
@@ -28,15 +29,19 @@ const Header = ({ onToggleSidebar }) => {
   }, [location.pathname])
 
   const logoutHandler = async () => {
+    setFetching(true);
     await axiosClient.delete('/logout')
       .then((response) => {
         // Store the fetched user data in AuthContext
         user.setToken(null);
         user.setUser(null);
+        // window.location.href = '/login';
         console.log(response);
+        setFetching(false);
       })
       .catch((error) => {
         console.log(error);
+        setFetching(false);
       });
     window.location.reload()
   }
@@ -80,9 +85,11 @@ const Header = ({ onToggleSidebar }) => {
           <span>{user.user.username}</span>
         </div>
         <div className={classes['header-signout']}>
-          <InvisibleButton onclick={logoutHandler}>
-            <i className="fas fa-sign-out-alt"></i>
-          </InvisibleButton>
+          {!isFetching ?
+            <InvisibleButton onclick={logoutHandler}>
+              <i className="fas fa-sign-out-alt"></i>
+            </InvisibleButton> :
+            <Spin/>}
         </div>
       </div>
       <div className={classes['header-user']}>

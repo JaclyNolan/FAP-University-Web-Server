@@ -1,6 +1,7 @@
 import AddStudent from "./AddStudent";
 import EditStudent from "./EditStudent";
 import ListStudent from "./ListStudent";
+import DetailsStudent from "./DetailsStudent";
 import Courses from "./Courses";
 import WeeklyTimeTable from "./WeeklyTimeTable";
 import CoureRegister from "./CoureRegister";
@@ -14,6 +15,7 @@ export {
     AddStudent, 
     EditStudent, 
     ListStudent, 
+    DetailsStudent, 
     Courses, 
     WeeklyTimeTable, 
     CoureRegister, 

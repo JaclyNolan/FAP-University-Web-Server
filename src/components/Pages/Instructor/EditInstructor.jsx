@@ -3,7 +3,7 @@ import {Button, Input, Select, InputNumber, Upload, message, DatePicker} from 'a
 import classes from '../Page.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
 import Image from '../../common/Image/Image';
-const EditTeacher= () => {
+const EditInstructor= () => {
     const handleChange = (value) => {
         console.log(value);
     }
@@ -26,7 +26,7 @@ const EditTeacher= () => {
       };
   return (
     <div>
-      <p className={classes['page__title']}>Edit teacher</p>
+      <p className={classes['page__title']}>Edit Instructor</p>
       <form className={classes['add__form']}>
         <div className={classes['add__main']}>
             <div className={classes['add__form-left']}>
@@ -107,4 +107,4 @@ const EditTeacher= () => {
   )
 }
 
-export default EditTeacher
+export default EditInstructor

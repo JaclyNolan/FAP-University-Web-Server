@@ -1,22 +1,24 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import classes from '../Page.module.scss';
 import { Select, Input, Button, Popconfirm, Tag, Table, Alert } from 'antd';
 import Image from '../../common/Image/Image';
 import axiosClient from '../../../axios-client';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 
 const List = () => {
-    const { Search } = Input
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search)
 
     const [tableData, setTableData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     const [ isFetching, setFetching ] = useState(false);
+    const fetchRef = useRef(0);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [search, setSearch] = useState("");
-    const [role, setRole] = useState('all');
+    const [search, setSearch] = useState(searchParams.get('search') ? searchParams.get('search') : '');
+    const [role, setRole] = useState(searchParams.get('role') ? searchParams.get('role') : 'all');
 
     const [errorMessage, _setErrorMessage] = useState("");
     const [successMessage, _setSuccessMessage] = useState("");
@@ -31,6 +33,7 @@ const List = () => {
     }
 
     const getTableDataFromUserData = (userData) => {
+        console.log(userData);
         return userData.map((user) => ({
             key: user.id,
             image: {
@@ -39,7 +42,11 @@ const List = () => {
             },
             username: {
                 text: user.username,
-                id: user.id
+                role: user.role_name,
+                info_id: (user.role_id === 2 ? user.staff_id : 
+                    user.role_id === 3 ? user.instructor_id :
+                    user.role_id === 4 ? user.student_id :
+                    null ),
             },
             email: user.email,
             role: {
@@ -47,7 +54,11 @@ const List = () => {
                 role: user.role_name
             },
             detail: {
-                id: user.id,
+                info_id: (user.role_id === 2 ? user.staff_id : 
+                    user.role_id === 3 ? user.instructor_id :
+                    user.role_id === 4 ? user.student_id :
+                    null ),
+                role: user.role_name,
                 text: 'Details'
             },
             actions: {
@@ -62,8 +73,11 @@ const List = () => {
         + (role !== 'all' ? `&role_id=${role}` : '') 
         + (search !== "" ? `&keyword=${search}` : ``);
         console.log(url);
+        fetchRef.current += 1;
+        const fetchId = fetchRef.current;
         await axiosClient.get(url)
             .then((response) => {
+                if (fetchId !== fetchRef.current) return
                 const { users, total_pages } = response.data;
                 setTotalPages(total_pages);
                 setTableData(getTableDataFromUserData(users));
@@ -125,10 +139,10 @@ const List = () => {
             case 'Admin':
                 color = 'red'
                 break
-            case 'student':
+            case 'Staff':
                 color = 'magenta'
                 break
-            case 'staff':
+            case 'Instructor':
                 color = 'purple'
                 break
             default:
@@ -154,7 +168,7 @@ const List = () => {
             title: 'User Name',
             dataIndex: 'username',
             key: 'username',
-            render: (text) => <Link to={`/user/details?id=${text.id}`}>{text.text}</Link>,
+            render: (text) => text.role !== "Admin" ? <Link to={`/${text.role.toLowerCase()}/details/${text.info_id}`}>{text.text}</Link> : text.text,
         },
         {
             title: 'Email',
@@ -171,14 +185,14 @@ const List = () => {
             title: 'Detail',
             dataIndex: 'detail',
             key: 'detail',
-            render: (text) => <Link to={`/user/details?id=${text.id}`}>{text.text}</Link>,
+            render: (text) => text.role !== "Admin" && <Link to={`/${text.role.toLowerCase()}/details/${text.info_id}`}>{text.text}</Link>,
         },
         {
             title: '',
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/user/edit?id=${text.id}`}>
+                <Link to={`/user/edit/${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
                     </Button>
@@ -208,15 +222,15 @@ const List = () => {
                 <div className={classes['list__nav']}>
                     <div className={classes['list__nav-left']}>
                         <Select
-                            defaultValue={'all'}
+                            defaultValue={role}
                             style={{ width: 120 }}
                             onChange={handleRoleChange}
                             options={[
-                                { value: 'all', label: 'All' },
+                                { value: 'all', label: 'Role' },
                                 { value: '1', label: 'Admin' },
                                 { value: '2', label: 'Staff' },
-                                { value: '3', label: 'Student' },
-                                { value: '4', label: 'Teacher' },
+                                { value: '3', label: 'Instructor' },
+                                { value: '4', label: 'Student' },
                                 // { value: 'disabled', label: 'Disabled', disabled: true },
                             ]}
                         />
@@ -244,8 +258,8 @@ const List = () => {
                 <div className={classes['list__table']}>
                     <Table columns={tableColumns} loading={isFetching} pagination={{
                         current: currentPage,
-                        total: totalPages * 5,
-                        pageSize: 5,
+                        total: totalPages * tableData.length,
+                        pageSize: tableData.length,
                         defaultCurrent: 1,
                         showQuickJumper: true,
                         onChange: handlePageChange
