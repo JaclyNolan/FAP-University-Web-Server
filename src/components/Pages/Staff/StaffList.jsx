@@ -1,20 +1,152 @@
-import React from 'react'
-import {Input, Button, Popconfirm, Select, Table} from 'antd'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { Input, Button, Popconfirm, Select, Table, Alert } from 'antd'
+import { Link, useLocation } from 'react-router-dom'
 import Image from '../../common/Image/Image'
 import classes from '../Page.module.scss'
+import axiosClient from '../../../axios-client';
+import debounce from 'lodash/debounce';
+import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
+
 const StaffList = () => {
-    const {Search} = Input
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search)
 
-    const handleChange = () => {
-        console.log('changinggg');
-    }
-    const onSearch = () => {
+    const [tableData, setTableData] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
+    const [isFetching, setFetching] = useState(false);
+    const fetchRef = useRef(0);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState(searchParams.get('search') ? searchParams.get('search') : '');
+    const [gender, setGender] = useState(searchParams.get('gender') ? searchParams.get('gender') : 'all');
+    const [department, setDepartment] = useState(searchParams.get('department') ? searchParams.get('department') : 'all');
+    const [position, setPosition] = useState(searchParams.get('position') ? searchParams.get('position') : 'all');
+
+    const [errorMessage, _setErrorMessage] = useState("");
+    const [successMessage, _setSuccessMessage] = useState("");
+
+    const setErrorMessage = (value) => {
+        _setErrorMessage(value);
+        _setSuccessMessage("");
     }
-    const deleteUserHandler = (id) => {
-        alert(`Deleted ${id}`)
+    const setSuccessMessage = (value) => {
+        _setErrorMessage("");
+        _setSuccessMessage(value);
     }
+
+    const debounceSetter = useMemo(() => {
+        const handleSearch = (e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+        }
+        return debounce(handleSearch, 700);
+    })
+
+    const handlePageChange = (page, pageSize) => {
+        setCurrentPage(page);
+    }
+
+    const handleDepartmentChange = (value) => {
+        setDepartment(value);
+        setCurrentPage(1);
+    }
+
+    const handleGenderChange = (value) => {
+        setGender(value);
+        setCurrentPage(1);
+    }
+
+    const handlePositionChange = (value) => {
+        setPosition(value);
+        setCurrentPage(1);
+    }
+
+    const positionLabels = {
+        0: 'Teacher',
+        1: 'Trainer',
+        2: 'HR',
+        3: 'Marketing',
+      };
+
+    const deleteStaffHandler = (id) => {
+        (async () => {
+            setFetching(true);
+            await axiosClient.put(`/staffs/delete-staff/${id}`)
+                .then((response) => {
+                    setFetching(false);
+                    setSuccessMessage('Successfully delete staff with id ' + id)
+                })
+                .catch((error) => {
+                    setFetching(false);
+                    setErrorMessage(error.message);
+                })
+            if (!errorMessage) {
+                if (currentPage === 1) {
+                    fetchStaffData(currentPage, search, gender, department, position);
+                } else {
+                    setCurrentPage(1);
+                }
+            }
+        })()
+    }
+
+    const getTableDataFromStaffData = (staffData) => {
+        console.log(staffData);
+        return staffData.map((staff) => ({
+            key: staff.id,
+            image: {
+                src: '/public/images/students/' + staff.image,
+                alt: staff.full_name
+            },
+            full_name: staff.full_name,
+            email: staff.email || "N/A",
+            gender: staff.gender,
+            Dob: staff.Dob,
+            phone_number: staff.phone_number,
+            address: staff.address,
+            position: staff.position,
+            department: staff.department,
+            position: staff.position,
+            detail: {
+                id: staff.id,
+                text: 'Details'
+            },
+            actions: {
+                id: staff.id
+            }
+        }))
+    }
+
+    const fetchStaffData = async (currentPage, search, gender, department, position) => {
+        setFetching(true);
+        const url = `/staffs?page=${currentPage}`
+            + (gender !== 'all' ? `&gender=${gender}` : '')
+            + (department !== 'all' ? `&department=${department}` : '')
+            + (position !== 'all' ? `&position=${position}` : '')
+            + (search !== "" ? `&keyword=${search}` : ``);
+        console.log(url);
+        fetchRef.current += 1;
+        const fetchId = fetchRef.current;
+        await axiosClient.get(url)
+            .then((response) => {
+                if (fetchId !== fetchRef.current) return
+                const { staffs, total_pages } = response.data;
+                setTotalPages(total_pages);
+                setTableData(getTableDataFromStaffData(staffs));
+                setFetching(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setErrorMessage(error.message);
+                setFetching(false);
+            })
+    }
+
+    useEffect(() => {
+        fetchStaffData(currentPage, search, gender, department, position);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, search, gender, department, position]);
+
     const tableColumns = [
         {
             title: 'Id',
@@ -25,17 +157,23 @@ const StaffList = () => {
             title: 'Image',
             dataIndex: 'image',
             key: 'image',
-            render : (text) => <Image src={text.src} alt={text.alt} width = {30} height = {30}/>
+            render: (text) => <Image src={text.src} alt={text.alt} width={30} height={30} />
         },
         {
             title: 'Full Name',
-            dataIndex: 'fullname',
-            key: 'fullname'
+            dataIndex: 'full_name',
+            key: 'full_name'
+        },
+        {
+            title: 'Gender',
+            dataIndex: 'gender',
+            key: 'gender',
+            render: (text) => (text === 0 ? 'Male' : 'Female'),
         },
         {
             title: 'DOB',
-            dataIndex: 'dob',
-            key: 'dob',
+            dataIndex: 'Dob',
+            key: 'Dob',
         },
         {
             title: 'Email',
@@ -44,8 +182,19 @@ const StaffList = () => {
         },
         {
             title: 'Phone',
-            dataIndex: 'phone',
-            key: 'phone'
+            dataIndex: 'phone_number',
+            key: 'phone_number'
+        },
+        {
+            title: 'Department',
+            dataIndex: 'department',
+            key: 'department'
+        },
+        {
+            title: 'Position',
+            dataIndex: 'position',
+            key: 'position',
+            render: (position) => positionLabels[position] || '', // Sử dụng đối tượng
         },
         {
             title: 'Address',
@@ -57,7 +206,7 @@ const StaffList = () => {
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/staff/details/${text.id}`} style={{marginRight: '10px'}}>Details</Link>
+                <Link to={`/staff/details/${text.id}`} style={{ marginRight: '10px' }}>Details</Link>
                 <Link to={`/staff/edit/${text.id}`}>
                     <Button type='primary' className={classes['list__table__actions-edit']}>
                         <i className="fas fa-edit"></i>
@@ -66,7 +215,7 @@ const StaffList = () => {
                 <Popconfirm
                     title="Delete staff"
                     description="Are you sure to delete this staff?"
-                    onConfirm={() => deleteUserHandler(text.id)}
+                    onConfirm={() => deleteStaffHandler(text.id)}
                     okText="Confirm"
                     cancelText="Cancel"
                 >
@@ -78,82 +227,87 @@ const StaffList = () => {
         },
 
     ]
-    const tableData = [
-        {
-            key: '1',
-            image: {
-                src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
-                alt: 'user'
-            },
-            fullname: 'Nguyen Van A',
-            email: 'anvbhaf190345@fpt.edu.vn',
-            dob: '01/01/2023',
-            phone: '012345678',
-            address: 'Ha Noi - Viet Nam',
-            actions: {
-                id: 1
-            }
-        }
-    ]
-  return (
-    <div className={classes['list']}>
-        <p className={classes['page__title']}>Staff List Test</p>
-        <div className={classes['list__main']}>
-            <div className={classes['list__nav']}>
-                <div className={classes['list__nav-left']}>
-                    
-                </div>
-                <div className={classes['list__nav-right']}>
-                    <div className={classes['list__nav-right__search']}>
-                        <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
+    return (
+        <div className={classes['list']}>
+            {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
+            {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
+            <p className={classes['page__title']}>Staff List Test</p>
+            <div className={classes['list__main']}>
+                <div className={classes['list__nav']}>
+                    <div className={classes['list__nav-left']}>
+
                     </div>
-                    <div className={classes['list__nav-right__add']}>
-                        <Link to='/staff/add'>
-                            <Button type='primary'>
-                                <i className="fas fa-plus"></i>
-                                <span>Add</span>
-                            </Button>
-                        </Link>
+                    <div className={classes['list__nav-right']}>
+                        <div className={classes['list__nav-right__search']}>
+                            <Input
+                                prefix={isFetching ? <LoadingOutlined /> : <SearchOutlined />}
+                                placeholder="input search text"
+                                allowClear
+                                onChange={debounceSetter}
+                                style={{ width: 200 }}
+                            />
+                        </div>
+                        <div className={classes['list__nav-right__add']}>
+                            <Link to='/staff/add'>
+                                <Button type='primary'>
+                                    <i className="fas fa-plus"></i>
+                                    <span>Add</span>
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className={classes['list__filters']}>
+                <div className={classes['list__filters']}>
                     <Select
-                        defaultValue="Department"
-                        style={{ width: 120 }}
-                        onChange={handleChange}
+                        defaultValue={department}
+                        style={{ width: 140 }}
+                        onChange={handleDepartmentChange}
                         options={[
-                            { value: 'Ha Noi', label: 'Ha Noi' },
-                            { value: 'Da Nang', label: 'Da Nang' },
+                            { value: 'all', label: 'Departments' },
+                            { value: 'Student Services', label: 'Student Services' },
+                            { value: 'Finance', label: 'Finance' },
+                            { value: 'Admissions', label: 'Admissions' },
+                            { value: 'Administration', label: 'Administration' },
+                            { value: 'Academic Affairs', label: 'Academic Affairs' },
+                            // { value: 'disabled', label: 'Disabled', disabled: true },
                         ]}
                     />
                     <Select
-                        defaultValue="Gender"
+                        defaultValue={gender}
                         style={{ width: 120 }}
-                        onChange={handleChange}
+                        onChange={handleGenderChange}
                         options={[
-                            { value: 'Male', label: 'Male' },
-                            { value: 'Female', label: 'Female' },
+                            { value: 'all', label: 'Gender' },
+                            { value: '0', label: 'Male' },
+                            { value: '1', label: 'Female' },
                         ]}
                     />
                     <Select
-                        defaultValue="Position"
+                        defaultValue={position}
                         style={{ width: 120 }}
-                        onChange={handleChange}
+                        onChange={handlePositionChange}
                         options={[
-                            { value: 'Teacher', label: 'Teacher' },
-                            { value: 'Trainer', label: 'Trainer' },
-                            { value: 'HR', label: 'HR' },
-                            { value: 'Marketing', label: 'Marketing' }
+                            { value: 'all', label: 'Position' },
+                            { value: '0', label: 'Teacher' },
+                            { value: '1', label: 'Trainer' },
+                            { value: '2', label: 'HR' },
+                            { value: '3', label: 'Marketing' },
                         ]}
                     />
-            </div>
-            <div className={classes['list__table']}>
-                <Table columns={tableColumns} pagination={{ pageSize: 6 }} dataSource={tableData} />
+                </div>
+                <div className={classes['list__table']}>
+                <Table columns={tableColumns} loading={isFetching} pagination={{
+                        current: currentPage,
+                        total: totalPages * tableData.length,
+                        pageSize: tableData.length,
+                        defaultCurrent: 1,
+                        showQuickJumper: true,
+                        onChange: handlePageChange
+                    }} dataSource={tableData} />
+                </div>
             </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default StaffList
