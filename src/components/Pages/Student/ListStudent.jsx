@@ -1,26 +1,29 @@
-import React, { useState, useEffect, useContext} from 'react'; //
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Input, Button, Popconfirm, Select, Table, Alert } from 'antd' //
-import { Link } from 'react-router-dom' //
+import { Link, useLocation } from 'react-router-dom' //
 import Image from '../../common/Image/Image' //
 import classes from '../Page.module.scss' //
 import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
+import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
+import debounce from 'lodash/debounce';
 
 const ListStudent = () => {
-    const { Search } = Input
 
-    const [studentData, setStudentData] = useState([]);
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search)
+
     const [tableData, setTableData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
-    const [loading, setLoading] = useState(true);
-    const { setContentLoading } = useContext(ContentContext);
+    const [ isFetching, setFetching ] = useState(false);
+    const fetchRef = useRef(0);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [search, setSearch] = useState("");
-    const [gender, setGender] = useState('all');
-    const [major, setMajor] = useState('all');
-    const [academic_year, setAcademicYear] = useState('all');
-    const [status, setStatus] = useState('all');
+    const [search, setSearch] = useState(searchParams.get('search') ? searchParams.get('search') : '');
+    const [gender, setGender] = useState(searchParams.get('gender') ? searchParams.get('gender') : 'all');
+    const [major, setMajor] = useState(searchParams.get('major') ? searchParams.get('major') : 'all');
+    const [academic_year, setAcademicYear] = useState(searchParams.get('academic_year') ? searchParams.get('academic_year') : 'all');
+    const [status, setStatus] = useState(searchParams.get('status') ? searchParams.get('status') : 'all');
 
     const [errorMessage, _setErrorMessage] = useState("");
     const [successMessage, _setSuccessMessage] = useState("");
@@ -41,39 +44,43 @@ const ListStudent = () => {
         _setSuccessMessage(value);
     }
 
-    useEffect(() => {
-        (async () => {
-            setLoading(true);
-            const url = `/students?page=${currentPage}`
-                + (gender !== 'all' ? `&gender=${gender}` : '')
-                + (major !== 'all' ? `&major=${major}` : '')
-                + (academic_year !== 'all' ? `&academic_year=${academic_year}` : '')
-                + (status !== 'all' ? `&status=${status}` : '')
-                + (search !== "" ? `&keyword=${search}` : ``);
-            console.log(url);
-            await axiosClient.get(url)
-                .then((response) => {
-                    const { students, total_pages } = response.data;
-                    setTotalPages(total_pages);
-                    setStudentData(students);
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    _setErrorMessage(error.message);
-                    setLoading(false);
-                })
-        })()
-    }, [currentPage, gender, major, academic_year, search, status]);
+    const fetchStudentData = async(currentPage, search, major, gender, academic_year, status) => {
+        setFetching(true);
+        const url = `/students?page=${currentPage}`
+        + (gender !== 'all' ? `&gender=${gender}` : '')
+        + (major !== 'all' ? `&major=${major}` : '')
+        + (academic_year !== 'all' ? `&academic_year=${academic_year}` : '')
+        + (status !== 'all' ? `&status=${status}` : '')
+        + (search !== "" ? `&keyword=${search}` : ``);
+        console.log(url);
+        fetchRef.current += 1;
+        const fetchId = fetchRef.current;
+        await axiosClient.get(url)
+            .then((response) => {
+                if (fetchId !== fetchRef.current) return
+                const { students, total_pages } = response.data;
+                setTotalPages(total_pages);
+                setTableData(getTableDataFromUserData(students));
+                setFetching(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setErrorMessage(error.message);
+                setFetching(false);
+            })
+    }
 
     useEffect(() => {
+        fetchStudentData(currentPage, search, major, gender, academic_year, status)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, search, major, gender, academic_year, status]);
+
+    const getTableDataFromUserData = (studentData) => {
         console.log(studentData);
-        const arr = [];
-        studentData.forEach((student, index) => {
-            const row = {
-                key: student.id,
+        return studentData.map((student) => ({
+            key: student.id,
                 image: {
-                    src: '/uploads/images/' + student.image,
+                    src: '/public/images/students/' + student.image,
                     alt: student.full_name
                 },
                 full_name: student.full_name,
@@ -85,8 +92,9 @@ const ListStudent = () => {
                 gender: student.gender,
                 academic_year: student.academic_year,
                 Dob: student.Dob,
-                phone: student.phone,
+                phone_number: student.phone,
                 address: student.address,
+                major_id: student.major_id,
                 status: student.status,
                 detail: {
                     id: student.id,
@@ -95,12 +103,8 @@ const ListStudent = () => {
                 actions: {
                     id: student.id
                 }
-            };
-            arr.push(row);
-        });
-        setTableData(arr);
-        console.log(arr);
-    }, [studentData])
+        }))
+    }
 
     const handleGenderChange = (value) => {
         setGender(value);
@@ -131,39 +135,32 @@ const ListStudent = () => {
         setCurrentPage(1);
     }
 
+    const debounceSetter = useMemo(() => {
+        const handleSearch = (e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+        }
+        return debounce(handleSearch, 700);
+    })
+
     const deleteStudentHandler = (id) => {
         (async () => {
-            setContentLoading(true);
+            setFetching(true);
             await axiosClient.put(`/students/delete-student/${id}`)
                 .then((response) => {
-                    setContentLoading(false);
+                    setFetching(false);
                     setSuccessMessage('Successfully delete student with id ' + id)
                 })
                 .catch((error) => {
-                    setContentLoading(false);
-                    _setErrorMessage(error.message);
+                    setFetching(false);
+                    setErrorMessage(error.message);
                 })
             if (!errorMessage) {
-                setLoading(true);
-                const url = `/students?page=${currentPage}`
-                    + (gender !== 'all' ? `&gender=${gender}` : '')
-                    + (major !== 'all' ? `&major=${major}` : '')
-                    + (academic_year !== 'all' ? `&academic_year=${academic_year}` : '')
-                    + (status !== 'all' ? `&status=${status}` : '')
-                    + (search !== "" ? `&keyword=${search}` : ``);
-                console.log(url);
-                await axiosClient.get(url)
-                    .then((response) => {
-                        const { students, total_pages } = response.data;
-                        setTotalPages(total_pages);
-                        setStudentData(students);
-                        setLoading(false);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        setErrorMessage(error.message);
-                        setLoading(false);
-                    })
+                if (currentPage === 1) {
+                    fetchStudentData(currentPage, search, major, gender, academic_year, status);
+                } else {
+                    setCurrentPage(1);
+                }
             }
         })()
     }
@@ -203,8 +200,8 @@ const ListStudent = () => {
         },
         {
             title: 'Phone',
-            dataIndex: 'phone',
-            key: 'phone'
+            dataIndex: 'phone_number',
+            key: 'phone_number'
         },
         {
             title: 'Address',
@@ -252,23 +249,7 @@ const ListStudent = () => {
         },
 
     ]
-    // const tableData = [
-    //     {
-    //         key: '1',
-    //         image: {
-    //             src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
-    //             alt: 'user'
-    //         },
-    //         fullname: 'Nguyen Van A',
-    //         email: 'anvbhaf190345@fpt.edu.vn',
-    //         dob: '01/01/2023',
-    //         phone: '012345678',
-    //         address: 'Ha Noi - Viet Nam',
-    //         actions: {
-    //             id: 1
-    //         }
-    //     }
-    //]
+
     return (
         <div className={classes['list']}>
             {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
@@ -280,13 +261,12 @@ const ListStudent = () => {
 
                     </div>
                     <div className={classes['list__nav-right']}>
-                        <div className={classes['list__nav-right__search']}>
-                            <Search
+                    <div className={classes['list__nav-right__search']}>
+                            <Input
+                                prefix={isFetching ? <LoadingOutlined/> : <SearchOutlined/>}
                                 placeholder="input search text"
                                 allowClear
-                                onChange={(e) => {
-                                    handleSearch(e.target.value)
-                                }}
+                                onChange={debounceSetter}
                                 style={{ width: 200 }}
                             />
                         </div>
@@ -302,17 +282,18 @@ const ListStudent = () => {
                 </div>
                 <div className={classes['list__filters']}>
                     <Select
-                        defaultValue="Major"
-                        style={{ width: 120 }}
-                        onChange={handleMajorChange}
-                        options={[
-                            { value: 'all', label: 'Majors' },
-                            { value: 'Business Administration', label: 'Business Administration' },
-                            { value: 'Computer Science', label: 'Computer Science' },
-                            { value: 'Mechanical Engineering', label: 'Mechanical Engineering' },
-                            { value: 'Psychology', label: 'Psychology' },
-                        ]}
-                    />
+                            defaultValue={major}
+                            style={{ width: 120 }}
+                            onChange={handleMajorChange}
+                            options={[
+                                { value: 'all', label: 'Majors' },
+                                { value: '1', label: 'Computer Science' },
+                                { value: '2', label: 'Business Administration' },
+                                { value: '3', label: 'Mechanical Engineering' },
+                                { value: '4', label: 'Psychology' },
+                                // { value: 'disabled', label: 'Disabled', disabled: true },
+                            ]}
+                        />
                     <Select
                         defaultValue="Gender"
                         style={{ width: 120 }}
@@ -351,9 +332,10 @@ const ListStudent = () => {
                     />
                 </div>
                 <div className={classes['list__table']}>
-                    <Table loading={loading} columns={tableColumns} pagination={{
-                        total: totalPages * 10,
-                        pageSize: 10,
+                <Table columns={tableColumns} loading={isFetching} pagination={{
+                        current: currentPage,
+                        total: totalPages * tableData.length,
+                        pageSize: tableData.length,
                         defaultCurrent: 1,
                         showQuickJumper: true,
                         onChange: handlePageChange
