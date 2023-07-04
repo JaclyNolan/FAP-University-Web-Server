@@ -1,28 +1,64 @@
-import React, { useState, useEffect, useContext } from 'react'; //
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Input, Button, Popconfirm, Select, Table, Alert } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Image from '../../common/Image/Image'
 import classes from '../Page.module.scss'
 import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
+import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
+import debounce from 'lodash/debounce';
 
 const InstructorList = () => {
-    const { Search } = Input
+    // const { Search } = Input
 
-    const [insData, setInsData] = useState([]);
+    // const [insData, setInsData] = useState([]);
+    // const [tableData, setTableData] = useState([]);
+    // const [totalPages, setTotalPages] = useState(1);
+    // const [loading, setLoading] = useState(true);
+    // const { setContentLoading } = useContext(ContentContext);
+
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const [search, setSearch] = useState("");
+    // const [gender, setGender] = useState('all');
+    // const [major, setMajor] = useState('all');
+    // const [position, setPosition] = useState('all');
+
+    // const [errorMessage, _setErrorMessage] = useState("");
+    // const [successMessage, _setSuccessMessage] = useState("");
+
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search)
+
     const [tableData, setTableData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
-    const [loading, setLoading] = useState(true);
-    const { setContentLoading } = useContext(ContentContext);
+    const [isFetching, setFetching] = useState(false);
+    const fetchRef = useRef(0);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [search, setSearch] = useState("");
-    const [gender, setGender] = useState('all');
-    const [major, setMajor] = useState('all');
-    const [position, setPosition] = useState('all');
+    const [search, setSearch] = useState(searchParams.get('search') ? searchParams.get('search') : '');
+    const [gender, setGender] = useState(searchParams.get('gender') ? searchParams.get('gender') : 'all');
+    const [major, setMajor] = useState(searchParams.get('major') ? searchParams.get('major') : 'all');
+    const [position, setPosition] = useState(searchParams.get('position') ? searchParams.get('position') : 'all');
 
     const [errorMessage, _setErrorMessage] = useState("");
     const [successMessage, _setSuccessMessage] = useState("");
+
+    const setErrorMessage = (value) => {
+        _setErrorMessage(value);
+        _setSuccessMessage("");
+    }
+    const setSuccessMessage = (value) => {
+        _setErrorMessage("");
+        _setSuccessMessage(value);
+    }
+
+    const debounceSetter = useMemo(() => {
+        const handleSearch = (e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+        }
+        return debounce(handleSearch, 700);
+    })
 
     const positionLabels = {
         0: 'Lecturers',
@@ -36,73 +72,123 @@ const InstructorList = () => {
         8: 'Tutors',
     };
 
-    const setErrorMessage = (value) => {
-        _setErrorMessage(value);
-        _setSuccessMessage("");
-    }
-    const setSuccessMessage = (value) => {
-        _setErrorMessage("");
-        _setSuccessMessage(value);
+    // useEffect(() => {
+    //     (async () => {
+    //         setLoading(true);
+    //         const url = `/instructors?page=${currentPage}`
+    //             + (gender !== 'all' ? `&gender=${gender}` : '')
+    //             + (major !== 'all' ? `&major=${major}` : '')
+    //             + (position !== 'all' ? `&position=${position}` : '')
+    //             + (search !== "" ? `&keyword=${search}` : ``);
+    //         console.log(url);
+    //         await axiosClient.get(url)
+    //             .then((response) => {
+    //                 const { instructors, total_pages } = response.data;
+    //                 setTotalPages(total_pages);
+    //                 setInsData(instructors);
+    //                 setLoading(false);
+    //             })
+    //             .catch((error) => {
+    //                 console.log(error);
+    //                 _setErrorMessage(error.message);
+    //                 setLoading(false);
+    //             })
+    //     })()
+    // }, [currentPage, gender, major, position, search]);
+
+    const fetchInsData = async (currentPage, search, gender, major, position) => {
+        setFetching(true);
+        const url = `/instructors?page=${currentPage}`
+            + (gender !== 'all' ? `&gender=${gender}` : '')
+            + (major !== 'all' ? `&major=${major}` : '')
+            + (position !== 'all' ? `&position=${position}` : '')
+            + (search !== "" ? `&keyword=${search}` : ``);
+        console.log(url);
+        fetchRef.current += 1;
+        const fetchId = fetchRef.current;
+        await axiosClient.get(url)
+            .then((response) => {
+                if (fetchId !== fetchRef.current) return
+                const { instructors, total_pages } = response.data;
+                setTotalPages(total_pages);
+                setTableData(getTableDataFromInsData(instructors));
+                setFetching(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setErrorMessage(error.message);
+                setFetching(false);
+            })
     }
 
     useEffect(() => {
-        (async () => {
-            setLoading(true);
-            const url = `/instructors?page=${currentPage}`
-                + (gender !== 'all' ? `&gender=${gender}` : '')
-                + (major !== 'all' ? `&major=${major}` : '')
-                + (position !== 'all' ? `&position=${position}` : '')
-                + (search !== "" ? `&keyword=${search}` : ``);
-            console.log(url);
-            await axiosClient.get(url)
-                .then((response) => {
-                    const { instructors, total_pages } = response.data;
-                    setTotalPages(total_pages);
-                    setInsData(instructors);
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    _setErrorMessage(error.message);
-                    setLoading(false);
-                })
-        })()
-    }, [currentPage, gender, major, position, search]);
+        fetchInsData(currentPage, search, gender, major, position)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, search, gender, major, position]);
 
-    useEffect(() => {
+    // useEffect(() => {
+    //     console.log(insData);
+    //     const arr = [];
+    //     insData.forEach((instructor, index) => {
+    //         const row = {
+    //             key: instructor.id,
+    //             image: {
+    //                 src: '/uploads/images/' + instructor.image,
+    //                 alt: instructor.full_name
+    //             },
+    //             full_name: instructor.full_name,
+    //             email: instructor.email || "N/A",
+    //             major: {
+    //                 text: instructor.major_name,
+    //                 major: instructor.major_name
+    //             },
+    //             gender: instructor.gender,
+    //             Dob: instructor.Dob,
+    //             phone_number: instructor.phone_number,
+    //             address: instructor.address,
+    //             position: instructor.position,
+    //             detail: {
+    //                 id: instructor.id,
+    //                 text: 'Details'
+    //             },
+    //             actions: {
+    //                 id: instructor.id
+    //             }
+    //         };
+    //         arr.push(row);
+    //     });
+    //     setTableData(arr);
+    //     console.log(arr);
+    // }, [insData])
+
+    const getTableDataFromInsData = (insData) => {
         console.log(insData);
-        const arr = [];
-        insData.forEach((instructor, index) => {
-            const row = {
-                key: instructor.id,
-                image: {
-                    src: '/uploads/images/' + instructor.image,
-                    alt: instructor.full_name
-                },
-                full_name: instructor.full_name,
-                email: instructor.email || "N/A",
-                major: {
-                    text: instructor.major_name,
-                    major: instructor.major_name
-                },
-                gender: instructor.gender,
-                Dob: instructor.Dob,
-                phone_number: instructor.phone_number,
-                address: instructor.address,
-                position: instructor.position,
-                detail: {
-                    id: instructor.id,
-                    text: 'Details'
-                },
-                actions: {
-                    id: instructor.id
-                }
-            };
-            arr.push(row);
-        });
-        setTableData(arr);
-        console.log(arr);
-    }, [insData])
+        return insData.map((instructor) => ({
+            key: instructor.id,
+            image: {
+                src: '/uploads/images/' + instructor.image,
+                alt: instructor.full_name
+            },
+            full_name: instructor.full_name,
+            email: instructor.email || "N/A",
+            major: {
+                text: instructor.major_name,
+                major: instructor.major_name
+            },
+            gender: instructor.gender,
+            Dob: instructor.Dob,
+            phone_number: instructor.phone_number,
+            address: instructor.address,
+            position: instructor.position,
+            detail: {
+                id: instructor.id,
+                text: 'Details'
+            },
+            actions: {
+                id: instructor.id
+            }
+        }))
+    }
 
     const handleGenderChange = (value) => {
         setGender(value);
@@ -127,41 +213,64 @@ const InstructorList = () => {
         setSearch(value);
         setCurrentPage(1);
     }
-    const deleteInstructorHandler = (id) => {
+    // const deleteInstructorHandler = (id) => {
+    //     (async () => {
+    //         setContentLoading(true);
+    //         await axiosClient.put(`/instructors/delete-instructor/${id}`)
+    //             .then((response) => {
+    //                 setContentLoading(false);
+    //                 setSuccessMessage('Successfully delete instructor with id ' + id)
+    //             })
+    //             .catch((error) => {
+    //                 setContentLoading(false);
+    //                 _setErrorMessage(error.message);
+    //             })
+    //         if (!errorMessage) {
+    //             setLoading(true);
+    //             const url = `/instructors?page=${currentPage}`
+    //                 + (gender !== 'all' ? `&gender=${gender}` : '')
+    //                 + (major !== 'all' ? `&major=${major}` : '')
+    //                 + (position !== 'all' ? `&position=${position}` : '')
+    //                 + (search !== "" ? `&keyword=${search}` : ``);
+    //             console.log(url);
+    //             await axiosClient.get(url)
+    //                 .then((response) => {
+    //                     const { instructors, total_pages } = response.data;
+    //                     setTotalPages(total_pages);
+    //                     setTableData(instructors);
+    //                     setLoading(false);
+    //                 })
+    //                 .catch((error) => {
+    //                     console.log(error);
+    //                     _setErrorMessage(error.message);
+    //                     setLoading(false);
+    //                 })
+    //         }
+    //     })()
+    // }
+
+    const deleteInsHandler = (id) => {
         (async () => {
-            setContentLoading(true);
+            setFetching(true);
             await axiosClient.put(`/instructors/delete-instructor/${id}`)
                 .then((response) => {
-                    setContentLoading(false);
+                    setFetching(false);
                     setSuccessMessage('Successfully delete instructor with id ' + id)
                 })
                 .catch((error) => {
-                    setContentLoading(false);
-                    _setErrorMessage(error.message);
+                    setFetching(false);
+                    setErrorMessage(error.message);
                 })
             if (!errorMessage) {
-                setLoading(true);
-                const url = `/instructors?page=${currentPage}`
-                    + (gender !== 'all' ? `&gender=${gender}` : '')
-                    + (major !== 'all' ? `&major=${major}` : '')
-                    + (position !== 'all' ? `&position=${position}` : '')
-                    + (search !== "" ? `&keyword=${search}` : ``);
-                console.log(url);
-                await axiosClient.get(url)
-                    .then((response) => {
-                        const { instructors, total_pages } = response.data;
-                        setTotalPages(total_pages);
-                        setInsData(instructors);
-                        setLoading(false);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        _setErrorMessage(error.message);
-                        setLoading(false);
-                    })
+                if (currentPage === 1) {
+                    fetchInsData(currentPage, search, gender, major, position);
+                } else {
+                    setCurrentPage(1);
+                }
             }
         })()
     }
+
     const tableColumns = [
         {
             title: 'Id',
@@ -225,7 +334,7 @@ const InstructorList = () => {
                 <Popconfirm
                     title="Delete the instructor"
                     description="Are you sure to delete this this instructor?"
-                    onConfirm={() => deleteInstructorHandler(text.id)}
+                    onConfirm={() => deleteInsHandler(text.id)}
                     okText="Confirm"
                     cancelText="Cancel"
                 >
@@ -266,12 +375,11 @@ const InstructorList = () => {
                     </div>
                     <div className={classes['list__nav-right']}>
                         <div className={classes['list__nav-right__search']}>
-                            <Search
+                        <Input
+                                prefix={isFetching ? <LoadingOutlined/> : <SearchOutlined/>}
                                 placeholder="input search text"
                                 allowClear
-                                onChange={(e) => {
-                                    handleSearch(e.target.value)
-                                }}
+                                onChange={debounceSetter}
                                 style={{ width: 200 }}
                             />
                         </div>
@@ -327,9 +435,10 @@ const InstructorList = () => {
                     />
                 </div>
                 <div className={classes['list__table']}>
-                    <Table loading={loading} columns={tableColumns} pagination={{
-                        total: totalPages * 10,
-                        pageSize: 10,
+                    <Table columns={tableColumns} loading={isFetching} pagination={{
+                        current: currentPage,
+                        total: totalPages * tableData.length,
+                        pageSize: tableData.length,
                         defaultCurrent: 1,
                         showQuickJumper: true,
                         onChange: handlePageChange
