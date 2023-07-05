@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useMemo, useRef, useContext } from 'react';
 import classes from '../Page.module.scss';
-import { Select, Input, Button, Popconfirm, Tag, Table, Alert, Space } from 'antd';
-import Image from '../../common/Image/Image';
+import { Select, Input, Button, Popconfirm, Table, Alert, Space } from 'antd';
 import axiosClient from '../../../axios-client';
 import { Link, useLocation } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 import DebounceSelect from '../../../helpers/customs/DebounceSelect';
-import Context from 'rc-field-form/es/FieldContext';
 import ContentContext from '../../../helpers/Context/ContentContext';
 
 const ClassEnrollList = () => {
@@ -147,6 +145,7 @@ const ClassEnrollList = () => {
             setSearch(e.target.value);
             setCurrentPage(1);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         return debounce(handleSearch, 700);
     })
 
@@ -176,9 +175,6 @@ const ClassEnrollList = () => {
         })()
     }
 
-    const onSearch = () => {
-
-    }
     const tableColumns = [
         {
             title: 'Class Enroll ID',
