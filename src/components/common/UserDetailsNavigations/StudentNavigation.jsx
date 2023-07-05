@@ -16,6 +16,9 @@ const StudentNavigation = (params) => {
       <Link className={classes['details__actions-btn']} to={`/enroll/list?student_id=${student_id}`}>
         <Button size='large'>Transcript</Button>
       </Link>
+      <Link className={classes['details__actions-btn']} to={`/classenroll/list?student_id=${student_id}`}>
+        <Button size='large'>Enrolled Classes</Button>
+      </Link>
       <Link className={classes['details__actions-btn']} to={`/fee/list?student_id=${student_id}`}>
         <Button size='large'>Tuition fees history</Button>
       </Link>

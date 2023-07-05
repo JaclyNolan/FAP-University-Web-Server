@@ -155,15 +155,15 @@ export const routers = [
         render: () => <PrivateRoute To = {ClassCourseEdit} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/enroll/add',
+        path: '/classenroll/add',
         render: () => <PrivateRoute To = {ClassEnrollAdd} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/enroll/list',
+        path: '/classenroll/list',
         render: () => <PrivateRoute To = {ClassEnrollList} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/enroll/edit/:id',
+        path: '/classenroll/edit/:id',
         render: () => <PrivateRoute To = {ClassEnrollEdit} roles = {['Admin', 'Staff']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {

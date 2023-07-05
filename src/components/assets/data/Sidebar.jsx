@@ -95,11 +95,11 @@ export const adminSidebar = [
         items: [
             {
                 title: 'List',
-                path: '/enroll/list'
+                path: '/classenroll/list'
             },
             {
                 title: 'Add',
-                path: '/enroll/add'
+                path: '/classenroll/add'
             },
         ]
     },
