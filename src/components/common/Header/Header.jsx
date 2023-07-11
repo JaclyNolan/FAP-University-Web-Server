@@ -50,9 +50,10 @@ const Header = ({ onToggleSidebar }) => {
     {
       key: '1',
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-          Nguyen Van A
-        </a>
+        <Link to="/profile">
+          <Avatar size="medium" src={user.user.picture} />
+          <span>{user.user.username}</span>
+        </Link>
       ),
     },
     {
@@ -89,7 +90,7 @@ const Header = ({ onToggleSidebar }) => {
             <InvisibleButton onclick={logoutHandler}>
               <i className="fas fa-sign-out-alt"></i>
             </InvisibleButton> :
-            <Spin/>}
+            <Spin />}
         </div>
       </div>
       <div className={classes['header-user']}>
