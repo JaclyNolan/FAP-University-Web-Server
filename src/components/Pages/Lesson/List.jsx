@@ -50,12 +50,12 @@ const List = () => {
                         <tr>
                             <td>
                                 <div>
-                                    <Link to={'/lesson/class/1'}>Class</Link>
+                                    <Link to={'/class/1'}>Class</Link>
                                 </div>
                                 <p>Programing</p>
                                 <p>at <b>B01</b></p>
                                 <div>
-                                    <Link to='/lesson/attendance/1'>Take attendance</Link>
+                                    <Link to='/schedule/attendance/1'>Take attendance</Link>
                                 </div>
                             </td>
                             <td></td>

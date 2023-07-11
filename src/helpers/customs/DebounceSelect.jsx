@@ -2,10 +2,18 @@ import { Select, Spin } from 'antd';
 import debounce from 'lodash/debounce';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-function DebounceSelect({ fetchOptions, debounceTimeout = 800, ...props }) {
-  const {value} = props;
+function DebounceSelect({ fetchOptions, debounceTimeout = 800, presetOptions, value, ...props }) {
   const [fetching, setFetching] = useState(false);
-  const [options, setOptions] = useState([]);
+  const [options, _setOptions] = useState([]);
+  const setOptions = (newOptions) => {
+    // console.log(presetOptions.concat(newOptions));
+    if (presetOptions) {
+      _setOptions(presetOptions.concat(newOptions));
+    } else {
+      _setOptions(newOptions);
+    }
+
+  }
   const fetchRef = useRef(0);
   const debounceFetcher = useMemo(() => {
     const loadOptions = (value) => {
@@ -19,7 +27,6 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 800, ...props }) {
           // for fetch callback order
           return;
         }
-        console.log(newOptions);
         setOptions(newOptions);
         setFetching(false);
       });
@@ -29,7 +36,7 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 800, ...props }) {
 
   useEffect(() => {
     debounceFetcher.apply(null, [""])
-  },[])
+  }, [])
   return (
     <>
       <Select
