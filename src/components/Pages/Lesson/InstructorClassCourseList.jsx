@@ -7,7 +7,7 @@ import debounce from 'lodash/debounce';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 import ContentContext from '../../../helpers/Context/ContentContext';
 
-const InstructorClassCourse = () => {
+const InstructorClassCourseList = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search)
 
@@ -32,7 +32,8 @@ const InstructorClassCourse = () => {
         _setSuccessMessage(value);
     }
 
-    /** @return "classCourses": [
+    /** 
+     * @return "classCourses": [
         {
             "class_course_id": 1,
             "class_id": 1,
@@ -168,4 +169,4 @@ const InstructorClassCourse = () => {
     )
 }
 
-export default InstructorClassCourse
+export default InstructorClassCourseList

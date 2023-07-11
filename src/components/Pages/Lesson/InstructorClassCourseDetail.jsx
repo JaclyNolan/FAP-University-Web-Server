@@ -7,7 +7,7 @@ import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 import ContentContext from '../../../helpers/Context/ContentContext';
 import { useLocation, useParams } from 'react-router-dom';
 
-const Class = () => {
+const InstructorClassCourseDetail = () => {
     console.log("Rendering Class.jsx")
     const params = useParams();
     const classCourseId = params.id;
@@ -77,7 +77,8 @@ const Class = () => {
     ]
 
 
-    /** @return "classCourse": {
+    /** 
+     * @return "classCourse": {
         "class_course_id": 1,
         "class_id": 1,
         "course_id": 1,
@@ -109,11 +110,12 @@ const Class = () => {
                 console.log(error);
                 setErrorMessage(error.message);
                 setContentLoading(false);
-                setClassCourseFetching(false);
+                // setClassCourseFetching(false);
             })
     }
 
-    /** @return "classEnrollments": [
+    /** 
+     * @return "classEnrollments": [
         {
             "class_course_id": 1,
             "class_enrollment_id": 1,
@@ -148,7 +150,7 @@ const Class = () => {
             .catch((error) => {
                 console.log(error);
                 setErrorMessage(error.message);
-                setStudentFetching(false);
+                // setStudentFetching(false);
             })
     }
 
@@ -192,4 +194,4 @@ const Class = () => {
     )
 }
 
-export default Class
+export default InstructorClassCourseDetail

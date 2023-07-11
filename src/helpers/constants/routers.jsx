@@ -13,7 +13,7 @@ import {FeedbackDetails, FeedbackList} from '../../components/Pages/Feedback'
 import { AttendanceEdit, AttendanceList } from '../../components/Pages/Attendance'
 import {NewsAdd, NewsDetails, NewsEdit, NewsList} from '../../components/Pages/News'
 import {EnrollmentEdit, EnrollmentList} from '../../components/Pages/Enrollment'
-import {List as LessonList, Class, Attendance, InstructorClassCourse} from '../../components/Pages/Lesson'
+import {List as LessonList, Attendance, InstructorClassCourseList, InstructorClassCourseDetail} from '../../components/Pages/Lesson'
 import {TeacherFeedback, TeacherFeedbackDetails} from '../../components/Pages/TeacherFeedback'
 import { AddClass, ClassEdit, ClassList } from "../../components/Pages/Class"
 import { Navigate } from "react-router-dom"
@@ -235,11 +235,11 @@ export const routers = [
     },
     {
         path: '/class',
-        render: () => <PrivateRoute To = {InstructorClassCourse} roles = {['Instructor']} authRequire = {true} ElseTo='/'></PrivateRoute>
+        render: () => <PrivateRoute To = {InstructorClassCourseList} roles = {['Instructor']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
         path: '/class/:id',
-        render: () => <PrivateRoute To = {Class} roles = {['Instructor']} authRequire = {true} ElseTo='/'></PrivateRoute>
+        render: () => <PrivateRoute To = {InstructorClassCourseDetail} roles = {['Instructor']} authRequire = {true} ElseTo='/'></PrivateRoute>
     },
     {
         path: '/schedule/attendance/:classId',

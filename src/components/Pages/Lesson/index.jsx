@@ -1,7 +1,7 @@
-import Class from "./Class";
+import InstructorClassCourseDetail from "./InstructorClassCourseDetail";
 import List from "./List";
 import Attendance from "./Attendance";
-import InstructorClassCourse from "./InstructorClassCourse";
+import InstructorClassCourseList from "./InstructorClassCourseList";
 
 
-export {Class, List, Attendance, InstructorClassCourse}
+export {InstructorClassCourseDetail , List, Attendance, InstructorClassCourseList}
