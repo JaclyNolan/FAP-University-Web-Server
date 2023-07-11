@@ -187,9 +187,10 @@ const ClassCourseList = () => {
             await axiosClient.put(`/classCourses/delete-classCourse/${id}`)
                 .then((response) => {
                     setFetching(false);
-                    setSuccessMessage('Successfully delete user with id ' + id)
+                    setSuccessMessage('Successfully delete class course with id ' + id)
                 })
                 .catch((error) => {
+                    console.log(error);
                     setFetching(false);
                     setErrorMessage(error.message);
                 })

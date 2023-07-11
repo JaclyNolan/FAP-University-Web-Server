@@ -7,7 +7,12 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 800, presetOptions, va
   const [options, _setOptions] = useState([]);
   const setOptions = (newOptions) => {
     // console.log(presetOptions.concat(newOptions));
-    _setOptions(presetOptions.concat(newOptions));
+    if (presetOptions) {
+      _setOptions(presetOptions.concat(newOptions));
+    } else {
+      _setOptions(newOptions);
+    }
+
   }
   const fetchRef = useRef(0);
   const debounceFetcher = useMemo(() => {
