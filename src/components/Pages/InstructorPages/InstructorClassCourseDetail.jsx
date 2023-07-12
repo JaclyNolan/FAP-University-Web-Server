@@ -3,7 +3,8 @@ import classes from '../Page.module.scss';
 import { Table, Alert, Image, Tag } from 'antd';
 import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const Times = [
     '7:15AM - 9:15AM',
@@ -46,7 +47,7 @@ const InstructorClassCourseDetail = () => {
     const [isClassCourseFetching, setClassCourseFetching] = useState(true);
     const [isStudentFetching, setStudentFetching] = useState(true);
     const [isScheduleFetching, setScheduleFetching] = useState(true);
-    // const { setContentLoading } = useContext(ContentContext)
+    const { setContentLoading } = useContext(ContentContext)
 
     const [errorMessage, _setErrorMessage] = useState("");
     const [successMessage, _setSuccessMessage] = useState("");
@@ -220,8 +221,7 @@ const InstructorClassCourseDetail = () => {
         console.log(classScheduleData);
         return classScheduleData.map((classSchedule) => ({
             key: classSchedule.class_schedule_id,
-            id: classSchedule.class_schedule_id,
-            date: classSchedule.day,
+            date: dayjs(classSchedule.day).format('DD/MM/YYYY'),
             slot: Times[classSchedule.slot],
             room: classSchedule.room,
             status: classSchedule.status,
@@ -230,11 +230,6 @@ const InstructorClassCourseDetail = () => {
     }
 
     const scheduleColumns = [
-        {
-            title: 'Id',
-            dataIndex: 'id',
-            key: 'id',
-        },
         {
             title: 'Date',
             dataIndex: 'date',
@@ -264,11 +259,11 @@ const InstructorClassCourseDetail = () => {
         },
     ]
 
-    // useEffect(() => {
-    //     if (!isClassCourseFetching && !isStudentFetching && !isScheduleFetching) setContentLoading(false)
-    //     else setContentLoading(true);
+    useEffect(() => {
+        if (!isClassCourseFetching) setContentLoading(false)
+        else setContentLoading(true);
 
-    // }, [isClassCourseFetching, isStudentFetching, isScheduleFetching])
+    }, [isClassCourseFetching])
 
     useEffect(() => {
         fetchClassCourseData();
@@ -302,12 +297,12 @@ const InstructorClassCourseDetail = () => {
                 <br />
                 <div><h3>Student List:</h3></div>
                 <div className={classes['list__table']}>
-                    <Table columns={studentColumns} pagination={false} dataSource={studentData} />
+                    <Table columns={studentColumns} loading={isStudentFetching} pagination={false} dataSource={studentData} />
                 </div>
                 <br />
                 <div><h3>Schedule List:</h3></div>
                 <div className={classes['list__table']}>
-                    <Table columns={scheduleColumns} pagination={false} dataSource={scheduleData} />
+                    <Table columns={scheduleColumns} loading={isScheduleFetching} pagination={false} dataSource={scheduleData} />
                 </div>
             </div>
         </div>
