@@ -1,25 +1,36 @@
-.list{
+.row {
+    &__slots {
+        background-color: #FAFAFA;
+    }
+
+    &__data {
+        text-align: center;
+    }
+}
+
+.list {
     display: flex;
     justify-content: flex-start;
     margin-top: 20px;
-    & table{
+
+    & table {
         border-collapse: collapse;
         border-bottom: 1px solid #000;
         width: 100%;
     }
+
     & td {
         border-left: 1px solid #000;
         border-right: 1px solid #000;
         height: 100px;
         // width: 200px;
-        & p, & div {
-            text-align: center;
 
-        }
     }
-    &__slots{
+
+    &__slots {
         width: 20%;
-        &-item{
+
+        &-item {
             height: 100px;
             border-top: 1px solid #000;
             border-left: 1px solid #000;
@@ -28,13 +39,15 @@
             align-items: center;
             justify-content: center;
             background-color: #ccc;
-            &:last-child{
+
+            &:last-child {
                 border-bottom: 1px solid #000;
             }
         }
     }
-    &__table{
-        &-header{
+
+    &__table {
+        &-header {
             border: 1px solid #000;
             display: flex;
             align-items: center;

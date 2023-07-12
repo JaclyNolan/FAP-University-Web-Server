@@ -5,19 +5,15 @@ import axiosClient from '../../../axios-client';
 import { Link, useLocation } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
-import ContentContext from '../../../helpers/Context/ContentContext';
 
 const InstructorClassCourseList = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search)
 
     const [tableData, setTableData] = useState([]);
-    const [totalPages, setTotalPages] = useState(1);
     const [isFetching, setFetching] = useState(false);
     const fetchRef = useRef(0);
-    const { setContentLoading } = useContext(ContentContext)
 
-    const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState(searchParams.get('search') ? searchParams.get('search') : '');
 
     const [errorMessage, _setErrorMessage] = useState("");
@@ -68,18 +64,17 @@ const InstructorClassCourseList = () => {
         }))
     }
 
-    const fetchClassCourseData = async (currentPage, search) => {
+    const fetchClassCourseData = async (search) => {
         setFetching(true);
-        const url = `/instructor/classCourse?page=${currentPage}`
-            + (search !== "" ? `&keyword=${search}` : ``);
+        const url = `/instructor/classCourse`
+            + (search !== "" ? `?keyword=${search}` : ``);
         console.log(url);
         fetchRef.current += 1;
         const fetchId = fetchRef.current;
         await axiosClient.get(url)
             .then((response) => {
                 if (fetchId !== fetchRef.current) return
-                const { classCourses, total_pages } = response.data;
-                setTotalPages(total_pages);
+                const { classCourses } = response.data;
                 setTableData(getTableDataFromClassCourseData(classCourses));
                 setFetching(false);
                 _setErrorMessage('');
@@ -92,22 +87,17 @@ const InstructorClassCourseList = () => {
     }
 
     useEffect(() => {
-        fetchClassCourseData(currentPage, search)
+        fetchClassCourseData(search)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPage, search]);
+    }, [search]);
 
     const debounceSetter = useMemo(() => {
         const handleSearch = (e) => {
             setSearch(e.target.value);
-            setCurrentPage(1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
         return debounce(handleSearch, 700);
     })
-
-    const handlePageChange = (page, pageSize) => {
-        setCurrentPage(page);
-    }
 
     const tableColumns = [
         {
@@ -155,14 +145,7 @@ const InstructorClassCourseList = () => {
                     </div>
                 </div>
                 <div className={classes['list__table']}>
-                    <Table columns={tableColumns} loading={isFetching} pagination={{
-                        current: currentPage,
-                        total: totalPages * tableData.length,
-                        pageSize: tableData.length,
-                        defaultCurrent: 1,
-                        showQuickJumper: true,
-                        onChange: handlePageChange
-                    }} dataSource={tableData} />
+                    <Table columns={tableColumns} loading={isFetching} pagination={ false } dataSource={tableData} />
                 </div>
             </div>
         </div>

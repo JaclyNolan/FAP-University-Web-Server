@@ -8,7 +8,7 @@ const Content = (props) => {
     const { Component, ...args } = props
 
     return (
-        <ContentContext.Provider value={{ isContentLoading: isContentLoading, setContentLoading: setContentLoading }}>
+        <ContentContext.Provider value={{ isContentLoading: isContentLoading, setContentLoading: setContentLoading }}>  
             <Spin tip="Loading" spinning={isContentLoading}>
                 <Component {...args} />
             </Spin>

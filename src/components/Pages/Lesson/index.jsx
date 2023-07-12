@@ -1,7 +1,7 @@
 import InstructorClassCourseDetail from "./InstructorClassCourseDetail";
-import List from "./List";
-import Attendance from "./Attendance";
+import InstructorWeeklySchedule from "./InstructorWeeklySchedule";
+import InstructorWeeklyScheduleAttendance from "./InstructorWeeklyScheduleAttendance";
 import InstructorClassCourseList from "./InstructorClassCourseList";
 
 
-export {InstructorClassCourseDetail , List, Attendance, InstructorClassCourseList}
+export {InstructorClassCourseDetail , InstructorWeeklySchedule, InstructorWeeklyScheduleAttendance, InstructorClassCourseList}

@@ -2,7 +2,7 @@ import React from 'react'
 import {Select} from 'antd'
 import classes from '../Page.module.scss'
 
-import s from '../Lesson/Lesson.module.scss'
+import s from '../Lesson/InstructorWeeklySchedule.module.scss'
 import { Link } from 'react-router-dom'
 const WeeklyTimeTable = () => {
     const handleChange = () => {
