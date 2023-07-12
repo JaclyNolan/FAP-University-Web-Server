@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, Input, Select, Table} from 'antd'
 import { Link } from 'react-router-dom'
 import classes from '../Page.module.scss'
-const TeacherFeedback = () => {
+const InstructorFeedback = () => {
     const {Search} = Input
 
     const handleChange = () => {
@@ -93,4 +93,4 @@ const TeacherFeedback = () => {
   )
 }
 
-export default TeacherFeedback
+export default InstructorFeedback
