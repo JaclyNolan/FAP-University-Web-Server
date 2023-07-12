@@ -92,7 +92,7 @@ const ListStudent = () => {
                 gender: student.gender,
                 academic_year: student.academic_year,
                 Dob: student.Dob,
-                phone_number: student.phone,
+                phone_number: student.phone_number,
                 address: student.address,
                 major_id: student.major_id,
                 status: student.status,
