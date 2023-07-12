@@ -145,7 +145,7 @@ const InstructorWeeklyScheduleAttendance = () => {
             title: '',
             dataIndex: 'status',
             key: 'status',
-            render: (text) => <Form.Item name={`status_${text.attendanceId}`} initialValue={text.status} read
+            render: (text) => <Form.Item name={`status_${text.attendanceId}`} initialValue={text.status}
                 rules={[{ requires: true, message: "Please select status" }]}>
                 <Radio.Group disabled={!editMode}>
                     <Radio value="0">Absent</Radio>
@@ -218,17 +218,7 @@ const InstructorWeeklyScheduleAttendance = () => {
                     </div>
                 </div>
                 <br />
-                {!editMode ? (
-                    <Form.Item name='viewMode'>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                        <span> </span>
-                        <Button htmlType="button" onClick={handleEdit}>
-                            Edit
-                        </Button>
-                    </Form.Item>
-                ) : (
+                {editMode ? (
                     <Form.Item name='editMode'>
                         <Button type="primary" htmlType="button" onClick={handleSave}>
                             Save
@@ -236,6 +226,16 @@ const InstructorWeeklyScheduleAttendance = () => {
                         <span> </span>
                         <Button htmlType="button" onClick={handleCancel}>
                             Cancel
+                        </Button>
+                    </Form.Item>
+                ) : (
+                    <Form.Item name='viewMode'>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                        <span> </span>
+                        <Button htmlType="button" onClick={handleEdit}>
+                            Edit
                         </Button>
                     </Form.Item>
                 )}
