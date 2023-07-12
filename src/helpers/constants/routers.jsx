@@ -1,7 +1,7 @@
 import PrivateRoute from "../../components/HOC/PrivateRoute/PrivateRoute"
 import { Home, Login, NotFound } from '../../components/Pages/index'
 import { List, Add, Edit } from '../../components/Pages/User'
-import { AddStudent, DetailsStudent, EditStudent, ListStudent, WeeklyTimeTable, Courses, CoureRegister, Classes, MarkReport, AttendanceReport, News, Feedback } from '../../components/Pages/Student'
+import { AddStudent, DetailsStudent, EditStudent, ListStudent } from '../../components/Pages/Student'
 import { AddInstructor, DetailsInstructor, EditInstructor, InstructorList } from '../../components/Pages/Instructor'
 import { AddStaff, DetailsStaff, EditStaff, StaffList } from '../../components/Pages/Staff'
 import { AddCourse, CourseEdit, CourseList } from '../../components/Pages/Course'
@@ -13,10 +13,10 @@ import { FeedbackDetails, FeedbackList } from '../../components/Pages/Feedback'
 import { AttendanceEdit, AttendanceList } from '../../components/Pages/Attendance'
 import { NewsAdd, NewsDetails, NewsEdit, NewsList } from '../../components/Pages/News'
 import { EnrollmentEdit, EnrollmentList } from '../../components/Pages/Enrollment'
-import { InstructorClassCourseList, InstructorClassCourseDetail, InstructorWeeklySchedule, InstructorWeeklyScheduleAttendance } from '../../components/Pages/Lesson'
-import { TeacherFeedback, TeacherFeedbackDetails } from '../../components/Pages/TeacherFeedback'
+import { InstructorClassCourseList, InstructorClassCourseDetail, InstructorWeeklySchedule, InstructorWeeklyScheduleAttendance, InstructorFeedback, InstructorFeedbackDetail } from '../../components/Pages/InstructorPages'
 import { AddClass, ClassEdit, ClassList } from "../../components/Pages/Class"
 import { Navigate } from "react-router-dom"
+import { AttendanceReport, Classes, CoureRegister, Courses, Feedback, MarkReport, News, WeeklyTimeTable } from "../../components/Pages/StudentPages"
 export const routers = [
     //ADMIN----------------------------------------------------------------------------------------------------------------
     {
@@ -254,12 +254,12 @@ export const routers = [
         render: () => <PrivateRoute To={InstructorWeeklyScheduleAttendance} roles={['Instructor']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/Instructorfeedback/list',
-        render: () => <PrivateRoute To={TeacherFeedback} roles={['Instructor']} authRequire={true} ElseTo='/'></PrivateRoute>
+        path: '/feedback',
+        render: () => <PrivateRoute To={InstructorFeedback} roles={['Instructor']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/Instructorfeedback/details/:id',
-        render: () => <PrivateRoute To={TeacherFeedbackDetails} roles={['Instructor']} authRequire={true} ElseTo='/'></PrivateRoute>
+        path: '/feedback/:id',
+        render: () => <PrivateRoute To={InstructorFeedbackDetail} roles={['Instructor']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     //STUDENT----------------------------------------------------------------------------------------------------------------
     {

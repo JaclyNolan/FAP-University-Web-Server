@@ -46,7 +46,7 @@ const InstructorClassCourseDetail = () => {
     const [isClassCourseFetching, setClassCourseFetching] = useState(true);
     const [isStudentFetching, setStudentFetching] = useState(true);
     const [isScheduleFetching, setScheduleFetching] = useState(true);
-    const { setContentLoading } = useContext(ContentContext)
+    // const { setContentLoading } = useContext(ContentContext)
 
     const [errorMessage, _setErrorMessage] = useState("");
     const [successMessage, _setSuccessMessage] = useState("");
@@ -264,11 +264,11 @@ const InstructorClassCourseDetail = () => {
         },
     ]
 
-    useEffect(() => {
-        if (!isClassCourseFetching && !isStudentFetching && !isScheduleFetching) setContentLoading(false)
-        else setContentLoading(true);
+    // useEffect(() => {
+    //     if (!isClassCourseFetching && !isStudentFetching && !isScheduleFetching) setContentLoading(false)
+    //     else setContentLoading(true);
 
-    }, [isClassCourseFetching, isStudentFetching, isScheduleFetching])
+    // }, [isClassCourseFetching, isStudentFetching, isScheduleFetching])
 
     useEffect(() => {
         fetchClassCourseData();

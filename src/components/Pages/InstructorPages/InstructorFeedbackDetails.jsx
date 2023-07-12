@@ -1,6 +1,6 @@
 import React from 'react'
 import classes from '../Feedback/Feedback.module.scss'
-const TeacherFeedbackDetails = () => {
+const InstructorFeedbackDetail = () => {
   return (
     <div className={classes['feedback__details']}>
         <div className={classes['feedback__details-row']}>
@@ -21,4 +21,4 @@ const TeacherFeedbackDetails = () => {
   )
 }
 
-export default TeacherFeedbackDetails
+export default InstructorFeedbackDetail
