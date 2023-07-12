@@ -206,7 +206,7 @@ export const instructorSidebar = [
             },
             {
                 title: "Your student's feedback",
-                path: '/teacherfeedback/list'
+                path: '/feedback'
             }
         ]
     },

@@ -32,7 +32,7 @@ const InstructorFeedback = () => {
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/teacherfeedback/details/${text.id}`} style={{marginRight: '10px'}}>
+                <Link to={`/feedback/${text.id}`} style={{marginRight: '10px'}}>
                     <Button>View Details</Button>
                 </Link>
             </div>
