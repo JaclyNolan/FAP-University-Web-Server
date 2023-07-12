@@ -1,5 +1,11 @@
-.cell {
-    text-align: center;
+.row {
+    &__slots {
+        background-color: #FAFAFA;
+    }
+
+    &__data {
+        text-align: center;
+    }
 }
 
 .list {

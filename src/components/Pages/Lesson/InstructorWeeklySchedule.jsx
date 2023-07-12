@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Input, Select, InputNumber, Upload, message, DatePicker, Table, Tag } from 'antd'
+import { DatePicker, Table, Tag } from 'antd'
 import classes from '../Page.module.scss'
 
 import s from './InstructorWeeklySchedule.module.scss'
@@ -7,13 +7,21 @@ import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 import axiosClient from '../../../axios-client'
 import ContentContext from '../../../helpers/Context/ContentContext'
+const Times = [
+    '7:15AM - 9:15AM',
+    '9:20AM - 11:20AM',
+    '12:10AM - 2:10PM',
+    '2:15PM - 4:15PM',
+    '4:20PM - 6:20PM',
+    '6:25PM - 8:25PM',
+];
 const SlotTimes = [
-    <div><h4>Slot 1</h4><p>7:15AM - 9:15AM</p></div>,
-    <div><h4>Slot 2</h4><p>9:20AM - 11:20AM</p></div>,
-    <div><h4>Slot 3</h4><p>12:10PM - 2:10PM</p></div>,
-    <div><h4>Slot 4</h4><p>2:15PM - 4:15PM</p></div>,
-    <div><h4>Slot 5</h4><p>4:20PM - 6:20PM</p></div>,
-    <div><h4>Slot 6</h4><p>6:25PM - 8:25PM</p></div>,
+    <div><h4>Slot 1</h4><p>{Times[0]}</p></div>,
+    <div><h4>Slot 2</h4><p>{Times[1]}</p></div>,
+    <div><h4>Slot 3</h4><p>{Times[2]}</p></div>,
+    <div><h4>Slot 4</h4><p>{Times[3]}</p></div>,
+    <div><h4>Slot 5</h4><p>{Times[4]}</p></div>,
+    <div><h4>Slot 6</h4><p>{Times[5]}</p></div>,
 ];
 const DaysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const weekFormat = 'DD/MM/YYYY';
@@ -27,7 +35,7 @@ const findStatusText = (status) => {
             return "Not Yet";
         case 2:
             return "In Progress";
-        case 3:
+        default:
             return "Done";
     }
 }
@@ -37,13 +45,16 @@ const findStatusColor = (status) => {
             return "red";
         case 2:
             return "yellow";
-        case 3:
+        default:
             return "green";
     }
 }
 
 const InstructorWeeklySchedule = () => {
     const [scheduleData, setScheduleData] = useState([]);
+    const [instructorData, setInstructorData] = useState(null);
+    const [isScheduleDataFetching, setScheduleDataFetching] = useState(true);
+    const [isInstructorFetching, setInstructorFetching] = useState(true);
     const [week, _setWeek] = useState({
         startDate: dayjs('2023-05-18').startOf('week'),
         endDate: dayjs('2023-05-18').endOf('week'),
@@ -60,6 +71,15 @@ const InstructorWeeklySchedule = () => {
     useEffect(() => {
         fetchScheduleData();
     }, [week]);
+
+    useEffect(() => {
+        fetchInstructorData();
+    }, []);
+
+    useEffect(() => {
+        if (!isInstructorFetching && !isScheduleDataFetching) setContentLoading(false);
+        else setContentLoading(true);
+    }, [isInstructorFetching, isScheduleDataFetching]);
 
     /**
      * @return "classSchedules": [
@@ -88,7 +108,7 @@ const InstructorWeeklySchedule = () => {
      */
 
     const fetchScheduleData = async () => {
-        setContentLoading(true);
+        setScheduleDataFetching(true);
         const url = `/instructor/classSchedule`
             + `?start_date=${week.startDate.format('DD/MM/YYYY')}`
             + `&end_date=${week.endDate.format('DD/MM/YYYY')}`;
@@ -96,10 +116,26 @@ const InstructorWeeklySchedule = () => {
         await axiosClient.get(url)
             .then((response) => {
                 setScheduleData(response.data.classSchedules);
-                setContentLoading(false);
+                setScheduleDataFetching(false);
             })
             .catch((error) => {
                 console.error('Error fetching schedule data:', error);
+                setScheduleDataFetching(false);
+            })
+    };
+
+    const fetchInstructorData = async () => {
+        setInstructorFetching(true);
+        const url = `/instructor/detail`;
+        console.log(url);
+        await axiosClient.get(url)
+            .then((response) => {
+                setInstructorData(response.data.instructor);
+                setInstructorFetching(false);
+            })
+            .catch((error) => {
+                console.error('Error fetching instructor data:', error);
+                setInstructorFetching(false);
             })
     };
 
@@ -107,13 +143,14 @@ const InstructorWeeklySchedule = () => {
         {
             title: 'Slots',
             key: 'slot',
+            className: s['row__slots'],
             dataIndex: 'slot',
         },
         ...DaysOfWeek.map((day) => ({
             title: day,
             key: day.toLowerCase(),
             dataIndex: day.toLowerCase(),
-            render: (text) => text && <div className={s['cell']}>
+            render: (text) => text && <div className={s['row__data']}>
                 <Link to={`/class/${text.classCourseId}`}>
                     <p>Class: {text.className}</p>
                     <p>{text.courseName}</p>
@@ -132,8 +169,7 @@ const InstructorWeeklySchedule = () => {
 
         DaysOfWeek.forEach((day) => {
             const matchingClassSchedule = scheduleData.find(
-                (classSchedule) => { 
-                    console.log(dayjs(classSchedule.day).format('dddd'), day);
+                (classSchedule) => {
                     return dayjs(classSchedule.day).format('dddd') === day && classSchedule.slot === index + 1;
                 }
             );
@@ -153,7 +189,7 @@ const InstructorWeeklySchedule = () => {
 
     return (
         <div>
-            <p className={classes['page__title']}>Activities for <b>Nguyen Van A</b></p>
+            <p className={classes['page__title']}>Activities for <b>{instructorData && instructorData.full_name}</b></p>
             <div className={classes['list__filters']}>
                 <DatePicker
                     value={week.startDate}
