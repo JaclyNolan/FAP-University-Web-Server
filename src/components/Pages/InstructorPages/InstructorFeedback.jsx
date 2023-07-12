@@ -1,24 +1,25 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Input, Select, Table } from 'antd'
+import { Button, Input, Popover, Select, Table } from 'antd'
 import { Link } from 'react-router-dom'
 import classes from '../Page.module.scss'
 import axiosClient from '../../../axios-client';
 import dayjs from 'dayjs';
 import ContentContext from '../../../helpers/Context/ContentContext';
 const InstructorFeedback = () => {
+    const { TextArea } = Input;
     const [classCourseId, setClassCourseId] = useState('all');
     const [tableData, setTableData] = useState(null);
     const [classCourseData, setClassCourseData] = useState(null);
     const [isFeedbackfetching, setFeedbackFetching] = useState(true);
     const [isClassCoursefetching, setClassCourseFetching] = useState(true);
-    const {setContentLoading} = useContext(ContentContext);
+    const { setContentLoading } = useContext(ContentContext);
 
     useEffect(() => {
         fetchFeedbackData();
         fetchClassCourseData();
     }, [])
 
-    useEffect(() => {  
+    useEffect(() => {
         fetchFeedbackData();
     }, [classCourseId])
 
@@ -28,7 +29,7 @@ const InstructorFeedback = () => {
     }, [isFeedbackfetching, isClassCoursefetching])
 
     /**
-     * @return     "feedbacks": [
+     * @return "feedbacks": [
         {
             "feedback_id": 2,
             "class_enrollment_id": 2,
@@ -85,7 +86,7 @@ const InstructorFeedback = () => {
             student: feedback.class_enrollment.student.full_name,
             dateCreated: dayjs(feedback.created_at).format('HH:mm:ss DD/MM/YYYY'),
             actions: {
-                id: feedback.feedback_id,
+                comment: feedback.feedback_content,
             }
         }));
     }
@@ -114,9 +115,12 @@ const InstructorFeedback = () => {
             dataIndex: 'actions',
             key: 'actions',
             render: (text) => <div>
-                <Link to={`/feedback/${text.id}`} style={{ marginRight: '10px' }}>
-                    <Button>View Details</Button>
-                </Link>
+                <Popover style={{ marginRight: '10px' }} title={<span>Comment</span>}
+                    content={(
+                        <TextArea style={{ width: 300 }} rows={4} readOnly value={text.comment}></TextArea>
+                    )} placement='topRight' trigger='click'>
+                    <Button>Feedback</Button>
+                </Popover>
             </div>
         },
     ]
@@ -170,7 +174,6 @@ const InstructorFeedback = () => {
             <div className={classes['list__main']}>
                 <div className={classes['list__nav']}>
                     <div className={classes['list__nav-left']}>
-
                     </div>
                     <div className={classes['list__nav-right']}>
                     </div>

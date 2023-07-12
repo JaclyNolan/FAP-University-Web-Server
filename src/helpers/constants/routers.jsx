@@ -257,10 +257,6 @@ export const routers = [
         path: '/feedback',
         render: () => <PrivateRoute To={InstructorFeedback} roles={['Instructor']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
-    {
-        path: '/feedback/:id',
-        render: () => <PrivateRoute To={InstructorFeedbackDetail} roles={['Instructor']} authRequire={true} ElseTo='/'></PrivateRoute>
-    },
     //STUDENT----------------------------------------------------------------------------------------------------------------
     {
         path: '/student/weeklytable/:id',
