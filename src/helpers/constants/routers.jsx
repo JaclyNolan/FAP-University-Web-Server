@@ -16,7 +16,7 @@ import { EnrollmentEdit, EnrollmentList } from '../../components/Pages/Enrollmen
 import { InstructorClassCourseList, InstructorClassCourseDetail, InstructorWeeklySchedule, InstructorWeeklyScheduleAttendance, InstructorFeedback, InstructorFeedbackDetail } from '../../components/Pages/InstructorPages'
 import { AddClass, ClassEdit, ClassList } from "../../components/Pages/Class"
 import { Navigate } from "react-router-dom"
-import { AttendanceReport, Classes, CoureRegister, Courses, Feedback, MarkReport, News, WeeklyTimeTable } from "../../components/Pages/StudentPages"
+import { AttendanceReport, Classes, CoureRegister, Courses, Feedback, MarkReport, News, StudentWeeklySchedule } from "../../components/Pages/StudentPages"
 export const routers = [
     //ADMIN----------------------------------------------------------------------------------------------------------------
     {
@@ -260,7 +260,7 @@ export const routers = [
     //STUDENT----------------------------------------------------------------------------------------------------------------
     {
         path: '/student/weeklytable/:id',
-        render: () => <PrivateRoute To={WeeklyTimeTable} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
+        render: () => <PrivateRoute To={StudentWeeklySchedule} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     {
         path: '/student/courses/:id',
