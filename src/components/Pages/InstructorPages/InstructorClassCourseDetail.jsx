@@ -226,6 +226,7 @@ const InstructorClassCourseDetail = () => {
             room: classSchedule.room,
             status: classSchedule.status,
             detail: classSchedule.class_schedule_id,
+            submitTime: classSchedule.submit_time,
         }))
     }
 
@@ -250,6 +251,12 @@ const InstructorClassCourseDetail = () => {
             dataIndex: 'status',
             key: 'status',
             render: (text) => <Tag color={findStatusColor(text)}>{findStatusText(text)}</Tag>
+        },
+        {
+            title: 'Last Update',
+            dataIndex: 'submitTime',
+            key: 'submitTime',
+            render: (text) => (dayjs(text).format('HH:mm:ss DD/MM/YYYY'))
         },
         {
             title: 'Detail',

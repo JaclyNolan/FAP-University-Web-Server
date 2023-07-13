@@ -5,6 +5,7 @@ import classes from '../Page.module.scss'
 import { Link, useParams } from 'react-router-dom'
 import axiosClient from '../../../axios-client'
 import ContentContext from '../../../helpers/Context/ContentContext'
+import dayjs from 'dayjs'
 const InstructorWeeklyScheduleAttendance = () => {
     const [editMode, setEditMode] = useState(false);
     const [tableData, setTableData] = useState([]);
@@ -171,10 +172,11 @@ const InstructorWeeklyScheduleAttendance = () => {
                 attendance_status: fields[`status_${attendance.attendance_id}`],
                 attendance_comment: fields[`comment_${attendance.attendance_id}`],
             }))
-            console.log(data);
+            console.log({ data: data });
             const url = `/instructor/classSchedule/${classScheduleId}/attendances`
             await axiosClient.put(url, { data: data })
                 .then((response) => {
+                    fetchScheduleAttendancesData();
                     alert("Saved attendance successfully");
                     setContentLoading(false);
                 })
@@ -239,6 +241,7 @@ const InstructorWeeklyScheduleAttendance = () => {
                         </Button>
                     </Form.Item>
                 )}
+                <p><b>Last Update: </b>{(scheduleAttendanceData && scheduleAttendanceData.submit_time) ? dayjs(scheduleAttendanceData.submit_time).format('HH:mm:ss DD/MM/YYYY') : 'None'}</p>
             </Form>
         </div>
     )

@@ -158,7 +158,7 @@ const InstructorWeeklySchedule = () => {
                 <p>at Room <b>{text.room}</b></p>
                 <Tag color={findStatusColor(text.status)}>{findStatusText(text.status)}</Tag>
                 <Link to={`/schedule/attendance/${text.classScheduleId}`}>
-                    <p>Take Attendance</p>
+                    <p>{text.isSubmit ? "Taken" : "Take Attendance"}</p>
                 </Link>
             </div>,
         })),
@@ -175,12 +175,14 @@ const InstructorWeeklySchedule = () => {
             );
             if (!matchingClassSchedule) return;
             row[day.toLowerCase()] = {
+                key: matchingClassSchedule.class_course_id,
                 classCourseId: matchingClassSchedule.class_course_id,
                 className: matchingClassSchedule.class_course.class.class_name,
                 courseName: matchingClassSchedule.class_course.course.course_name,
                 room: matchingClassSchedule.room,
                 status: matchingClassSchedule.status,
                 classScheduleId: matchingClassSchedule.class_schedule_id,
+                isSubmit: matchingClassSchedule.submit_time ? true : false, 
             };
         });
 
