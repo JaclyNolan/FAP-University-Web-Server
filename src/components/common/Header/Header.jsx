@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import classes from './Header.module.scss'
 import { Breadcrumb, Avatar, Dropdown, Spin } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import InvisibleButton from '../Button/InvisibleButton';
 import { useMediaQuery } from '../../../helpers/hooks/useMediaQuery';
 import AuthContext from '../../../helpers/Context/AuthContext';
@@ -12,6 +12,8 @@ const Header = ({ onToggleSidebar }) => {
   const { user } = useContext(AuthContext);
   const [isFetching, setFetching] = useState(false);
   const location = useLocation()
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const splitedUrl = window.location.href.split('/')
     const url = splitedUrl.splice(3, splitedUrl.length)
@@ -35,16 +37,16 @@ const Header = ({ onToggleSidebar }) => {
         // Store the fetched user data in AuthContext
         user.setToken(null);
         user.setUser(null);
-        // window.location.href = '/login';
         console.log(response);
         setFetching(false);
+        return navigate('/login');
       })
       .catch((error) => {
         console.log(error);
         setFetching(false);
       });
-    window.location.reload()
-  }
+      // window.location.href = '/';
+    }
 
   const items = [
     {
@@ -67,6 +69,8 @@ const Header = ({ onToggleSidebar }) => {
       ),
     }
   ];
+
+  // if (isFetching) 
 
   return (
     <header className={classes['header']}>

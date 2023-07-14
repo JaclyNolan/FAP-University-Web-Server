@@ -1,5 +1,3 @@
-import { routers } from "./routers";
+import { adminRouters, staffRouters, instructorRouters, studentRouters, commomRouters } from "./routers";
 
-
-
-export {routers}
+export { adminRouters, staffRouters, instructorRouters, studentRouters, commomRouters }
