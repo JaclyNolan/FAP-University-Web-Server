@@ -164,6 +164,7 @@ const StudentWeeklySchedule = () => {
                 </Link>
                 <p>at Room <b>{text.room}</b></p>
                 <Tag color={findStatusColor(text.status)}>{findStatusText(text.status)}</Tag>
+                <br/>
                 {text.attendanceStatus 
                 ? <Tag color='green'>Present</Tag> 
                 : <Tag color='red'>Absent</Tag>}
@@ -208,6 +209,7 @@ const StudentWeeklySchedule = () => {
                     }}
                 />
             </div>
+            <br/>
             <div>
                 <Table
                     dataSource={data}

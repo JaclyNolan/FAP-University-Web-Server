@@ -17,8 +17,7 @@ import { InstructorClassCourseList, InstructorClassCourseDetail, InstructorWeekl
 import { AddClass, ClassEdit, ClassList } from "../../components/Pages/Class"
 import { Navigate } from "react-router-dom"
 import { AttendanceReport, Classes, CoureRegister, Courses, Feedback, MarkReport, News, StudentWeeklySchedule } from "../../components/Pages/StudentPages"
-export const routers = [
-    //ADMIN----------------------------------------------------------------------------------------------------------------
+export const commomRouters = [
     {
         path: '/',
         render: () => <PrivateRoute To={Home} roles={[]} authRequire={true} ElseTo='/login' />
@@ -28,21 +27,12 @@ export const routers = [
         render: () => <PrivateRoute To={Login} roles={[]} authRequire={false} ElseTo='/' />
     },
     {
-        path: '/user/add',
-        render: () => <PrivateRoute To={Add} roles={['Admin']} authRequire={true} ElseTo='/'></PrivateRoute>
-    },
-    {
-        path: '/user/edit/:id',
-        render: () => <PrivateRoute To={Edit} roles={['Admin']} authRequire={true} ElseTo='/'></PrivateRoute>
-    },
-    {
-        path: '/user/list',
-        render: () => <PrivateRoute To={List} roles={['Admin']} authRequire={true} ElseTo='/'></PrivateRoute>
-    },
-    {
-        path: '/user',
-        render: () => <Navigate to='/user/list' />
-    },
+        path: '*',
+        render: () => <NotFound />
+    }
+]
+
+export const staffRouters = [
     //STAFF&ADMIN----------------------------------------------------------------------------------------------------------------
     {
         path: '/student/list',
@@ -228,6 +218,29 @@ export const routers = [
         path: '/enrollment/list',
         render: () => <PrivateRoute To={EnrollmentList} roles={['Admin', 'Staff']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
+    ...commomRouters
+]
+export const adminRouters = [
+    //ADMIN----------------------------------------------------------------------------------------------------------------
+    {
+        path: '/user/add',
+        render: () => <PrivateRoute To={Add} roles={['Admin']} authRequire={true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/user/edit/:id',
+        render: () => <PrivateRoute To={Edit} roles={['Admin']} authRequire={true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/user/list',
+        render: () => <PrivateRoute To={List} roles={['Admin']} authRequire={true} ElseTo='/'></PrivateRoute>
+    },
+    {
+        path: '/user',
+        render: () => <Navigate to='/user/list' />
+    },
+    ...staffRouters
+]
+export const instructorRouters = [
     //INSTRUCTOR----------------------------------------------------------------------------------------------------------------
     {
         path: '/schedule/weekly',
@@ -257,9 +270,12 @@ export const routers = [
         path: '/feedback',
         render: () => <PrivateRoute To={InstructorFeedback} roles={['Instructor']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
+    ...commomRouters
+]
+export const studentRouters = [
     //STUDENT----------------------------------------------------------------------------------------------------------------
     {
-        path: '/student/weeklytable/:id',
+        path: '/schedule/weekly',
         render: () => <PrivateRoute To={StudentWeeklySchedule} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     {
@@ -290,9 +306,5 @@ export const routers = [
         path: '/student/feedback',
         render: () => <PrivateRoute To={Feedback} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
-    //
-    {
-        path: '*',
-        render: () => <NotFound />
-    }
+    ...commomRouters
 ]

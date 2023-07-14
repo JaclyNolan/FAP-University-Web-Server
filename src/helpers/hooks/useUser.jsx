@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import axiosClient from '../../axios-client';
+import { redirect, useNavigate } from 'react-router-dom';
 
 //useUser is like a context provider for the user nest in AuthContext
 const useUser = () => {
     const [user, _setUser] = useState(null);
     const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
     const [fetchingUser, setFetchingUser] = useState(true)
+    const navigate = useNavigate();
 
     console.log("Rendering useUser.jsx")
 
@@ -46,6 +48,7 @@ const useUser = () => {
                         setUser(null);
                         setToken(null);
                         setFetchingUser(false)
+                        return navigate('/login');
                     })
             } else {
                 // console.log("fetchingUser: " + fetchingUser);
