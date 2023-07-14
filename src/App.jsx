@@ -1,11 +1,26 @@
 import { Header, Sidebar, Backdrop } from "./components/common"
 import classes from './App.module.scss'
 import { Routes, Route } from 'react-router-dom'
-import { routers } from './helpers/constants'
 import ScreenLoader from "./components/common/ScreenLoader/ScreenLoader";
 import AuthContext from './helpers/Context/AuthContext';
 import { useEffect, useState } from "react";
 import { useMediaQuery, useUser } from "./helpers/hooks";
+import { adminRouters, commomRouters, instructorRouters, staffRouters, studentRouters } from "./helpers/constants";
+const findRouter = (role) => {
+  switch (role){
+    case "Admin":
+      return adminRouters
+    case "Staff":
+      return staffRouters
+    case "Instructor":
+      return instructorRouters
+    case "Student":
+      return studentRouters
+    default:
+      return commomRouters
+  }
+}
+
 function App() {
   const user = useUser()
   const isMobileView = useMediaQuery("(max-width: 850px)");
@@ -35,7 +50,7 @@ function App() {
   }
 
   console.log('Rendering App.jsx');
-    
+
   return user.isFetching
     ? <ScreenLoader />
     : (<AuthContext.Provider value={{ user: user }}>
@@ -46,7 +61,7 @@ function App() {
           {user.token && <Header onToggleSidebar={onToggleSidebar} />}
           <div className={classes['main-main']}>
             <Routes>
-              {routers.map((routeItem, index) => {
+              {findRouter(user.user && user.user.role).map((routeItem, index) => {
                 return <Route path={routeItem.path} key={index} element={routeItem.render()} />
               })}
             </Routes>

@@ -230,8 +230,8 @@ export const studentSidebar = [
         title: 'Information Access',
         items: [
             {
-                title: 'Weekly time table',
-                path: '/student/weeklytable/1'
+                title: 'Weekly timetable',
+                path: '/schedule/weekly'
             },
             {
                 title: 'Course list',

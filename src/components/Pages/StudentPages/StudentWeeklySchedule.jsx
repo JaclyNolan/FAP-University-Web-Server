@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { DatePicker, Table, Tag } from 'antd'
 import classes from '../Page.module.scss'
-import s from './InstructorWeeklySchedule.module.scss'
+import s from '../InstructorPages/InstructorWeeklySchedule.module.scss'
 import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 import axiosClient from '../../../axios-client'
@@ -49,11 +49,11 @@ const findStatusColor = (status) => {
     }
 }
 
-const InstructorWeeklySchedule = () => {
+const StudentWeeklySchedule = () => {
     const [scheduleData, setScheduleData] = useState([]);
-    const [instructorData, setInstructorData] = useState(null);
+    const [studentData, setStudentData] = useState(null);
     const [isScheduleDataFetching, setScheduleDataFetching] = useState(true);
-    const [isInstructorFetching, setInstructorFetching] = useState(true);
+    const [isStudentFetching, setStudentFetching] = useState(true);
     const [week, _setWeek] = useState({
         startDate: dayjs('2023-05-18').startOf('week'),
         endDate: dayjs('2023-05-18').endOf('week'),
@@ -72,23 +72,24 @@ const InstructorWeeklySchedule = () => {
     }, [week]);
 
     useEffect(() => {
-        fetchInstructorData();
+        fetchStudentData();
     }, []);
 
     useEffect(() => {
-        if (!isInstructorFetching && !isScheduleDataFetching) setContentLoading(false);
+        if (!isStudentFetching && !isScheduleDataFetching) setContentLoading(false);
         else setContentLoading(true);
-    }, [isInstructorFetching, isScheduleDataFetching]);
+    }, [isStudentFetching, isScheduleDataFetching]);
 
     /**
      * @return "classSchedules": [
         {
-            "class_course_id": 1,
             "class_schedule_id": 1,
+            "class_course_id": 1,
             "day": "2023-05-18",
-            "room": 101,
             "slot": 1,
+            "room": 101,
             "status": 1,
+            "submit_time": null,
             "class_course": {
                 "class_course_id": 1,
                 "class_id": 1,
@@ -96,19 +97,26 @@ const InstructorWeeklySchedule = () => {
                 "class": {
                     "class_id": 1,
                     "class_name": "CS001"
-                }
+                },
                 "course": {
                     "course_id": 1,
                     "course_name": "Introduction to Programming"
                 }
-            }
+            },
+            "attendances": [
+                {
+                    "class_schedule_id": 1,
+                    "class_enrollment_id": 1,
+                    "attendance_status": "1"
+                }
+            ]
         }
     ]
      */
 
     const fetchScheduleData = async () => {
         setScheduleDataFetching(true);
-        const url = `/instructor/classSchedule`
+        const url = `/student/classSchedule`
             + `?start_date=${week.startDate.format('DD/MM/YYYY')}`
             + `&end_date=${week.endDate.format('DD/MM/YYYY')}`;
         console.log(url);
@@ -123,18 +131,18 @@ const InstructorWeeklySchedule = () => {
             })
     };
 
-    const fetchInstructorData = async () => {
-        setInstructorFetching(true);
-        const url = `/instructor/detail`;
+    const fetchStudentData = async () => {
+        setStudentFetching(true);
+        const url = `/student/detail`;
         console.log(url);
         await axiosClient.get(url)
             .then((response) => {
-                setInstructorData(response.data.instructor);
-                setInstructorFetching(false);
+                setStudentData(response.data.student);
+                setStudentFetching(false);
             })
             .catch((error) => {
-                console.error('Error fetching instructor data:', error);
-                setInstructorFetching(false);
+                console.error('Error fetching student data:', error);
+                setStudentFetching(false);
             })
     };
 
@@ -156,9 +164,10 @@ const InstructorWeeklySchedule = () => {
                 </Link>
                 <p>at Room <b>{text.room}</b></p>
                 <Tag color={findStatusColor(text.status)}>{findStatusText(text.status)}</Tag>
-                <Link to={`/schedule/attendance/${text.classScheduleId}`}>
-                    <p>{text.isSubmit ? "Taken" : "Take Attendance"}</p>
-                </Link>
+                <br/>
+                {text.attendanceStatus 
+                ? <Tag color='green'>Present</Tag> 
+                : <Tag color='red'>Absent</Tag>}
             </div>,
         })),
     ];
@@ -181,16 +190,15 @@ const InstructorWeeklySchedule = () => {
                 room: matchingClassSchedule.room,
                 status: matchingClassSchedule.status,
                 classScheduleId: matchingClassSchedule.class_schedule_id,
-                isSubmit: matchingClassSchedule.submit_time ? true : false, 
+                attendanceStatus: matchingClassSchedule.attendances[0].attendance_status, 
             };
         });
 
         return row;
     });
-
     return (
         <div>
-            <p className={classes['page__title']}>Activities for <b>{instructorData && instructorData.full_name}</b></p>
+            <p className={classes['page__title']}>Activities for <b>{studentData && studentData.full_name}</b></p>
             <div className={classes['list__filters']}>
                 <DatePicker
                     value={week.startDate}
@@ -201,7 +209,7 @@ const InstructorWeeklySchedule = () => {
                     }}
                 />
             </div>
-            <br />
+            <br/>
             <div>
                 <Table
                     dataSource={data}
@@ -216,4 +224,4 @@ const InstructorWeeklySchedule = () => {
     )
 }
 
-export default InstructorWeeklySchedule
+export default StudentWeeklySchedule

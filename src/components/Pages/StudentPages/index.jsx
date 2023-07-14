@@ -4,7 +4,7 @@ import CoureRegister from './CoureRegister';
 import Feedback from './Feedback';
 import MarkReport from './MarkReport';
 import News from './News';
-import WeeklyTimeTable from './WeeklyTimeTable';
+import StudentWeeklySchedule from './StudentWeeklySchedule';
 import Courses from './Courses';
 
 export {
@@ -15,5 +15,5 @@ export {
     Feedback,
     MarkReport,
     News,
-    WeeklyTimeTable,
+    StudentWeeklySchedule,
 }
