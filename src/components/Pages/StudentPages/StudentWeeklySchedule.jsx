@@ -166,14 +166,14 @@ const StudentWeeklySchedule = () => {
                 <Tag color={findStatusColor(text.status)}>{findStatusText(text.status)}</Tag>
                 <br/>
                 {text.attendanceStatus 
-                ? <Tag color='green'>Present</Tag> 
+                ? <Tag color='green'>Present at {text.attendanceTime && 'at ' + dayjs(text.attendanceTime).format("HH:mm:ss")}</Tag> 
                 : <Tag color='red'>Absent</Tag>}
             </div>,
         })),
     ];
 
     const data = SlotTimes.map((slotTime, index) => {
-        const row = { slot: slotTime };
+        const row = { key: index, slot: slotTime };
 
         DaysOfWeek.forEach((day) => {
             const matchingClassSchedule = scheduleData.find(
@@ -191,6 +191,7 @@ const StudentWeeklySchedule = () => {
                 status: matchingClassSchedule.status,
                 classScheduleId: matchingClassSchedule.class_schedule_id,
                 attendanceStatus: matchingClassSchedule.attendances[0].attendance_status, 
+                attendanceTime: matchingClassSchedule.attendances[0].attendance_time,
             };
         });
 
