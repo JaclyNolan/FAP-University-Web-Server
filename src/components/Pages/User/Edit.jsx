@@ -118,7 +118,11 @@ const Edit = () => {
               <DebounceSelect
                 placeholder="Select Staff ID"
                 fetchOptions={fetchStaffList}
-                key='staff_id' />
+                key='staff_id'
+                presetOptions={[
+                  { value: userData.staff_id, label: userData.staff_id }
+                ]}
+              />
             </Form.Item >
           </div >
         )
@@ -135,7 +139,10 @@ const Edit = () => {
               <DebounceSelect
                 placeholder="Select Instructor ID"
                 key='instructor_id'
-                fetchOptions={fetchInstructorList}/>
+                fetchOptions={fetchInstructorList}
+                presetOptions={[
+                  { value: userData.instructor_id, label: userData.instructor_id }
+                ]} />
             </Form.Item>
           </div>
         )
@@ -145,6 +152,7 @@ const Edit = () => {
             <label htmlFor="student_id">Student ID</label>
             <Form.Item
               name="student_id"
+              initialValue={userData.student_id}
               noStyle
               rules={[
                 { required: true, message: 'Please search & select a student ID' }
@@ -153,7 +161,10 @@ const Edit = () => {
                 // value={null}
                 placeholder="Select Student ID"
                 key='student_id'
-                fetchOptions={fetchStudentList} />
+                fetchOptions={fetchStudentList}
+                presetOptions={[
+                  { value: userData.student_id, label: userData.student_id }
+                ]} />
             </Form.Item>
           </div>
         )
