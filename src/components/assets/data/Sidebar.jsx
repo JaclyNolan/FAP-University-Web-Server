@@ -235,7 +235,7 @@ export const studentSidebar = [
             },
             {
                 title: 'Course list',
-                path: '/student/courses/1'
+                path: '/course'
             },
             {
                 title: 'Class list',

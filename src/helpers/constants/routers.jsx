@@ -279,7 +279,7 @@ export const studentRouters = [
         render: () => <PrivateRoute To={StudentWeeklySchedule} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/student/courses/:id',
+        path: '/course',
         render: () => <PrivateRoute To={Courses} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     {
