@@ -6,29 +6,15 @@ import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 import debounce from 'lodash/debounce';
 import Image from '../../common/Image/Image'
 import classes from '../Page.module.scss'
-const findStatusName = (status) => {
-    switch (status) {
-        case 0:
-            return "Not Registered"
-        case 1:
-            return "In Progress"
-        case 2:
-            return "Reserved"
-        case 3:
-            return "Failed"
-        default:
-            return "Passed"
-    }
-}
 const findStatusColor = (status) => {
     switch (status) {
-        case 0:
-            return 'black'
         case 1:
-            return "yellow"
+            return 'black'
         case 2:
-            return "blue"
+            return "yellow"
         case 3:
+            return "blue"
+        case 4:
             return "red"
         default:
             return "green"
@@ -63,7 +49,8 @@ const Courses = () => {
                     "enrollment_id": 1,
                     "student_id": "CS001",
                     "course_id": 1,
-                    "status": 1
+                    "status": 1,
+                    "status_name": "Not Register",
                 }
             ]
         },
@@ -79,27 +66,19 @@ const Courses = () => {
 
     const getTableDataFromCourseData = (coursesData) => {
         return coursesData.map((course, index) => {
-            const enrollment = course.enrollments[0];
             return {
                 key: index + 1,
                 courseName: course.course_name,
                 credit: course.credits,
                 tuitionFee: course.tuition_fee,
-                ...(enrollment
-                    ? {
-                        status: enrollment.status,
-                        actions: {
-                            status: enrollment.status,
-                            enrollmentId: enrollment.enrollment_id,
-                        }
-                    }
-                    : {
-                        status: 0,
-                        actions: {
-                            status: 0,
-                            courseId: course.course_id
-                        }
-                    }),
+                status: {
+                    id: course.enrollments[0].status,
+                    name: course.enrollments[0].status_name,
+                },
+                actions: {
+                    status: course.enrollments[0].status,
+                    enrollmentId: course.enrollments[0].enrollment_id,
+                }
             }
         });
     }
@@ -157,14 +136,14 @@ const Courses = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (text) => <Tag color={findStatusColor(text)}>{findStatusName(text)}</Tag>
+            render: (text) => <Tag color={findStatusColor(text.id)}>{text.name}</Tag>
         },
         {
             title: '',
             dataIndex: 'actions',
             key: 'actions',
-            render: (text) => (text.status === 0
-                && <Link to={`/course/register/${text.courseId}`}><Button>Register</Button></Link>)
+            render: (text) => (text.status === 1
+                && <Link to={`/course/register/${text.enrollmentId}`}><Button>Register</Button></Link>)
         }
     ]
 
@@ -192,11 +171,11 @@ const Courses = () => {
                             style={{ width: 200 }}
                             options={[
                                 { value: 'all', label: 'Status' },
-                                { value: '0', label: 'Not Registered' },
-                                { value: '1', label: 'In Progress' },
-                                { value: '2', label: 'Reserved' },
-                                { value: '3', label: 'Failed' },
-                                { value: '4', label: 'Passed' },
+                                { value: '1', label: 'Not Registered' },
+                                { value: '2', label: 'In Progress' },
+                                { value: '3', label: 'Reserved' },
+                                { value: '4', label: 'Failed' },
+                                { value: '5', label: 'Passed' },
                             ]}
                         ></Select>
                     </div>
