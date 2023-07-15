@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import ContentContext from '../../../helpers/Context/ContentContext'
 import axiosClient from '../../../axios-client'
 import { Alert, Tag } from 'antd'
+import BACKEND_SERVER_URL from '../../../helpers/constants/config';
 const DetailsStudent = () => {
   const params = useParams();
   const student_id = params.id;
@@ -73,7 +74,7 @@ const DetailsStudent = () => {
   const getTableDataFromStudentData = (student) => {
     return {
       user: {
-        userName: student.username,
+        userID: student.id,
         alt: student.full_name,
         profileImg: student.image,
       },
@@ -135,9 +136,9 @@ const DetailsStudent = () => {
           <p className={classes['page__title']}>User details</p>
           <div className={classes['details__main']}>
             <div className={classes['details__left']}>
-              <p className={classes['details__left-title']}>About <b>{tableData.user.userName}</b></p>
+              <p className={classes['details__left-title']}>About <b>{tableData.user.userID}</b></p>
               <div className={classes['details__left-image']}>
-                <Image className={classes['details__left-image-img']} alt={tableData.user.alt} src={tableData.user.profileImg}  width={100} height={100} />
+                <Image className={classes['details__left-image-img']} src={`${BACKEND_SERVER_URL}/api/files/get-file/${tableData.user.profileImg}`} width={350} height={350} />
               </div>
             </div>
             <div className={classes['details__right']}>
