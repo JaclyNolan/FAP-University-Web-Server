@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom'
 import ContentContext from '../../../helpers/Context/ContentContext'
 import axiosClient from '../../../axios-client'
 import { Alert } from 'antd'
+import BACKEND_SERVER_URL from '../../../helpers/constants/config';
+
 const DetailsStaff = () => {
   const params = useParams();
   const staff_id = params.id;
@@ -23,6 +25,13 @@ const DetailsStaff = () => {
     _setErrorMessage("");
     _setSuccessMessage(value);
   }
+
+  const positionLabels = {
+    0: 'Teacher',
+    1: 'Trainer',
+    2: 'HR',
+    3: 'Marketing',
+  };
 
   useEffect(() => {
     setContentLoading(true);
@@ -46,7 +55,7 @@ const DetailsStaff = () => {
   const getTableDataFromStaffData = (staff) => {
     return {
       user: {
-        userName: staff.username,
+        userName: staff.id,
         alt: staff.full_name,
         profileImg: staff.image,
       },
@@ -69,11 +78,11 @@ const DetailsStaff = () => {
         },
         {
           label: 'Email',
-          value: staff.email
+          value: staff.email || "N/A",
         },
         {
           label: 'Phone Number',
-          value: staff.phone
+          value: staff.phone_number
         },
         {
           label: 'Address',
@@ -85,7 +94,7 @@ const DetailsStaff = () => {
         },
         {
           label: 'Position',
-          value: staff.position
+          value: positionLabels[staff.position] || 'N/A',
         },
       ]
     }
@@ -102,7 +111,7 @@ const DetailsStaff = () => {
             <div className={classes['details__left']}>
               <p className={classes['details__left-title']}>About <b>{tableData.user.userName}</b></p>
               <div className={classes['details__left-image']}>
-                <Image className={classes['details__left-image-img']} alt={tableData.user.alt} src={tableData.user.profileImg}  width={100} height={100} />
+              <Image className={classes['details__left-image-img']} src={`${BACKEND_SERVER_URL}/api/files/get-file/${tableData.user.profileImg}`} width={350} height={350} />
               </div>
             </div>
             <div className={classes['details__right']}>

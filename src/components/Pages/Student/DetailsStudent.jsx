@@ -101,7 +101,7 @@ const DetailsStudent = () => {
         },
         {
           label: 'Email',
-          value: student.email
+          value: student.email|| "N/A",
         },
         {
           label: 'Phone Number',
