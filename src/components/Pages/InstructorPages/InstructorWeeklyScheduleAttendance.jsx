@@ -114,6 +114,7 @@ const InstructorWeeklyScheduleAttendance = () => {
             },
             studentName: attendance.class_enrollment.student.full_name,
             studentId: attendance.class_enrollment.student.student_id,
+            attendanceTime: attendance.attendance_time,
             status: {
                 status: attendance.attendance_status,
                 attendanceId: attendance.attendance_id,
@@ -143,14 +144,20 @@ const InstructorWeeklyScheduleAttendance = () => {
             key: 'studentId'
         },
         {
+            title: 'Present at',
+            dataIndex: 'attendanceTime',
+            key: 'attendanceTime',
+            render: (text) => (text ? dayjs(text).format('HH:mm:ss') : 'Not yet')
+        },
+        {
             title: '',
             dataIndex: 'status',
             key: 'status',
             render: (text) => <Form.Item name={`status_${text.attendanceId}`} initialValue={text.status}
-                rules={[{ requires: true, message: "Please select status" }]}>
+                rules={[{ required: true, message: "Please select status" }]}>
                 <Radio.Group disabled={!editMode}>
-                    <Radio value="0">Absent</Radio>
-                    <Radio value="1">Attended</Radio>
+                    <Radio value={0}>Absent</Radio>
+                    <Radio value={1}>Attended</Radio>
                 </Radio.Group>
             </Form.Item>
         },
