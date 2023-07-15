@@ -100,6 +100,7 @@ const Edit = () => {
     fetchUserData();
   }, [])
 
+  useEffect(() => form.resetFields(), [userData]);
 
   const getInfoInputFromRole = () => {
     switch (roleId) {
@@ -116,13 +117,10 @@ const Edit = () => {
                 { required: true, message: 'Please search & select a staff ID' }
               ]}>
               <DebounceSelect
+                defaultValue={userData.staff_id}
                 placeholder="Select Staff ID"
                 fetchOptions={fetchStaffList}
-                key='staff_id'
-                presetOptions={[
-                  { value: userData.staff_id, label: userData.staff_id }
-                ]}
-              />
+                key='staff_id' />
             </Form.Item >
           </div >
         )
@@ -137,12 +135,10 @@ const Edit = () => {
                 { required: true, message: 'Please search & select a instructor ID' }
               ]}>
               <DebounceSelect
+                defaultValue={userData.instructor_id}
                 placeholder="Select Instructor ID"
                 key='instructor_id'
-                fetchOptions={fetchInstructorList}
-                presetOptions={[
-                  { value: userData.instructor_id, label: userData.instructor_id }
-                ]} />
+                fetchOptions={fetchInstructorList} />
             </Form.Item>
           </div>
         )
@@ -152,19 +148,15 @@ const Edit = () => {
             <label htmlFor="student_id">Student ID</label>
             <Form.Item
               name="student_id"
-              initialValue={userData.student_id}
               noStyle
               rules={[
                 { required: true, message: 'Please search & select a student ID' }
               ]}>
               <DebounceSelect
-                // value={null}
+                defaultValue={userData.student_id}
                 placeholder="Select Student ID"
                 key='student_id'
-                fetchOptions={fetchStudentList}
-                presetOptions={[
-                  { value: userData.student_id, label: userData.student_id }
-                ]} />
+                fetchOptions={fetchStudentList} />
             </Form.Item>
           </div>
         )
@@ -205,6 +197,7 @@ const Edit = () => {
     setErrorMessage(errorInfo.errorFields[0].errors)
     console.log(errorInfo);
   }
+
   return (
     <>
       {successMessage !== "" && <Alert type='success' banner message={successMessage} />}

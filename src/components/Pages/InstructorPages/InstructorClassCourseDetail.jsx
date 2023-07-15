@@ -256,7 +256,7 @@ const InstructorClassCourseDetail = () => {
             title: 'Last Update',
             dataIndex: 'submitTime',
             key: 'submitTime',
-            render: (text) => (dayjs(text).format('HH:mm:ss DD/MM/YYYY'))
+            render: (text) => (text && dayjs(text).format('HH:mm:ss DD/MM/YYYY'))
         },
         {
             title: 'Detail',
