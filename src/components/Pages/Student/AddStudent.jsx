@@ -4,8 +4,6 @@ import classes from '../Page.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
 import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
-import DebounceSelect from '../../../helpers/customs/DebounceSelect';
-import axios from 'axios';
 
 const AddStudent = () => {
 
@@ -13,8 +11,6 @@ const AddStudent = () => {
   const [successMessage, _setSuccessMessage] = useState("");
   const { setContentLoading } = useContext(ContentContext);
 
-
-  const [file, setFile] = useState(null);
   const [student_id, setStudentId] = useState("");
   const [full_name, setFullName] = useState("");
   const [image, setImage] = useState(null);
@@ -27,18 +23,6 @@ const AddStudent = () => {
   const [major_id, setMajorId] = useState("");
 
   const [form] = Form.useForm();
-
-  const onFileChange = (info) => {
-    if (info.file.status === 'uploading') {
-      return;
-    }
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  };
-
 
   const customRequest = async ({ file, onError, onSuccess }) => {
     const formData = new FormData();
@@ -56,41 +40,13 @@ const AddStudent = () => {
       setImage(filename);
 
       onSuccess(response.data, file);
-      console.log(JSON.stringify(response.data));
-      message.success('${file.name} file uploaded successfully');
+      // console.log(JSON.stringify(response.data));
+      message.success(`${file.name} file uploaded successfully`);
     } catch (error) {
       onError(error);
-      message.error('${file.name} file upload failed.');
+      message.success(`${file.name} file upload failed.`);
     }
   };
-
-
-  const onFormSubmit = (values) => {
-    const formData = new FormData();
-    if (values.upload) {
-      console.log(values.upload[0].originFileObj);
-    }
-    formData.append('file', values.upload[0].originFileObj);
-    // const formData = new FormData();
-    //formData.append('file', file);
-    try {
-      const response = axiosClient.post('/files/save-file', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-
-      const { success, message, filename } = response.data;
-      if (success) {
-        setImage(filename);
-        message.success(message);
-      } else {
-        message.error(message);
-      }
-    } catch (error) {
-      message.error('Image upload failed');
-      console.log(error);
-    }
-  };
-
 
   const setErrorMessage = (value) => {
     _setErrorMessage(value);
@@ -162,34 +118,6 @@ const AddStudent = () => {
     form.resetFields(['major_id']);
     form.resetFields(['status']);
   }
-
-  const handleFileUpload = (event) => {
-    setFile(event.target.files[0]);
-  }
-
-  const submitFile = async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await axiosClient.post('/files/save-file', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-
-      const { success, message, filename } = response.data;
-      if (success) {
-        setImage(filename);
-        message.success(message);
-      } else {
-        message.error(message);
-      }
-    } catch (error) {
-      message.error('Image upload failed');
-      console.log(error);
-    }
-  };
 
   const onFinishFailed = (errorInfo) => {
     setErrorMessage(errorInfo.errorFields[0].errors)

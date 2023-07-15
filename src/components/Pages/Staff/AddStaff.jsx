@@ -88,6 +88,31 @@ const AddStaff = () => {
     form.resetFields(['department']);
     form.resetFields(['position']);
   }
+
+  const customRequest = async ({ file, onError, onSuccess }) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axiosClient.post('/files/save-file', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      // Trích xuất giá trị filename từ phản hồi API
+      const { filename } = response.data;
+
+      // Cập nhật giá trị trường image
+      setImage(filename);
+
+      onSuccess(response.data, file);
+      // console.log(JSON.stringify(response.data));
+      message.success(`${file.name} file uploaded successfully`);
+    } catch (error) {
+      onError(error);
+      message.success(`${file.name} file upload failed.`);
+    }
+  };
+
   return (
     <Form
       form={form}
@@ -206,6 +231,25 @@ const AddStaff = () => {
             </div>
           </div>
           <div className={classes['add__form-right']}>
+            {/* image */}
+            <div className={classes['add__form-row']}>
+              <label htmlFor="image" style={{ marginRight: '10px' }}>Image</label>
+
+              <Form.Item
+                name="upload"
+                valuePropName="fileList"
+                getValueFromEvent={(e) => {
+                  if (Array.isArray(e)) {
+                    return e;
+                  }
+                  return e && e.fileList;
+                }}
+              >
+                <Upload name="file" customRequest={customRequest} >
+                  <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                </Upload>
+              </Form.Item>
+            </div>
 
             <div className={classes['add__form-row']}>
               <label htmlFor="dob">Date Of Birth</label>
