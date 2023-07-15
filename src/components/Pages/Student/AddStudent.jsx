@@ -5,6 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
 import DebounceSelect from '../../../helpers/customs/DebounceSelect';
+import axios from 'axios';
 
 const AddStudent = () => {
 
@@ -12,9 +13,11 @@ const AddStudent = () => {
   const [successMessage, _setSuccessMessage] = useState("");
   const { setContentLoading } = useContext(ContentContext);
 
+
+  const [file, setFile] = useState(null);
   const [student_id, setStudentId] = useState("");
   const [full_name, setFullName] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const [gender, setGender] = useState("");
   const [academic_year, setAcademicYear] = useState("");
   const [date_of_birth, setDateOfBirth] = useState("");
@@ -24,6 +27,70 @@ const AddStudent = () => {
   const [major_id, setMajorId] = useState("");
 
   const [form] = Form.useForm();
+
+  const onFileChange = (info) => {
+    if (info.file.status === 'uploading') {
+      return;
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  };
+
+
+  const customRequest = async ({ file, onError, onSuccess }) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axiosClient.post('/files/save-file', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      // Trích xuất giá trị filename từ phản hồi API
+      const { filename } = response.data;
+
+      // Cập nhật giá trị trường image
+      setImage(filename);
+
+      onSuccess(response.data, file);
+      console.log(JSON.stringify(response.data));
+      message.success('${file.name} file uploaded successfully');
+    } catch (error) {
+      onError(error);
+      message.error('${file.name} file upload failed.');
+    }
+  };
+
+
+  const onFormSubmit = (values) => {
+    const formData = new FormData();
+    if (values.upload) {
+      console.log(values.upload[0].originFileObj);
+    }
+    formData.append('file', values.upload[0].originFileObj);
+    // const formData = new FormData();
+    //formData.append('file', file);
+    try {
+      const response = axiosClient.post('/files/save-file', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      const { success, message, filename } = response.data;
+      if (success) {
+        setImage(filename);
+        message.success(message);
+      } else {
+        message.error(message);
+      }
+    } catch (error) {
+      message.error('Image upload failed');
+      console.log(error);
+    }
+  };
+
 
   const setErrorMessage = (value) => {
     _setErrorMessage(value);
@@ -96,36 +163,34 @@ const AddStudent = () => {
     form.resetFields(['status']);
   }
 
-  // const props = {
-  //   name: 'file',
-  //   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  //   headers: {
-  //     authorization: 'authorization-text',
-  //   },
-  //   onChange(info) {
-  //     if (info.file.status !== 'uploading') {
-  //       console.log(info.file, info.fileList);
-  //     }
-  //     if (info.file.status === 'done') {
-  //       message.success(`${info.file.name} file uploaded successfully`);
-  //     } else if (info.file.status === 'error') {
-  //       message.error(`${info.file.name} file upload failed.`);
-  //     }
-  //   },
-  // };
+  const handleFileUpload = (event) => {
+    setFile(event.target.files[0]);
+  }
 
-  // const handleImageUpload = (info) => {
-  //   if (info.file.status !== 'uploading') {
-  //     console.log(info.file, info.fileList);
-  //   }
-  //   if (info.file.status === 'done') {
-  //     message.success(`${info.file.name} file uploaded successfully`);
-  //     // Lưu trữ thông tin hình ảnh đã tải lên vào state hoặc làm xử lý khác
-  //     setImage(info.file);
-  //   } else if (info.file.status === 'error') {
-  //     message.error(`${info.file.name} file upload failed.`);
-  //   }
-  // };
+  const submitFile = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axiosClient.post('/files/save-file', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      const { success, message, filename } = response.data;
+      if (success) {
+        setImage(filename);
+        message.success(message);
+      } else {
+        message.error(message);
+      }
+    } catch (error) {
+      message.error('Image upload failed');
+      console.log(error);
+    }
+  };
+
   const onFinishFailed = (errorInfo) => {
     setErrorMessage(errorInfo.errorFields[0].errors)
     console.log(errorInfo);
@@ -151,7 +216,8 @@ const AddStudent = () => {
                 noStyle
                 rules={[
                   { required: true, message: 'Please input new student id' }
-                ]}>
+                ]}
+                >
                 <Input id='student_id' value={student_id} onChange={(e) => {
                   setStudentId(e.target.value);
                 }} />
@@ -272,85 +338,24 @@ const AddStudent = () => {
             </div>
 
             {/* image */}
-            {/* <div className={classes['add__form-row']}>
+            <div className={classes['add__form-row']}>
               <label htmlFor="image" style={{ marginRight: '10px' }}>Image</label>
+
               <Form.Item
-                name="image"
-                noStyle
-                rules={[{ required: true, message: 'Please upload an image' }]}
+                name="upload"
+                valuePropName="fileList"
+                getValueFromEvent={(e) => {
+                  if (Array.isArray(e)) {
+                    return e;
+                  }
+                  return e && e.fileList;
+                }}
               >
-                <Upload
-                  id="image"
-                  showUploadList={false}
-                  beforeUpload={() => false} // Ngăn chặn việc tự động tải lên
-                  customRequest={async ({ file }) => {
-                    const formData = new FormData();
-                    formData.append('file', file);
-
-                    try {
-                      const response = await axiosClient.post('/files/save-file', formData, {
-                        headers: { 'Content-Type': 'multipart/form-data' }
-                      });
-
-                      const { success, message, filename } = response.data;
-                      if (success) {
-                        setImage(filename);
-                        message.success(message);
-                      } else {
-                        message.error(message);
-                      }
-                    } catch (error) {
-                      message.error('Image upload failed');
-                      console.log(error);
-                    }
-                  }}
-                >
-                  {image ? (
-                    <img src={`/files/get-file/${image}`} alt="Uploaded Image" style={{ maxWidth: '100px' }} />
-                  ) : (
-                    <Button icon={<UploadOutlined />} style={{ marginLeft: '10px' }}>
-                      Click to Upload
-                    </Button>
-                  )}
-                </Upload>
-
-              </Form.Item>
-            </div> */}
-
-
-            {/* <div className={classes['add__form-row']}>
-                <label htmlFor="image" style={{
-                  marginRight: '10px'
-                }}>Image</label>
-                <Upload {...props} id='image'>
+                <Upload name="file" customRequest={customRequest} >
                   <Button icon={<UploadOutlined />}>Click to Upload</Button>
                 </Upload>
-              </div> */}
-
-            {/* <div className={classes['add__form-row']}>
-                <label htmlFor="image" style={{ marginRight: '10px' }}>Image</label>
-                <Form.Item
-                  name="image"
-                  noStyle
-                  rules={[{ required: true, message: 'Please upload an image' }]}
-                >
-                  <Upload
-                    id="image"
-                    showUploadList={false}
-                    onChange={handleImageUpload}
-                    beforeUpload={() => false} // Ngăn chặn việc tự động tải lên
-                    {...props} // Truyền props của Upload vào
-                  >
-                    {image ? (
-                      <img src={URL.createObjectURL(image)} alt="Uploaded Image" style={{ maxWidth: '100px' }} />
-                    ) : (
-                      <Button icon={<UploadOutlined />} style={{ marginLeft: '10px' }}>
-                        Click to Upload
-                      </Button>
-                    )}
-                  </Upload>
-                </Form.Item>
-              </div> */}
+              </Form.Item>
+            </div>
 
             <div className={classes['add__form-row']}>
               <label htmlFor="phone_number">Phone number</label>
