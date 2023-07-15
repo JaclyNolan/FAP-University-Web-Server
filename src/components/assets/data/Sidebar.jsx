@@ -188,34 +188,28 @@ export const adminSidebar = [
     },
 ]
 
-export const teacherSidebar = [
+export const instructorSidebar = [
     {
         title: 'Home',
         items: [
             {
                 title: 'Home',
                 path: '/'
+            },
+            {
+                title: 'Weekly Schedule',
+                path: '/schedule/weekly'
+            },
+            {
+                title: 'Your classes',
+                path: '/class'
+            },
+            {
+                title: "Your student's feedback",
+                path: '/feedback'
             }
         ]
     },
-    {
-        title: 'Lesson Schedule',
-        items: [
-            {
-                title: 'List',
-                path: '/lesson/list'
-            }
-        ]
-    },
-    {
-        title: 'Feedback',
-        items: [
-            {
-                title: 'List',
-                path: '/teacherfeedback/list'
-            }
-        ]
-    }
 ]
 
 export const studentSidebar = [
@@ -236,8 +230,8 @@ export const studentSidebar = [
         title: 'Information Access',
         items: [
             {
-                title: 'Weekly time table',
-                path: '/student/weeklytable/1'
+                title: 'Weekly timetable',
+                path: '/schedule/weekly'
             },
             {
                 title: 'Course list',

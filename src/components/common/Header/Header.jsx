@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import classes from './Header.module.scss'
 import { Breadcrumb, Avatar, Dropdown, Spin } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import InvisibleButton from '../Button/InvisibleButton';
 import { useMediaQuery } from '../../../helpers/hooks/useMediaQuery';
 import AuthContext from '../../../helpers/Context/AuthContext';
@@ -12,6 +12,8 @@ const Header = ({ onToggleSidebar }) => {
   const { user } = useContext(AuthContext);
   const [isFetching, setFetching] = useState(false);
   const location = useLocation()
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const splitedUrl = window.location.href.split('/')
     const url = splitedUrl.splice(3, splitedUrl.length)
@@ -35,24 +37,25 @@ const Header = ({ onToggleSidebar }) => {
         // Store the fetched user data in AuthContext
         user.setToken(null);
         user.setUser(null);
-        // window.location.href = '/login';
         console.log(response);
         setFetching(false);
+        return navigate('/login');
       })
       .catch((error) => {
         console.log(error);
         setFetching(false);
       });
-    window.location.reload()
-  }
+      // window.location.href = '/';
+    }
 
   const items = [
     {
       key: '1',
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-          Nguyen Van A
-        </a>
+        <Link to="/profile">
+          <Avatar size="medium" src={user.user.picture} />
+          <span>{user.user.username}</span>
+        </Link>
       ),
     },
     {
@@ -66,6 +69,8 @@ const Header = ({ onToggleSidebar }) => {
       ),
     }
   ];
+
+  // if (isFetching) 
 
   return (
     <header className={classes['header']}>
@@ -89,7 +94,7 @@ const Header = ({ onToggleSidebar }) => {
             <InvisibleButton onclick={logoutHandler}>
               <i className="fas fa-sign-out-alt"></i>
             </InvisibleButton> :
-            <Spin/>}
+            <Spin />}
         </div>
       </div>
       <div className={classes['header-user']}>

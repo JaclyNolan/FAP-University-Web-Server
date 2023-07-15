@@ -159,7 +159,7 @@ const ClassEnrollList = () => {
             await axiosClient.put(`/classEnrollments/delete-classEnrollment/${id}`)
                 .then((response) => {
                     setFetching(false);
-                    setSuccessMessage('Successfully delete user with id ' + id)
+                    setSuccessMessage('Successfully delete class enrollment with id ' + id)
                 })
                 .catch((error) => {
                     setFetching(false);

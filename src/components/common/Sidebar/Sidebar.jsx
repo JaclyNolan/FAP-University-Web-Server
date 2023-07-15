@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import classes from './Sidebar.module.scss'
 import {Collapse} from 'antd'
 import logo from '../../assets/Images/btec-logo.png'
-import { adminSidebar, staffSidebar, studentSidebar, teacherSidebar } from '../../assets/data/Sidebar'
+import { adminSidebar, staffSidebar, studentSidebar, instructorSidebar } from '../../assets/data/Sidebar'
 import { Link, useLocation } from 'react-router-dom'
 import AuthContext from '../../../helpers/Context/AuthContext'
 const Sidebar = ({sidebarStyle}) => {
@@ -29,8 +29,8 @@ const Sidebar = ({sidebarStyle}) => {
       case 'Staff':
         setSidebarData(staffSidebar)
         break
-      case 'teacher':
-        setSidebarData(teacherSidebar)
+      case 'Instructor':
+        setSidebarData(instructorSidebar)
         break;
       default:
         setSidebarData(studentSidebar)
