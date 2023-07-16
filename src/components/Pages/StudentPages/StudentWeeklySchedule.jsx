@@ -1,27 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DatePicker, Table, Tag } from 'antd'
 import classes from '../Page.module.scss'
 import s from '../InstructorPages/InstructorWeeklySchedule.module.scss'
 import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 import axiosClient from '../../../axios-client'
-import ContentContext from '../../../helpers/Context/ContentContext'
-const Times = [
-    '7:15AM - 9:15AM',
-    '9:20AM - 11:20AM',
-    '12:10AM - 2:10PM',
-    '2:15PM - 4:15PM',
-    '4:20PM - 6:20PM',
-    '6:25PM - 8:25PM',
-];
-const SlotTimes = [
-    <div><h4>Slot 1</h4><p>{Times[0]}</p></div>,
-    <div><h4>Slot 2</h4><p>{Times[1]}</p></div>,
-    <div><h4>Slot 3</h4><p>{Times[2]}</p></div>,
-    <div><h4>Slot 4</h4><p>{Times[3]}</p></div>,
-    <div><h4>Slot 5</h4><p>{Times[4]}</p></div>,
-    <div><h4>Slot 6</h4><p>{Times[5]}</p></div>,
-];
+
 const DaysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const weekFormat = 'DD/MM/YYYY';
 const customWeekStartEndFormat = (value) =>
@@ -50,15 +34,16 @@ const findStatusColor = (status) => {
 }
 
 const StudentWeeklySchedule = () => {
-    const [scheduleData, setScheduleData] = useState([]);
+    const [slotTimes, setSlotTimes] = useState(null);
+    const [scheduleData, setScheduleData] = useState(null);
     const [studentData, setStudentData] = useState(null);
+    const [isSlotTimesFetching, setSlotTimesFetching] = useState(true);
     const [isScheduleDataFetching, setScheduleDataFetching] = useState(true);
     const [isStudentFetching, setStudentFetching] = useState(true);
     const [week, _setWeek] = useState({
         startDate: dayjs('2023-05-18').startOf('week'),
         endDate: dayjs('2023-05-18').endOf('week'),
     });
-    const { setContentLoading } = useContext(ContentContext);
 
     const setWeek = (date) => {
         _setWeek({
@@ -73,12 +58,8 @@ const StudentWeeklySchedule = () => {
 
     useEffect(() => {
         fetchStudentData();
+        fetchSlotTimesData();
     }, []);
-
-    useEffect(() => {
-        if (!isStudentFetching && !isScheduleDataFetching) setContentLoading(false);
-        else setContentLoading(true);
-    }, [isStudentFetching, isScheduleDataFetching]);
 
     /**
      * @return "classSchedules": [
@@ -146,6 +127,37 @@ const StudentWeeklySchedule = () => {
             })
     };
 
+    /**
+     * @return "slotTimes": [
+        {
+            "slot": 1,
+            "start_time": "7:15:00",
+            "end_time": "9:15:00"
+        },
+     */
+
+    const fetchSlotTimesData = async () => {
+        setSlotTimesFetching(true);
+        const url = `/classSchedule/slotTimes`;
+        console.log(url);
+        await axiosClient.get(url)
+            .then((response) => {
+                setSlotTimes(getSlotTimesFromData(response.data.slotTimes));
+                setSlotTimesFetching(false);
+            })
+            .catch((error) => {
+                console.error('Error fetching slot time data:', error);
+                setSlotTimesFetching(false);
+            })
+    }
+
+    const getSlotTimesFromData = (slotTimesData) => {
+        return slotTimesData.map((slotTime) => {
+            const Time = dayjs(slotTime.start_time, 'HH:mm:ss').format('h:mmA') + ' - ' +dayjs(slotTime.end_time, 'HH:mm:ss').format('h:mmA')
+            return <div><h4>Slot {slotTime.slot}</h4><p>{Time}</p></div>
+        })
+    }
+
     const columns = [
         {
             title: 'Slots',
@@ -164,15 +176,15 @@ const StudentWeeklySchedule = () => {
                 </Link>
                 <p>at Room <b>{text.room}</b></p>
                 <Tag color={findStatusColor(text.status)}>{findStatusText(text.status)}</Tag>
-                <br/>
-                {text.attendanceStatus 
-                ? <Tag color='green'>Present at {text.attendanceTime && 'at ' + dayjs(text.attendanceTime).format("HH:mm:ss")}</Tag> 
-                : <Tag color='red'>Absent</Tag>}
+                <br />
+                {text.attendanceStatus
+                    ? <Tag color='green'>Present at {text.attendanceTime && 'at ' + dayjs(text.attendanceTime).format("HH:mm:ss")}</Tag>
+                    : <Tag color='red'>Absent</Tag>}
             </div>,
         })),
     ];
 
-    const data = SlotTimes.map((slotTime, index) => {
+    const data = slotTimes && slotTimes.map((slotTime, index) => {
         const row = { key: index, slot: slotTime };
 
         DaysOfWeek.forEach((day) => {
@@ -190,7 +202,7 @@ const StudentWeeklySchedule = () => {
                 room: matchingClassSchedule.room,
                 status: matchingClassSchedule.status,
                 classScheduleId: matchingClassSchedule.class_schedule_id,
-                attendanceStatus: matchingClassSchedule.attendances[0].attendance_status, 
+                attendanceStatus: matchingClassSchedule.attendances[0].attendance_status,
                 attendanceTime: matchingClassSchedule.attendances[0].attendance_time,
             };
         });
@@ -199,7 +211,7 @@ const StudentWeeklySchedule = () => {
     });
     return (
         <div>
-            <p className={classes['page__title']}>Activities for <b>{studentData && studentData.full_name}</b></p>
+            <p className={classes['page__title']}>Activities for <b>{!isStudentFetching && studentData.full_name}</b></p>
             <div className={classes['list__filters']}>
                 <DatePicker
                     value={week.startDate}
@@ -210,11 +222,12 @@ const StudentWeeklySchedule = () => {
                     }}
                 />
             </div>
-            <br/>
+            <br />
             <div>
                 <Table
                     dataSource={data}
                     columns={columns}
+                    loading={isScheduleDataFetching || isSlotTimesFetching}
                     bordered
                     pagination={false}
                     size="middle"
