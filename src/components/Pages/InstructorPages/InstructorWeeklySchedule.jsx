@@ -45,8 +45,8 @@ const InstructorWeeklySchedule = () => {
     const [isScheduleDataFetching, setScheduleDataFetching] = useState(true);
     const [isInstructorFetching, setInstructorFetching] = useState(true);
     const [week, _setWeek] = useState({
-        startDate: dayjs('2023-05-18').startOf('week'),
-        endDate: dayjs('2023-05-18').endOf('week'),
+        startDate: dayjs().startOf('week'),
+        endDate: dayjs().endOf('week'),
     });
 
 

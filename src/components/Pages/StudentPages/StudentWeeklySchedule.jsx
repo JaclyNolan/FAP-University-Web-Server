@@ -45,8 +45,8 @@ const StudentWeeklySchedule = () => {
     const [isScheduleDataFetching, setScheduleDataFetching] = useState(true);
     const [isStudentFetching, setStudentFetching] = useState(true);
     const [week, _setWeek] = useState({
-        startDate: dayjs('2023-05-18').startOf('week'),
-        endDate: dayjs('2023-05-18').endOf('week'),
+        startDate: dayjs().startOf('week'),
+        endDate: dayjs().endOf('week'),
     });
 
     const setWeek = (date) => {
@@ -181,9 +181,11 @@ const StudentWeeklySchedule = () => {
                 <p>at Room <b>{text.room}</b></p>
                 <Tag color={findStatusColor(text.status)}>{findStatusText(text.status)}</Tag>
                 <br />
-                {text.attendanceStatus
-                    ? <Tag color='green'>Present at {text.attendanceTime && 'at ' + dayjs(text.attendanceTime).format("HH:mm:ss")}</Tag>
-                    : <Tag color='red'>Absent</Tag>}
+                {text.status !== 1 && <>
+                    {text.attendanceStatus
+                        ? <Tag color='green'>Present at {text.attendanceTime && 'at ' + dayjs(text.attendanceTime).format("HH:mm:ss")}</Tag>
+                        : <Tag color='red'>Absent</Tag>}
+                </>}
             </div>,
         })),
     ];
