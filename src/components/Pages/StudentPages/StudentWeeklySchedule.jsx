@@ -15,11 +15,13 @@ const customWeekStartEndFormat = (value) =>
 const findStatusText = (status) => {
     switch (status) {
         case 1:
-            return "Not Yet";
+            return "Not Started";
         case 2:
+            return "Taking Attendance";
+        case 3:
             return "In Progress";
         default:
-            return "Done";
+            return "Ended";
     }
 }
 const findStatusColor = (status) => {
@@ -27,6 +29,8 @@ const findStatusColor = (status) => {
         case 1:
             return "red";
         case 2:
+            return "orange";
+        case 3:
             return "yellow";
         default:
             return "green";
@@ -47,8 +51,8 @@ const StudentWeeklySchedule = () => {
 
     const setWeek = (date) => {
         _setWeek({
-            startDate: date.startOf('week'),
-            endDate: date.endOf('week'),
+            startDate: dayjs(date).startOf('week'),
+            endDate: dayjs(date).endOf('week'),
         })
     }
 
@@ -153,7 +157,7 @@ const StudentWeeklySchedule = () => {
 
     const getSlotTimesFromData = (slotTimesData) => {
         return slotTimesData.map((slotTime) => {
-            const Time = dayjs(slotTime.start_time, 'HH:mm:ss').format('h:mmA') + ' - ' +dayjs(slotTime.end_time, 'HH:mm:ss').format('h:mmA')
+            const Time = dayjs(slotTime.start_time, 'HH:mm:ss').format('h:mmA') + ' - ' + dayjs(slotTime.end_time, 'HH:mm:ss').format('h:mmA')
             return <div><h4>Slot {slotTime.slot}</h4><p>{Time}</p></div>
         })
     }
@@ -184,7 +188,7 @@ const StudentWeeklySchedule = () => {
         })),
     ];
 
-    const data = slotTimes && slotTimes.map((slotTime, index) => {
+    const data = (slotTimes && scheduleData) && slotTimes.map((slotTime, index) => {
         const row = { key: index, slot: slotTime };
 
         DaysOfWeek.forEach((day) => {
