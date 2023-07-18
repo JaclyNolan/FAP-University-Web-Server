@@ -239,7 +239,7 @@ export const studentSidebar = [
             },
             {
                 title: 'Class list',
-                path: '/student/classes'
+                path: '/class'
             },
         ]
     },
