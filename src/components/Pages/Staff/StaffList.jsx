@@ -6,7 +6,6 @@ import classes from '../Page.module.scss'
 import axiosClient from '../../../axios-client';
 import debounce from 'lodash/debounce';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
-import BACKEND_SERVER_URL from '../../../helpers/constants/config';
 
 const StaffList = () => {
     const location = useLocation();
@@ -96,7 +95,7 @@ const StaffList = () => {
         return staffData.map((staff) => ({
             key: staff.id,
             image: {
-                src: staff.image,
+                src: '/public/images/students/' + staff.image,
                 alt: staff.full_name
             },
             full_name: staff.full_name,
@@ -158,7 +157,7 @@ const StaffList = () => {
             title: 'Image',
             dataIndex: 'image',
             key: 'image',
-            render : (text) => <Image src={`${BACKEND_SERVER_URL}/api/files/get-file/${text.src}`} alt={text.alt} width = {40} height = {40}/>
+            render: (text) => <Image src={text.src} alt={text.alt} width={30} height={30} />
         },
         {
             title: 'Full Name',

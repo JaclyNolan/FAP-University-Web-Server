@@ -12,7 +12,7 @@ const Edit = () => {
   const { setContentLoading } = useContext(ContentContext);
   const [userData, setUserData] = useState({});
   const params = useParams();
-  const user_id = params.id; 
+  const user_id = params.id;
   const [isValidUserId, setIsValidUserId] = useState(false);
   const [form] = Form.useForm();
 

@@ -7,7 +7,6 @@ import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 import debounce from 'lodash/debounce';
-import BACKEND_SERVER_URL from '../../../helpers/constants/config';
 
 const ListStudent = () => {
 
@@ -81,7 +80,7 @@ const ListStudent = () => {
         return studentData.map((student) => ({
             key: student.id,
                 image: {
-                    src: student.image,
+                    src: '/public/images/students/' + student.image,
                     alt: student.full_name
                 },
                 full_name: student.full_name,
@@ -93,7 +92,7 @@ const ListStudent = () => {
                 gender: student.gender,
                 academic_year: student.academic_year,
                 Dob: student.Dob,
-                phone_number: student.phone_number,
+                phone_number: student.phone,
                 address: student.address,
                 major_id: student.major_id,
                 status: student.status,
@@ -176,7 +175,7 @@ const ListStudent = () => {
             title: 'Image',
             dataIndex: 'image',
             key: 'image',
-            render : (text) => <Image src={`${BACKEND_SERVER_URL}/api/files/get-file/${text.src}`} alt={text.alt} width = {40} height = {40}/>
+            render : (text) => <Image src={text.src} alt={text.alt} width = {30} height = {30}/>
         },
         {
             title: 'Full Name',

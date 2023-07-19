@@ -6,8 +6,6 @@ import { useParams } from 'react-router-dom'
 import ContentContext from '../../../helpers/Context/ContentContext'
 import axiosClient from '../../../axios-client'
 import { Alert } from 'antd'
-import BACKEND_SERVER_URL from '../../../helpers/constants/config';
-
 const DetailsInstructor = () => {
   const params = useParams();
   const instructor_id = params.id;
@@ -26,18 +24,6 @@ const DetailsInstructor = () => {
     _setErrorMessage("");
     _setSuccessMessage(value);
   }
-
-  const positionLabels = {
-    0: 'Lecturers',
-    1: 'Associate Professor',
-    2: 'Lecturer Dr',
-    3: 'Master of Instructors',
-    4: 'Professor',
-    5: 'Visiting Lecturer',
-    6: 'Research Lecturer',
-    7: 'Practical Instructor',
-    8: 'Tutors',
-  };
 
   useEffect(() => {
     setContentLoading(true);
@@ -61,7 +47,7 @@ const DetailsInstructor = () => {
   const getTableDataFromInstructorData = (instructor) => {
     return {
       user: {
-        userID: instructor.id,
+        userName: instructor.username,
         alt: instructor.full_name,
         profileImg: instructor.image,
       },
@@ -84,7 +70,7 @@ const DetailsInstructor = () => {
         },
         {
           label: 'Email',
-          value: instructor.email || "N/A",
+          value: instructor.email
         },
         {
           label: 'Phone Number',
@@ -100,7 +86,7 @@ const DetailsInstructor = () => {
         },
         {
           label: 'Position',
-          value: positionLabels[instructor.position] || 'N/A',
+          value: instructor.position
         },
       ]
     }
@@ -112,12 +98,12 @@ const DetailsInstructor = () => {
       {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
       {isValidInstructorId &&
         <div className={classes['details']}>
-          <p className={classes['page__title']}>Instructor details</p>
+          <p className={classes['page__title']}>User details</p>
           <div className={classes['details__main']}>
             <div className={classes['details__left']}>
-              <p className={classes['details__left-title']}>About <b>{tableData.user.userID}</b></p>
+              <p className={classes['details__left-title']}>About <b>{tableData.user.userName}</b></p>
               <div className={classes['details__left-image']}>
-                <Image className={classes['details__left-image-img']} src={`${BACKEND_SERVER_URL}/api/files/get-file/${tableData.user.profileImg}`} width={350} height={350} />
+                <Image className={classes['details__left-image-img']} alt={tableData.user.alt} src={tableData.user.profileImg}  width={100} height={100} />
               </div>
             </div>
             <div className={classes['details__right']}>

@@ -6,11 +6,25 @@ import classes from '../Page.module.scss'
 import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
 import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
-import BACKEND_SERVER_URL from '../../../helpers/constants/config';
 import debounce from 'lodash/debounce';
 
 const InstructorList = () => {
+    // const { Search } = Input
 
+    // const [insData, setInsData] = useState([]);
+    // const [tableData, setTableData] = useState([]);
+    // const [totalPages, setTotalPages] = useState(1);
+    // const [loading, setLoading] = useState(true);
+    // const { setContentLoading } = useContext(ContentContext);
+
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const [search, setSearch] = useState("");
+    // const [gender, setGender] = useState('all');
+    // const [major, setMajor] = useState('all');
+    // const [position, setPosition] = useState('all');
+
+    // const [errorMessage, _setErrorMessage] = useState("");
+    // const [successMessage, _setSuccessMessage] = useState("");
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search)
@@ -58,6 +72,30 @@ const InstructorList = () => {
         8: 'Tutors',
     };
 
+    // useEffect(() => {
+    //     (async () => {
+    //         setLoading(true);
+    //         const url = `/instructors?page=${currentPage}`
+    //             + (gender !== 'all' ? `&gender=${gender}` : '')
+    //             + (major !== 'all' ? `&major=${major}` : '')
+    //             + (position !== 'all' ? `&position=${position}` : '')
+    //             + (search !== "" ? `&keyword=${search}` : ``);
+    //         console.log(url);
+    //         await axiosClient.get(url)
+    //             .then((response) => {
+    //                 const { instructors, total_pages } = response.data;
+    //                 setTotalPages(total_pages);
+    //                 setInsData(instructors);
+    //                 setLoading(false);
+    //             })
+    //             .catch((error) => {
+    //                 console.log(error);
+    //                 _setErrorMessage(error.message);
+    //                 setLoading(false);
+    //             })
+    //     })()
+    // }, [currentPage, gender, major, position, search]);
+
     const fetchInsData = async (currentPage, search, gender, major, position) => {
         setFetching(true);
         const url = `/instructors?page=${currentPage}`
@@ -88,12 +126,47 @@ const InstructorList = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, search, gender, major, position]);
 
+    // useEffect(() => {
+    //     console.log(insData);
+    //     const arr = [];
+    //     insData.forEach((instructor, index) => {
+    //         const row = {
+    //             key: instructor.id,
+    //             image: {
+    //                 src: '/uploads/images/' + instructor.image,
+    //                 alt: instructor.full_name
+    //             },
+    //             full_name: instructor.full_name,
+    //             email: instructor.email || "N/A",
+    //             major: {
+    //                 text: instructor.major_name,
+    //                 major: instructor.major_name
+    //             },
+    //             gender: instructor.gender,
+    //             Dob: instructor.Dob,
+    //             phone_number: instructor.phone_number,
+    //             address: instructor.address,
+    //             position: instructor.position,
+    //             detail: {
+    //                 id: instructor.id,
+    //                 text: 'Details'
+    //             },
+    //             actions: {
+    //                 id: instructor.id
+    //             }
+    //         };
+    //         arr.push(row);
+    //     });
+    //     setTableData(arr);
+    //     console.log(arr);
+    // }, [insData])
+
     const getTableDataFromInsData = (insData) => {
         console.log(insData);
         return insData.map((instructor) => ({
             key: instructor.id,
             image: {
-                src: instructor.image,
+                src: '/uploads/images/' + instructor.image,
                 alt: instructor.full_name
             },
             full_name: instructor.full_name,
@@ -140,6 +213,41 @@ const InstructorList = () => {
         setSearch(value);
         setCurrentPage(1);
     }
+    // const deleteInstructorHandler = (id) => {
+    //     (async () => {
+    //         setContentLoading(true);
+    //         await axiosClient.put(`/instructors/delete-instructor/${id}`)
+    //             .then((response) => {
+    //                 setContentLoading(false);
+    //                 setSuccessMessage('Successfully delete instructor with id ' + id)
+    //             })
+    //             .catch((error) => {
+    //                 setContentLoading(false);
+    //                 _setErrorMessage(error.message);
+    //             })
+    //         if (!errorMessage) {
+    //             setLoading(true);
+    //             const url = `/instructors?page=${currentPage}`
+    //                 + (gender !== 'all' ? `&gender=${gender}` : '')
+    //                 + (major !== 'all' ? `&major=${major}` : '')
+    //                 + (position !== 'all' ? `&position=${position}` : '')
+    //                 + (search !== "" ? `&keyword=${search}` : ``);
+    //             console.log(url);
+    //             await axiosClient.get(url)
+    //                 .then((response) => {
+    //                     const { instructors, total_pages } = response.data;
+    //                     setTotalPages(total_pages);
+    //                     setTableData(instructors);
+    //                     setLoading(false);
+    //                 })
+    //                 .catch((error) => {
+    //                     console.log(error);
+    //                     _setErrorMessage(error.message);
+    //                     setLoading(false);
+    //                 })
+    //         }
+    //     })()
+    // }
 
     const deleteInsHandler = (id) => {
         (async () => {
@@ -173,7 +281,7 @@ const InstructorList = () => {
             title: 'Image',
             dataIndex: 'image',
             key: 'image',
-            render : (text) => <Image src={`${BACKEND_SERVER_URL}/api/files/get-file/${text.src}`} alt={text.alt} width = {40} height = {40}/>
+            render: (text) => <Image src={text.src} alt={text.alt} width={30} height={30} />
         },
         {
             title: 'Full Name',
@@ -238,7 +346,23 @@ const InstructorList = () => {
         },
 
     ]
-
+    // const tableData = [
+    //     {
+    //         key: '1',
+    //         image: {
+    //             src: 'https://img.freepik.com/free-icon/user_318-159711.jpg',
+    //             alt: 'user'
+    //         },
+    //         fullname: 'Nguyen Van A',
+    //         email: 'anvbhaf190345@fpt.edu.vn',
+    //         dob: '01/01/2023',
+    //         phone: '012345678',
+    //         address: 'Ha Noi - Viet Nam',
+    //         actions: {
+    //             id: 1
+    //         }
+    //     }
+    // ]
     return (
         <div className={classes['list']}>
             {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
