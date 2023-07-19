@@ -248,7 +248,7 @@ export const studentSidebar = [
         items: [
             {
                 title: 'Attendance Report',
-                path: '/student/attendancereport'
+                path: '/class'
             },
             {
                 title: 'Mark report',

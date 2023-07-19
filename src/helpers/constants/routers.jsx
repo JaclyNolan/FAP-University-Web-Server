@@ -291,20 +291,8 @@ export const studentRouters = [
         render: () => <PrivateRoute To={StudentClassCourseDetail} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/student/courseregister/:id',
-        render: () => <PrivateRoute To={StudentCourseRegister} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
-    },
-    {
-        path: '/student/classes',
-        render: () => <PrivateRoute To={Classes} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
-    },
-    {
         path: '/student/markreport',
         render: () => <PrivateRoute To={MarkReport} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
-    },
-    {
-        path: '/student/attendancereport',
-        render: () => <PrivateRoute To={AttendanceReport} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     {
         path: '/student/news/:id',
