@@ -5,7 +5,7 @@ import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
 import { Link, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { findAttendanceColor, findAttendanceText, findStatusColor, findStatusText } from '../CommonFunctions';
+import { findAttendanceColor, findAttendanceText, findGradeStatusColor, findStatusColor, findStatusText } from '../CommonFunctions';
 
 const StudentClassCourseDetail = () => {
     const params = useParams();
@@ -15,10 +15,12 @@ const StudentClassCourseDetail = () => {
     const [studentData, setStudentData] = useState(null);
     const [classCourseData, setClassCourseData] = useState(null);
     const [scheduleData, setScheduleData] = useState(null);
+    const [gradeData, setGradeData] = useState(null);
     const [isSlotTimesFetching, setSlotTimesFetching] = useState(true);
     const [isClassCourseFetching, setClassCourseFetching] = useState(true);
     const [isStudentFetching, setStudentFetching] = useState(true);
     const [isScheduleFetching, setScheduleFetching] = useState(true);
+    const [isGradeFetching, setGradeFetching] = useState(true);
 
     const studentColumns = [
         {
@@ -258,11 +260,74 @@ const StudentClassCourseDetail = () => {
         },
     ]
 
+    /** 
+     * @return "classCourse": {
+        "class_course_id": 1,
+        "class_enrollments": [
+            {
+                "class_enrollment_id": 1,
+                "class_course_id": 1,
+                "student_id": "CS001",
+                "grades": [
+                    {
+                        "grade_id": 1,
+                        "class_enrollment_id": 1,
+                        "score": 80,
+                        "status": "Merit"
+                    }
+                ]
+            }
+        ]
+    }
+    **/
+
+    const fetchClassCourseGradeData = async () => {
+        setGradeFetching(true);
+        await axiosClient.get(`/student/classCourse/${classCourseId}/grades`)
+            .then((response) => {
+                setGradeData(getGradeDataFrom(response.data.classCourse));
+                setGradeFetching(false);
+            })
+            .catch((error) => {
+                console.error(error);
+                setGradeFetching(false);
+            })
+    }
+
+    const getGradeDataFrom = (classCourseData) => {
+        return classCourseData.class_enrollments[0].grades.map((grade, index) => ({
+            key: index + 1,
+            score: grade.score,
+            status: grade.status
+        }))
+    }
+
+    const gradeColumns = [
+        {
+            title: 'No',
+            dataIndex: 'key',
+            key: 'no',
+        },
+        {
+            title: 'Score',
+            dataIndex: 'score',
+            key: 'score',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (text) => (<Tag color={findGradeStatusColor(text)}>{text}</Tag>)
+        },
+    ]
+
+
     useEffect(() => {
         fetchClassCourseData();
         fetchClassCourseStudentData();
         fetchClassCourseScheduleData();
         fetchSlotTimeData();
+        fetchClassCourseGradeData();
     }, []);
 
     return (
@@ -291,12 +356,34 @@ const StudentClassCourseDetail = () => {
                 <br />
                 <div><h3>Student List:</h3></div>
                 <div className={classes['list__table']}>
-                    <Table columns={studentColumns} loading={isStudentFetching} pagination={false} dataSource={studentData} />
+                    <Table columns={studentColumns}
+                        loading={isStudentFetching}
+                        pagination={false}
+                        dataSource={studentData}
+                        scroll={{
+                            y: 240,
+                        }} />
                 </div>
                 <br />
                 <div><h3>Schedule List:</h3></div>
                 <div className={classes['list__table']}>
-                    <Table columns={scheduleColumns} loading={isScheduleFetching} pagination={false} dataSource={scheduleData} />
+                    <Table columns={scheduleColumns} 
+                    loading={isScheduleFetching} 
+                    pagination={false} 
+                    dataSource={scheduleData} 
+                    scroll={{
+                        y: 240,
+                    }} />
+                </div>
+                <div><h3>Grade List:</h3></div>
+                <div className={classes['list__table']}>
+                    <Table columns={gradeColumns} 
+                    loading={isGradeFetching} 
+                    pagination={false} 
+                    dataSource={gradeData} 
+                    scroll={{
+                        y: 240,
+                    }} />
                 </div>
             </div>
         </div>

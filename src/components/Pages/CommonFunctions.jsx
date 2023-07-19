@@ -24,6 +24,20 @@ const findStatusColor = (status) => {
             return "green";
     }
 }
+const findGradeStatusColor = (status) => {
+    switch (status) {
+        case "None":
+            return "black";
+        case "Failed":
+            return "red";
+        case "Passed":
+            return "green";
+        case "Merit":
+            return "blue";
+        default:
+            return "purple";
+    }
+}
 const findAttendanceColor = (status) => {
     switch (status) {
         case 0:
@@ -41,4 +55,4 @@ const findAttendanceText = (status, time) => {
     }
 }
 
-export {findAttendanceColor, findAttendanceText, findStatusColor, findStatusText}
+export {findAttendanceColor, findAttendanceText, findGradeStatusColor, findStatusColor, findStatusText}

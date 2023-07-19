@@ -252,7 +252,7 @@ export const studentSidebar = [
             },
             {
                 title: 'Mark report',
-                path: '/student/markreport'
+                path: '/class'
             },
         ]
     },

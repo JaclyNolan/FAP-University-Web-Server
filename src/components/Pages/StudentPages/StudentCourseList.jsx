@@ -92,7 +92,6 @@ const StudentCourseList = () => {
             + ((search !== "" || status !== "all") ? '?' : '')
             + (search !== "" ? `keyword=${search}` : ``)
             + (status !== "all" ? `enrollment_status=${status}` : ``);
-        console.log(url);
         fetchRef.current += 1;
         const fetchId = fetchRef.current;
         await axiosClient.get(url)
@@ -119,7 +118,6 @@ const StudentCourseList = () => {
     const fetchEnrollmentStatusData = async () => {
         setEnrollmentStatusFetching(true);
         const url = '/enrollment/status';
-        console.log(url);
         await axiosClient.get(url)
             .then((response) => {
                 const { enrollmentStatus } = response.data;
