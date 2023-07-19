@@ -33,6 +33,8 @@ const InstructorWeeklyScheduleAttendance = () => {
         {
             "class_schedule_id": 1,
             "class_course_id": 1,
+            "status": 1,
+            "submit_time": 2023-09-19 12:00:00,
             "attendances": [
                 {
                     "attendance_id": 1,
@@ -238,15 +240,16 @@ const InstructorWeeklyScheduleAttendance = () => {
                         </Button>
                     </Form.Item>
                 ) : (
-                    <Form.Item name='viewMode'>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                        <span> </span>
-                        <Button htmlType="button" onClick={handleEdit}>
-                            Edit
-                        </Button>
-                    </Form.Item>
+                    (scheduleAttendanceData && scheduleAttendanceData.status === 2) && <Form.Item name='viewMode'>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                    <span> </span>
+                    <Button htmlType="button" onClick={handleEdit}>
+                        Edit
+                    </Button>
+                </Form.Item>
+                    
                 )}
                 <p><b>Last Update: </b>{(scheduleAttendanceData && scheduleAttendanceData.submit_time) ? dayjs(scheduleAttendanceData.submit_time).format('HH:mm:ss DD/MM/YYYY') : 'None'}</p>
             </Form>

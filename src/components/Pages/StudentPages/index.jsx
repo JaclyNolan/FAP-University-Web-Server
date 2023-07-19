@@ -1,17 +1,21 @@
 import AttendanceReport from './AttendanceReport';
 import Classes from './Classes';
-import CoureRegister from './CoureRegister';
+import StudentCourseRegister from './StudentCourseRegister';
 import Feedback from './Feedback';
 import MarkReport from './MarkReport';
 import News from './News';
 import StudentWeeklySchedule from './StudentWeeklySchedule';
-import Courses from './Courses';
+import StudentCourseList from './StudentCourseList';
+import StudentClassCourseDetail from './StudentClassCourseDetail';
+import StudentClassCourseList from './StudentClassCourseList';
 
 export {
     AttendanceReport,
     Classes,
-    Courses,
-    CoureRegister,
+    StudentCourseList,
+    StudentCourseRegister,
+    StudentClassCourseList,
+    StudentClassCourseDetail,
     Feedback,
     MarkReport,
     News,
