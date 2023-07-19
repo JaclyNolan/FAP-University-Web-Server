@@ -72,7 +72,7 @@ const List = () => {
         const url = `/users?page=${currentPage}` 
         + (role !== 'all' ? `&role_id=${role}` : '') 
         + (search !== "" ? `&keyword=${search}` : ``);
-        console.log(url);
+        
         fetchRef.current += 1;
         const fetchId = fetchRef.current;
         await axiosClient.get(url)

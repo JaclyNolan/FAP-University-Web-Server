@@ -5,6 +5,7 @@ import s from '../InstructorPages/InstructorWeeklySchedule.module.scss'
 import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 import axiosClient from '../../../axios-client'
+import { findStatusColor, findStatusText } from '../CommonFunctions'
 
 const DaysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const weekFormat = 'DD/MM/YYYY';
@@ -12,30 +13,6 @@ const customWeekStartEndFormat = (value) =>
     `${dayjs(value).startOf('week').format(weekFormat)} ~ ${dayjs(value)
         .endOf('week')
         .format(weekFormat)}`;
-const findStatusText = (status) => {
-    switch (status) {
-        case 1:
-            return "Not Started";
-        case 2:
-            return "Taking Attendance";
-        case 3:
-            return "In Progress";
-        default:
-            return "Ended";
-    }
-}
-const findStatusColor = (status) => {
-    switch (status) {
-        case 1:
-            return "red";
-        case 2:
-            return "orange";
-        case 3:
-            return "yellow";
-        default:
-            return "green";
-    }
-}
 
 const StudentWeeklySchedule = () => {
     const [slotTimes, setSlotTimes] = useState(null);
@@ -104,7 +81,7 @@ const StudentWeeklySchedule = () => {
         const url = `/student/classSchedule`
             + `?start_date=${week.startDate.format('DD/MM/YYYY')}`
             + `&end_date=${week.endDate.format('DD/MM/YYYY')}`;
-        console.log(url);
+        
         await axiosClient.get(url)
             .then((response) => {
                 setScheduleData(response.data.classSchedules);
@@ -119,7 +96,7 @@ const StudentWeeklySchedule = () => {
     const fetchStudentData = async () => {
         setStudentFetching(true);
         const url = `/student/detail`;
-        console.log(url);
+        
         await axiosClient.get(url)
             .then((response) => {
                 setStudentData(response.data.student);
@@ -143,7 +120,7 @@ const StudentWeeklySchedule = () => {
     const fetchSlotTimesData = async () => {
         setSlotTimesFetching(true);
         const url = `/classSchedule/slotTimes`;
-        console.log(url);
+        
         await axiosClient.get(url)
             .then((response) => {
                 setSlotTimes(getSlotTimesFromData(response.data.slotTimes));

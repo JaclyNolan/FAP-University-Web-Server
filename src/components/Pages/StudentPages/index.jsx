@@ -6,14 +6,16 @@ import MarkReport from './MarkReport';
 import News from './News';
 import StudentWeeklySchedule from './StudentWeeklySchedule';
 import StudentCourseList from './StudentCourseList';
-import StudentClassEnrollmentList from './StudentClassEnrollmentList';
+import StudentClassCourseDetail from './StudentClassCourseDetail';
+import StudentClassCourseList from './StudentClassCourseList';
 
 export {
     AttendanceReport,
     Classes,
     StudentCourseList,
     StudentCourseRegister,
-    StudentClassEnrollmentList,
+    StudentClassCourseList,
+    StudentClassCourseDetail,
     Feedback,
     MarkReport,
     News,

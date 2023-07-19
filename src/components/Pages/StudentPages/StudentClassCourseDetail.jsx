@@ -5,35 +5,27 @@ import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
 import { Link, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { findStatusColor, findStatusText } from '../CommonFunctions';
+import { findAttendanceColor, findAttendanceText, findStatusColor, findStatusText } from '../CommonFunctions';
 
-const InstructorClassCourseDetail = () => {
+const StudentClassCourseDetail = () => {
     const params = useParams();
     const classCourseId = params.id;
 
     const [slotTimes, setSlotTimes] = useState(null);
-    const [studentData, setstudentData] = useState([]);
+    const [studentData, setStudentData] = useState(null);
     const [classCourseData, setClassCourseData] = useState(null);
     const [scheduleData, setScheduleData] = useState(null);
     const [isSlotTimesFetching, setSlotTimesFetching] = useState(true);
     const [isClassCourseFetching, setClassCourseFetching] = useState(true);
     const [isStudentFetching, setStudentFetching] = useState(true);
     const [isScheduleFetching, setScheduleFetching] = useState(true);
-    const { setContentLoading } = useContext(ContentContext)
-
-    const [errorMessage, _setErrorMessage] = useState("");
-    const [successMessage, _setSuccessMessage] = useState("");
-
-    const setErrorMessage = (value) => {
-        _setErrorMessage(value);
-        _setSuccessMessage("");
-    }
-    const setSuccessMessage = (value) => {
-        _setErrorMessage("");
-        _setSuccessMessage(value);
-    }
 
     const studentColumns = [
+        {
+            title: 'No',
+            dataIndex: 'key',
+            key: 'no',
+        },
         {
             title: 'Id',
             dataIndex: 'id',
@@ -56,9 +48,9 @@ const InstructorClassCourseDetail = () => {
             key: 'gender'
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
+            title: 'Date of birth',
+            dataIndex: 'dob',
+            key: 'dob'
         },
     ]
 
@@ -76,73 +68,64 @@ const InstructorClassCourseDetail = () => {
         "course": {
             "course_id": 1,
             "course_name": "Introduction to Programming"
+        },
+        "instructor": {
+            "instructor_id": "INS001",
+            "full_name": "John Smith"
         }
     }
     **/
+
     const fetchClassCourseData = async () => {
         setClassCourseFetching(true);
-        const url = `/instructor/classCourse/${classCourseId}`
-        await axiosClient.get(url)
+        await axiosClient.get(`/student/classCourse/${classCourseId}`)
             .then((response) => {
-                const { classCourse } = response.data;
-                setClassCourseData(classCourse);
+                setClassCourseData(response.data.classCourse);
                 setClassCourseFetching(false);
-                _setErrorMessage('');
             })
             .catch((error) => {
-                console.log(error);
-                setErrorMessage(error.message);
+                console.error(error);
                 setClassCourseFetching(false);
             })
     }
 
     /** 
-     * @return "classCourse": [
-        {
-            "class_course_id": 1,
-            "class_id": 1,
-            "course_id": 1,
-            "instructor_id": "INS001",
-            "class_enrollments": [
-                {
-                    "class_course_id": 1,
-                    "class_enrollment_id": 1,
+     * @return "classCourse": {
+        "class_course_id": 1,
+        "class_id": 1,
+        "course_id": 1,
+        "instructor_id": "INS001",
+        "class_enrollments": [
+            {
+                "class_course_id": 1,
+                "class_enrollment_id": 1,
+                "student_id": "CS001",
+                "student": {
                     "student_id": "CS001",
-                    "student": {
-                        "student_id": "CS001",
-                        "image": "imageCS1.jpg",
-                        "full_name": "John Doe",
-                        "gender": 1,
-                        "user": {
-                            "student_id": "CS001",
-                            "email": "studentuser1@example.com"
-                        }
-                    }
-                },
+                    "image": "imageCS1.jpg",
+                    "full_name": "John Doe",
+                    "gender": 1,
+                    "date_of_birth": "1999-05-10"
+                }
+            },
     **/
 
     const fetchClassCourseStudentData = async () => {
         setStudentFetching(true);
-        const url = `/instructor/classCourse/${classCourseId}/students`
-
-        await axiosClient.get(url)
+        await axiosClient.get(`/student/classCourse/${classCourseId}/students`)
             .then((response) => {
-                const { class_enrollments } = response.data.classCourse;
-                setstudentData(getStudentDataFromClassEnrollmentData(class_enrollments));
+                setStudentData(getStudentDataFromClassCourseData(response.data.classCourse));
                 setStudentFetching(false);
-                _setErrorMessage('');
             })
             .catch((error) => {
-                console.log(error);
-                setErrorMessage(error.message);
+                console.error(error);
                 setStudentFetching(false);
             })
     }
 
-    const getStudentDataFromClassEnrollmentData = (classEnrollmentData) => {
-        console.log(classEnrollmentData);
-        return classEnrollmentData.map((classEnrollment) => ({
-            key: classEnrollment.student_id,
+    const getStudentDataFromClassCourseData = (classCourseData) => {
+        return classCourseData.class_enrollments.map((classEnrollment, index) => ({
+            key: index + 1,
             id: classEnrollment.student_id,
             image: {
                 scr: classEnrollment.student.image,
@@ -150,7 +133,7 @@ const InstructorClassCourseDetail = () => {
             },
             fullName: classEnrollment.student.full_name,
             gender: classEnrollment.student.gender === 1 ? "Male" : "Female",
-            email: classEnrollment.student.user ? classEnrollment.student.user.email : "No email",
+            dob: classEnrollment.student.date_of_birth,
         }))
     }
     /** 
@@ -161,43 +144,50 @@ const InstructorClassCourseDetail = () => {
         "instructor_id": "INS001",
         "class_schedules": [
             {
-                "class_schedule_id": 1,
+                "class_schedule_id": 11,
                 "class_course_id": 1,
-                "day": "2023-05-18",
-                "slot": 1,
-                "room": 101,
-                "status": 1
+                "day": "2023-08-23",
+                "slot": 3,
+                "room": 105,
+                "status": 1,
+                "submit_time": null,
+                "attendances": [
+                    {
+                        "attendance_id": 41,
+                        "class_schedule_id": 11,
+                        "class_enrollment_id": 1,
+                        "attendance_status": 0,
+                        "attendance_time": null
+                    }
+                ]
             },
     **/
 
     const fetchClassCourseScheduleData = async () => {
         setScheduleFetching(true);
-        const url = `/instructor/classCourse/${classCourseId}/classSchedules`
-
-        await axiosClient.get(url)
+        await axiosClient.get(`/student/classCourse/${classCourseId}/classSchedules`)
             .then((response) => {
-                const { class_schedules } = response.data.classCourse;
-                setScheduleData(getScheduleDataFrom(class_schedules));
+                setScheduleData(getScheduleDataFrom(response.data.classCourse));
                 setScheduleFetching(false);
-                _setErrorMessage('');
             })
             .catch((error) => {
-                console.log(error);
-                setErrorMessage(error.message);
+                console.error(error);
                 setScheduleFetching(false);
             })
     }
 
-    const getScheduleDataFrom = (classScheduleData) => {
-        console.log(classScheduleData);
-        return classScheduleData.map((classSchedule) => ({
+    const getScheduleDataFrom = (classCourseData) => {
+        return classCourseData.class_schedules.map((classSchedule) => ({
             key: classSchedule.class_schedule_id,
             date: dayjs(classSchedule.day).format('DD/MM/YYYY'),
             slot: classSchedule.slot,
             room: classSchedule.room,
-            status: classSchedule.status,
-            detail: classSchedule.class_schedule_id,
-            submitTime: classSchedule.submit_time,
+            schedule_status: classSchedule.status,
+            attendance: {
+                status: classSchedule.attendances[0].attendance_status,
+                time: classSchedule.attendances[0].attendance_time,
+            },
+            comment: classSchedule.attendances[0].attendance_comment,
         }))
     }
 
@@ -213,6 +203,7 @@ const InstructorClassCourseDetail = () => {
     const fetchSlotTimeData = async () => {
         setSlotTimesFetching(true);
         const url = `/classSchedule/slotTimes`;
+
         await axiosClient.get(url)
             .then((response) => {
                 setSlotTimes(getSlotTimesFromData(response.data.slotTimes));
@@ -249,22 +240,21 @@ const InstructorClassCourseDetail = () => {
             key: 'room',
         },
         {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
+            title: 'Class Status',
+            dataIndex: 'schedule_status',
+            key: 'schedule_status',
             render: (text) => <Tag color={findStatusColor(text)}>{findStatusText(text)}</Tag>
         },
         {
-            title: 'Last Update',
-            dataIndex: 'submitTime',
-            key: 'submitTime',
-            render: (text) => (text && dayjs(text).format('HH:mm:ss DD/MM/YYYY'))
+            title: 'Attendance',
+            dataIndex: 'attendance',
+            key: 'attendance',
+            render: (text) => <Tag color={findAttendanceColor(text.status)}>{findAttendanceText(text.status, text.time)}</Tag>
         },
         {
-            title: 'Detail',
-            dataIndex: 'detail',
-            key: 'detail',
-            render: (text) => <Link to={`/schedule/attendance/${text}`}>Detail</Link>
+            title: 'Comment',
+            dataIndex: 'comment',
+            key: 'comment',
         },
     ]
 
@@ -277,8 +267,6 @@ const InstructorClassCourseDetail = () => {
 
     return (
         <div className={classes['list']}>
-            {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
-            {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
             <p className={classes['page__title']}>Class: {classCourseData && classCourseData.class.class_name}</p>
             <div className={classes['list__main']}>
                 <div className={classes['list__nav']}>
@@ -286,6 +274,8 @@ const InstructorClassCourseDetail = () => {
                         <div className={classes['list__class-name']}>
                             <p><b>Class: </b></p>
                             <p>{classCourseData && classCourseData.class.class_name}</p>
+                            <p><b>Instructor</b></p>
+                            <p>{classCourseData && classCourseData.instructor.full_name}</p>
                         </div>
                         <div className={classes['list__class-name']}>
                             <p><b>Course</b></p>
@@ -313,4 +303,4 @@ const InstructorClassCourseDetail = () => {
     )
 }
 
-export default InstructorClassCourseDetail
+export default StudentClassCourseDetail
