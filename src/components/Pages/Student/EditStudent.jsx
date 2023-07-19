@@ -4,26 +4,105 @@ import classes from '../Page.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
 import Image from '../../common/Image/Image';
 const EditStudent = () => {
-  const handleChange = () => {
+  
+  const [errorMessage, _setErrorMessage] = useState("");
+  const [successMessage, _setSuccessMessage] = useState("");
+  const { setContentLoading } = useContext(ContentContext);
+  const [studentData, setStudentData] = useState({});
+  const [gender, setGender] = useState("");
+  const [academic_year, setAcademicYear] = useState("");
+  const [status, setStatus] = useState(null);
+  const [major_id, setMajorId] = useState("");
+  const params = useParams();
+  const student_id = params.id;
+  const [isValidUserId, setIsValidUserId] = useState(false);
 
+  const [form] = Form.useForm();
+
+  const setErrorMessage = (value) => {
+    _setErrorMessage(value);
+    _setSuccessMessage("");
   }
-  const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
+  const setSuccessMessage = (value) => {
+    _setErrorMessage("");
+    _setSuccessMessage(value);
+  }
+
+  const handleGenderChange = (value) => {
+    setGender(value);
+  }
+
+  const handleAcademicYearChange = (value) => {
+    setAcademicYear(value);
+  }
+
+  const handleStatusChange = (value) => {
+    setStatus(value);
+  }
+
+  const handleMajorChange = (value) => {
+    setMajorId(value);
+  }
+
+  useEffect(() => {
+    setContentLoading(true);
+    const fetchUserData = async () => {
+      try {
+        const url = `/students/edit-student/${student_id}`
+        const response = await axiosClient.get(url)
+        console.log(response);
+        const { full_name, date_of_birth, gender, address, phone_number, status, major_id, academic_year, image } = response.data.student
+        setUserData({ id, full_name, date_of_birth, gender, address, phone_number, image })
+        setMajorId(major_id);
+        setStatus(status);
+        setAcademicYear(academic_year);
+        setGender(gender);
+        setIsValidUserId(true);
+        setContentLoading(false);
+      } catch (error) {
+        setContentLoading(false);
+        console.log(error);
+        setErrorMessage(error.response.data.message);
       }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
+    }
+    fetchUserData();
+  }, [])
+
+  const onFinish = () => {
+    (async () => {
+      setContentLoading(true);
+      const data = {
+        student_id: student_id,
+        full_name: full_name,
+        image: image,
+        gender: gender,
+        academic_year: academic_year,
+        date_of_birth: date_of_birth,
+        phone_number: phone_number,
+        address: address,
+        major_id: major_id,
+        status: status
       }
-    },
-  };
+      console.log(data);
+      await axiosClient.put('/students/edit-student', data)
+        .then((response) => {
+          setSuccessMessage(response.data.message);
+          setContentLoading(false);
+          resetValue();
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorMessage(error.response.data.error);
+          setContentLoading(false);
+        })
+    })()
+  }
+
+  const onFinishFailed = (errorInfo) => {
+    setErrorMessage(errorInfo.errorFields[0].errors)
+    console.log(errorInfo);
+  }
+
   return (
     <div>
       <p className={classes['page__title']}>Edit student</p>
@@ -78,7 +157,7 @@ const EditStudent = () => {
                 marginRight: '10px'
               }}>Image</label>
                 <div  className={classes['add__form-row-row']}>
-                    <Upload {...props} id='img'>
+                    <Upload  id='img'>
                         <Button icon={<UploadOutlined />}>Click to Upload</Button>
                     </Upload>
                     <Image alt='user' src='https://img.freepik.com/free-icon/user_318-159711.jpg' width={50} height={50}/>
