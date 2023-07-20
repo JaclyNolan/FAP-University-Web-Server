@@ -16,7 +16,7 @@ import { EnrollmentEdit, EnrollmentList } from '../../components/Pages/Enrollmen
 import { InstructorClassCourseList, InstructorClassCourseDetail, InstructorWeeklySchedule, InstructorWeeklyScheduleAttendance, InstructorFeedback, InstructorFeedbackDetail } from '../../components/Pages/InstructorPages'
 import { AddClass, ClassEdit, ClassList } from "../../components/Pages/Class"
 import { Navigate } from "react-router-dom"
-import { Feedback, MarkReport, StudentClassCourseDetail, StudentClassCourseList, StudentCourseList, StudentCourseRegister, StudentWeeklySchedule } from "../../components/Pages/StudentPages"
+import { StudentClassCourseDetail, StudentClassCourseList, StudentCourseList, StudentFeedbackList, StudentWeeklySchedule } from "../../components/Pages/StudentPages"
 export const commomRouters = [
     {
         path: '/',
@@ -291,12 +291,8 @@ export const studentRouters = [
         render: () => <PrivateRoute To={StudentClassCourseDetail} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     {
-        path: '/student/markreport',
-        render: () => <PrivateRoute To={MarkReport} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
-    },
-    {
-        path: '/student/feedback',
-        render: () => <PrivateRoute To={Feedback} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
+        path: '/feedback',
+        render: () => <PrivateRoute To={StudentFeedbackList} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     ...commomRouters
 ]

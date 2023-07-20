@@ -1,23 +1,24 @@
-import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axiosClient from '../../../axios-client';
-import { Input, Table, Tag, Select, Button, Modal } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
-import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
-import debounce from 'lodash/debounce';
+import { Input, Table, Select, Button, Modal, Popover } from 'antd';
+import {  useLocation } from 'react-router-dom';
 import classes from '../Page.module.scss'
+import StudentFeedbackAdd from './StudentFeedbackAdd';
 
-const StudentClassCourseList = () => {
+const StudentFeedbackList = () => {
+    const {TextArea} = Input;
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search)
+    const [isModalOpen, setModalOpen] = useState(false);
 
-    const [courseData, setCourseData] = useState(null);
-    const [isCourseFetching, setCourseFetching] = useState(false);
+    const [feedbackData, setFeedbackData] = useState(null);
+    const [isFeedbackFetching, setFeedbackFetching] = useState(false);
     const [classData, setClassData] = useState(null);
     const [isClassFetching, setClassFetching] = useState(false);
     const [instructorData, setInstructorData] = useState(null);
     const [isInstructorFetching, setInstructorFetching] = useState(false);
-    const [classCourseData, setClassCourseData] = useState(null);
-    const [isClassCourseFetching, setClassCourseFetching] = useState(false);
+    const [courseData, setCourseData] = useState(null);
+    const [isCourseFetching, setCourseFetching] = useState(false);
     const fetchRef = useRef(0);
 
     const [search, setSearch] = useState(searchParams.get('search') ? searchParams.get('search') : null);
@@ -26,7 +27,7 @@ const StudentClassCourseList = () => {
     const [instructor, setInstructor] = useState(searchParams.get('instructorId') ? searchParams.get('instructorId') : null);
 
     useEffect(() => {
-        fetchClassCoursesData();
+        fetchFeedbackData();
     }, [search, course, classFilter, instructor])
 
     useEffect(() => {
@@ -36,107 +37,82 @@ const StudentClassCourseList = () => {
     }, [])
 
     /**
-     * @return "classCourses": [
+     * @return "feedbacks": [
         {
-            "class_course_id": 1,
-            "class_id": 1,
-            "course_id": 1,
-            "instructor_id": "INS001",
-            "class": {
-                "class_id": 1,
-                "major_id": 1,
-                "class_name": "CS001"
-            },
-            "course": {
-                "course_id": 1,
-                "course_name": "Introduction to Programming"
-            },
-            "instructor": {
-                "instructor_id": "INS001",
-                "full_name": "John Smith"
+            "feedback_id": 1,
+            "class_enrollment_id": 1,
+            "feedback_content": "Sample feedback 1",
+            "created_at": "2023-07-19 00:00:00",
+            "class_enrollment": {
+                "class_enrollment_id": 1,
+                "class_course_id": 1,
+                "class_course": {
+                    "class_course_id": 1,
+                    "class_id": 1,
+                    "course_id": 1,
+                    "instructor_id": "INS001",
+                    "class": {
+                        "class_id": 1,
+                        "class_name": "CS001"
+                    },
+                    "course": {
+                        "course_id": 1,
+                        "course_name": "Introduction to Programming"
+                    },
+                    "instructor": {
+                        "instructor_id": "INS001",
+                        "full_name": "John Smith"
+                    }
+                }
             }
-        }
-    ]
+        },
      */
 
-    const getTableDataFromClassCourseData = (classCourses) => {
-        return classCourses.map((classCourse, index) => {
+    const getTableDataFromFeedbackData = (feedbacks) => {
+        return feedbacks.map((feedback, index) => {
             return {
                 key: index + 1,
-                courseName: classCourse.course.course_name,
-                className: classCourse.class.class_name,
-                instructorName: classCourse.instructor.full_name,
-                actions: {
-                    id: classCourse.class_course_id,
-                }
+                courseName: feedback.class_enrollment.class_course.course.course_name,
+                className: feedback.class_enrollment.class_course.class.class_name,
+                instructorName: feedback.class_enrollment.class_course.instructor.full_name,
+                content: feedback.feedback_content,
             }
         });
     }
 
-    const fetchClassCoursesData = async () => {
-        setClassCourseFetching(true);
+    const fetchFeedbackData = async () => {
+        setFeedbackFetching(true);
         const params = {
             keyword: search,
             course_id: course,
             class_id: classFilter,
             instructor_id: instructor,
         }
-        const url = '/student/classCourse'
         fetchRef.current += 1;
         const fetchId = fetchRef.current;
-        await axiosClient.get(url, { params })
-            .then((response) => {
-                if (fetchId !== fetchRef.current) return
-                setClassCourseData(getTableDataFromClassCourseData(response.data.classCourses));
-                setClassCourseFetching(false);
-            })
-            .catch((error) => {
-                console.error(error);
-                setClassCourseFetching(false);
-            })
+        const response = await axiosClient.get(`student/feedback`, { params })
+        if (fetchId !== fetchRef.current) return
+        setFeedbackData(getTableDataFromFeedbackData(response.data.feedbacks));
+        setFeedbackFetching(false);
     }
 
     const fetchCoursesData = async () => {
         setCourseFetching(true);
-        const url = '/student/course/list';
-        
-        await axiosClient.get(url)
-            .then((response) => {
-                setCourseData(response.data.courses);
-                setCourseFetching(false);
-            })
-            .catch((error) => {
-                console.error(error);
-                setCourseFetching(false);
-            })
+        const response = await axiosClient.get('/student/course/list')
+        setCourseData(response.data.courses);
+        setCourseFetching(false);
     }
     const fetchClassesData = async () => {
         setClassFetching(true);
-        const url = '/student/class/list';
-        
-        await axiosClient.get(url)
-            .then((response) => {
-                setClassData(response.data.classes);
-                setClassFetching(false);
-            })
-            .catch((error) => {
-                console.error(error);
-                setClassFetching(false);
-            })
+        const response = await axiosClient.get('/student/class/list')
+        setClassData(response.data.classes);
+        setClassFetching(false);
     }
     const fetchInstructorsData = async () => {
         setInstructorFetching(true);
-        const url = '/student/instructor/list';
-        
-        await axiosClient.get(url)
-            .then((response) => {
-                setInstructorData(response.data.instructors);
-                setInstructorFetching(false);
-            })
-            .catch((error) => {
-                console.error(error);
-                setInstructorFetching(false);
-            })
+        const response = await axiosClient.get('/student/instructor/list')
+        setInstructorData(response.data.instructors);
+        setInstructorFetching(false);
     }
 
     const classEnrollmentColumns = [
@@ -161,20 +137,19 @@ const StudentClassCourseList = () => {
             key: 'instructorName',
         },
         {
-            title: '',
-            dataIndex: 'actions',
-            key: 'actions',
-            render: (text) => (<Link to={`/class/${text.id}`}><Button>Detail</Button></Link>)
+            title: 'Content',
+            dataIndex: 'content',
+            key: 'content',
+            render: (text) => <div>
+                <Popover style={{ marginRight: '10px' }} title={<span>Comment</span>}
+                    content={(
+                        <TextArea style={{ width: 300 }} rows={4} readOnly value={text}></TextArea>
+                    )} placement='topRight' trigger='click'>
+                    <Button>Feedback</Button>
+                </Popover>
+            </div>
         }
     ]
-
-    const debounceSetter = useMemo(() => {
-        const handleSearch = (e) => {
-            setSearch(e.target.value);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        return debounce(handleSearch, 700);
-    })
 
     const handleCourseChange = (value) => {
         setCourse(value);
@@ -185,10 +160,13 @@ const StudentClassCourseList = () => {
     const handleInstructorChange = (value) => {
         setInstructor(value);
     }
+    const handleAddClick = () => {
+        setModalOpen(true);
+    }
 
     return (
         <div className={classes['list']}>
-            <p className={classes['page__title']}>Course List</p>
+            <p className={classes['page__title']}>Feedback List</p>
             <div className={classes['list__main']}>
                 <div className={classes['list__nav']}>
                     <div className={classes['list__nav-left']}>
@@ -230,23 +208,27 @@ const StudentClassCourseList = () => {
                         />
                     </div>
                     <div className={classes['list__nav-right']}>
-                        <div className={classes['list__nav-right__search']}>
-                            <Input
-                                prefix={isClassCourseFetching ? <LoadingOutlined /> : <SearchOutlined />}
-                                placeholder="input search text"
-                                allowClear
-                                onChange={debounceSetter}
-                                style={{ width: 200 }}
-                            />
+                        <div className={classes['list__nav-right__add']}>
+                            <Button type='primary' onClick={handleAddClick}>
+                                <i className="fas fa-plus"></i>
+                                <span>Make a new feedback</span>
+                            </Button>
                         </div>
                     </div>
                 </div>
                 <div className={classes['list__table']}>
-                    <Table columns={classEnrollmentColumns} loading={isClassCourseFetching} pagination={{ pageSize: 6 }} dataSource={classCourseData} />
+                    <Table columns={classEnrollmentColumns} loading={isFeedbackFetching} pagination={{ pageSize: 6 }} dataSource={feedbackData} />
                 </div>
             </div>
+            {isModalOpen && <Modal
+                open={isModalOpen}
+                title={`Submit Feedback`}
+                onCancel={() => { setModalOpen(false) }}
+                footer={null}>
+                <StudentFeedbackAdd setModalOpen={setModalOpen} fetchList={fetchFeedbackData} />
+            </Modal>}
         </div>
     )
 }
 
-export default StudentClassCourseList
+export default StudentFeedbackList

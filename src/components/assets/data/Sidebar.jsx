@@ -220,10 +220,6 @@ export const studentSidebar = [
                 title: "Home",
                 path: '/'
             },
-            {
-                title: 'News',
-                path: '/student/news/1'
-            }
         ]
     },
     {
@@ -261,7 +257,7 @@ export const studentSidebar = [
         items: [
             {
                 title: 'Make Feedback',
-                path: '/student/feedback'
+                path: '/feedback'
             },
         ]
     }
