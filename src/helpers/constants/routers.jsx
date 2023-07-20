@@ -16,7 +16,7 @@ import { EnrollmentEdit, EnrollmentList } from '../../components/Pages/Enrollmen
 import { InstructorClassCourseList, InstructorClassCourseDetail, InstructorWeeklySchedule, InstructorWeeklyScheduleAttendance, InstructorFeedback, InstructorFeedbackDetail } from '../../components/Pages/InstructorPages'
 import { AddClass, ClassEdit, ClassList } from "../../components/Pages/Class"
 import { Navigate } from "react-router-dom"
-import { AttendanceReport, Classes, Feedback, MarkReport, News, StudentClassCourseDetail, StudentClassCourseList, StudentCourseList, StudentCourseRegister, StudentWeeklySchedule } from "../../components/Pages/StudentPages"
+import { Feedback, MarkReport, StudentClassCourseDetail, StudentClassCourseList, StudentCourseList, StudentCourseRegister, StudentWeeklySchedule } from "../../components/Pages/StudentPages"
 export const commomRouters = [
     {
         path: '/',
@@ -293,10 +293,6 @@ export const studentRouters = [
     {
         path: '/student/markreport',
         render: () => <PrivateRoute To={MarkReport} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
-    },
-    {
-        path: '/student/news/:id',
-        render: () => <PrivateRoute To={News} roles={['Student']} authRequire={true} ElseTo='/'></PrivateRoute>
     },
     {
         path: '/student/feedback',

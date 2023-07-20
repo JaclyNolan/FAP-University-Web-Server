@@ -3,7 +3,6 @@ import Classes from './Classes';
 import StudentCourseRegister from './StudentCourseRegister';
 import Feedback from './Feedback';
 import MarkReport from './MarkReport';
-import News from './News';
 import StudentWeeklySchedule from './StudentWeeklySchedule';
 import StudentCourseList from './StudentCourseList';
 import StudentClassCourseDetail from './StudentClassCourseDetail';
@@ -18,6 +17,5 @@ export {
     StudentClassCourseDetail,
     Feedback,
     MarkReport,
-    News,
     StudentWeeklySchedule,
 }
