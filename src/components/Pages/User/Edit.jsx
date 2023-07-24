@@ -12,8 +12,14 @@ const Edit = () => {
   const { setContentLoading } = useContext(ContentContext);
   const [userData, setUserData] = useState({});
   const params = useParams();
-  const user_id = params.id; 
+  const user_id = params.id;
   const [isValidUserId, setIsValidUserId] = useState(false);
+  // const [userId, _setUserId] = useState("");
+  // const [username, setUsername] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [staffId, setStaffId] = useState(null);
+  // const [instructorId, setInstructorId] = useState(null);
+  // const [studentId, setStudentId] = useState(null);
   const [form] = Form.useForm();
 
   const setErrorMessage = (value) => {
@@ -118,11 +124,7 @@ const Edit = () => {
               <DebounceSelect
                 placeholder="Select Staff ID"
                 fetchOptions={fetchStaffList}
-                key='staff_id'
-                presetOptions={[
-                  { value: userData.staff_id, label: userData.staff_id }
-                ]}
-              />
+                key='staff_id' />
             </Form.Item >
           </div >
         )
@@ -139,10 +141,7 @@ const Edit = () => {
               <DebounceSelect
                 placeholder="Select Instructor ID"
                 key='instructor_id'
-                fetchOptions={fetchInstructorList}
-                presetOptions={[
-                  { value: userData.instructor_id, label: userData.instructor_id }
-                ]} />
+                fetchOptions={fetchInstructorList}/>
             </Form.Item>
           </div>
         )
@@ -152,7 +151,6 @@ const Edit = () => {
             <label htmlFor="student_id">Student ID</label>
             <Form.Item
               name="student_id"
-              initialValue={userData.student_id}
               noStyle
               rules={[
                 { required: true, message: 'Please search & select a student ID' }
@@ -161,10 +159,7 @@ const Edit = () => {
                 // value={null}
                 placeholder="Select Student ID"
                 key='student_id'
-                fetchOptions={fetchStudentList}
-                presetOptions={[
-                  { value: userData.student_id, label: userData.student_id }
-                ]} />
+                fetchOptions={fetchStudentList} />
             </Form.Item>
           </div>
         )
