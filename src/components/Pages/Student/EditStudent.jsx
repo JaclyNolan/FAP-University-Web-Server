@@ -18,7 +18,7 @@ const EditStudent = () => {
 
   const params = useParams();
   const student_id = params.id;
-  const [isValidUserId, setIsValidUserId] = useState(false);
+  const [isValidStudentId, setIsValidStudentId] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -37,21 +37,23 @@ const EditStudent = () => {
       try {
         const url = `/students/edit-student/${student_id}`
         const response = await axiosClient.get(url)
-        const { full_name, date_of_birth, gender, address, phone, status, major_id, academic_year, image, email } = response.data.student
+        console.log(response.data.student);
+        const { full_name, date_of_birth, gender, address, phone_number, status, major_id, academic_year, image, email } = response.data.student
         setStudentData({ 
           student_id, 
           full_name, 
           date_of_birth: dayjs(date_of_birth), 
           gender, 
           address, 
-          phone, 
+          phone_number, 
           email, 
           status, 
           academic_year, 
           major_id, 
           image })
-        setIsValidUserId(true);
+        setIsValidStudentId(true);
         setContentLoading(false);
+        setImage(image);
       } catch (error) {
         setContentLoading(false);
         console.log(error);
@@ -69,12 +71,13 @@ const EditStudent = () => {
         image: image,
         gender: fields.gender,
         academic_year: fields.academic_year,
-        date_of_birth: fields.date_of_birth,
-        phone: fields.phone,
+        date_of_birth: dayjs(fields.date_of_birth).format('YYYY-MM-DD'),
+        phone_number: fields.phone_number,
         address: fields.address,
         major_id: fields.major_id,
         status: fields.status
       }
+
       await axiosClient.put('/students/update-student/' + student_id, data)
         .then((response) => {
           setSuccessMessage(response.data.message);
@@ -116,7 +119,7 @@ const EditStudent = () => {
     <>
       {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
       {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
-      {isValidUserId &&
+      {isValidStudentId &&
         <Form
           form={form}
           onFinish={onFinish}
@@ -237,14 +240,14 @@ const EditStudent = () => {
                 </Form.Item>
               </div>
               <div className={classes['add__form-row']}>
-                <label htmlFor="phone">Phone number</label>
+                <label htmlFor="phone_number">Phone number</label>
                 <Form.Item
-                  name="phone"
+                  name="phone_number"
                   noStyle
                   rules={[
                     { required: true, message: 'Please input new phone number' }
                   ]}>
-                  <InputNumber id='phone' />
+                  <InputNumber id='phone_number' />
                 </Form.Item>
               </div>
               <div className={classes['add__form-row']}>
