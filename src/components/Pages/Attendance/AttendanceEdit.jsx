@@ -1,83 +1,193 @@
-import React from 'react'
-import {Button, Input, message, Radio, DatePicker} from 'antd'
+import React, { useContext, useEffect, useState } from 'react'
+import {Button, Input, Form,Alert, DatePicker, Select} from 'antd'
 import classes from '../Page.module.scss'
+import axiosClient from '../../../axios-client';
+import ContentContext from '../../../helpers/Context/ContentContext';
+import { useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 const EditStudent = () => {
-  const handleChange = () => {
+  const [errorMessage, _setErrorMessage] = useState("");
+  const [successMessage, _setSuccessMessage] = useState("");
+  const { setContentLoading } = useContext(ContentContext);
+  const [attendanceData, setAttendanceData] = useState({});
+  const params = useParams();
+  const attendance_id = params.id;
+  const [isValidAttendanceId, setIsValidAttendanceId] = useState(false);
 
+  const [form] = Form.useForm();
+
+  const setErrorMessage = (value) => {
+    _setErrorMessage(value);
+    _setSuccessMessage("");
   }
-  const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
+  const setSuccessMessage = (value) => {
+    _setErrorMessage("");
+    _setSuccessMessage(value);
+  }
+  
+  useEffect(() => {
+    setContentLoading(true);
+    const fetchAttendanceData = async () => {
+      try {
+        const url = `/attendances/edit-attendance/${attendance_id}`
+        const response = await axiosClient.get(url)
+        const { student_name, class_name, course_name, day, slot, room, attendance_comment, status} = response.data.attendance
+        setAttendanceData({ id: attendance_id, student_name, class_name, course_name, status, day: dayjs(day), slot, room, attendance_comment })
+        setIsValidAttendanceId(true);
+        setContentLoading(false);
+      } catch (error) {
+        setContentLoading(false);
+        console.log(error);
+        setErrorMessage(error.response.data.message);
       }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
+    }
+    fetchAttendanceData();
+  }, [])
+
+  const onFinish = (fields) => {
+    (async () => {
+      setContentLoading(true);
+      const data = {
+        attendance_status: fields.status,
       }
-    },
-  };
+      console.log(data);
+      await axiosClient.put('/attendances/update-attendance/' + attendance_id, data)
+        .then((response) => {
+          setSuccessMessage(response.data.message);
+          setContentLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorMessage(error.response.data.error);
+          setContentLoading(false);
+        })
+    })()
+  }
+
+  const onFinishFailed = (errorInfo) => {
+    setErrorMessage(errorInfo.errorFields[0].errors)
+    console.log(errorInfo);
+  }
+
   return (
     <div>
+      {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
+      {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
+      {isValidAttendanceId &&
+        <Form
+          form={form}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          initialValues={attendanceData}
+          scrollToFirstError
+        >
       <p className={classes['page__title']}>Edit Attendance</p>
-      <form className={classes['edit__form']}>
         <div className={classes['edit__main']}>
             <div className={classes['edit__form-left']}>
                 <div className={classes['edit__form-row']}>
                     <label htmlFor="id">Attendance ID</label>
-                    <Input id='id' disabled value={'2345'}/>
+                    <Form.Item
+                  name="id"
+                  noStyle>
+                  <Input id='id' readOnly disabled />
+                </Form.Item>
                 </div>
                 <div className={classes['edit__form-row']}>
-                    <label htmlFor="cid">Class ID</label>
-                    <Input id='cid' disabled value={'bhaf12345'}/>
+                    <label htmlFor="class_name">Class</label>
+                    <Form.Item
+                  name="class_name"
+                  noStyle>
+                  <Input id='class_name' readOnly disabled />
+                </Form.Item>
                 </div>
             </div>
             <div className={classes['edit__form-right']}>
                 <div className={classes['edit__form-row']}>
-                    <label htmlFor="sid">Student ID</label>
-                    <Input id='sid' disabled value={'bhaf12345'}/>
+                    <label htmlFor="student_name">Student</label>
+                    <Form.Item
+                  name="student_name"
+                  noStyle>
+                  <Input id='student_name' readOnly disabled />
+                </Form.Item>
                 </div>
                 <div className={classes['edit__form-row']}>
-                    <label htmlFor="courseId">Course ID</label>
-                    <Input id='courseId' disabled value={'bhaf12345'}/>
+                    <label htmlFor="course_name">Course</label>
+                    <Form.Item
+                  name="course_name"
+                  noStyle>
+                  <Input id='course_name' readOnly disabled />
+                </Form.Item>
                 </div>
             </div>
         </div>
         <div className={classes['edit__group']}>
             <div className={classes['edit__group-row']}>
                 <label htmlFor="day">Day</label>
-                <Input id='day' disabled value={'Tuesday'}/>
+                <Form.Item
+                  name="day" // Thay đổi name thành "date_of_birth"
+                  noStyle
+                  rules={[
+                    { required: true, message: 'Please input new day' }
+                  ]}
+                >
+                  <DatePicker
+                    id="day"  readOnly disabled
+                  />
+                </Form.Item>
             </div>
             <div className={classes['edit__group-row']}>
                 <label htmlFor="slot">Slot</label>
-                <Input id='slot' disabled value={'1'}/>
+                <Form.Item
+                  name="slot"
+                  noStyle>
+                  <Input id='slot' readOnly disabled />
+                </Form.Item>
             </div>
             <div className={classes['edit__group-row']}>
                 <label htmlFor="room">Room</label>
-                <Input id='room' disabled value={'B01'}/>
+                <Form.Item
+                  name="room"
+                  noStyle>
+                  <Input id='room' readOnly disabled />
+                </Form.Item>
             </div>
             <div className={classes['edit__group-row']}>
                 <label htmlFor="status">Attendance Status</label>
-                <Radio id='status'>Checked</Radio>
+                <Form.Item
+                  name="status"
+                  noStyle>
+                  <Select
+                    defaultValue="Choose Attendance"
+                    style={{ width: '100%' }}
+                    id='status'
+                    options={[
+                      { value: 0, label: 'Attended' },
+                      { value: 1, label: 'Absent' },
+                      { value: 2, label: 'Null' },
+                    ]}
+                  />
+                </Form.Item>
             </div>
-            <div className={classes['edit__group-row']}>
+            {/* <div className={classes['edit__group-row']}>
                 <label htmlFor="time">Attendance time</label>
                 <DatePicker id='time'/>
-            </div>
+            </div> */}
             <div className={classes['edit__group-row']}>
-                <label htmlFor="comment">Teacher's comment</label>
-                <Input id='room' disabled value={'He is late'}/>
+                <label htmlFor="attendance_comment">Teacher's comment</label>
+                <Form.Item
+                  name="attendance_comment"
+                  noStyle>
+                  <Input id='attendance_comment' readOnly disabled />
+                </Form.Item>
             </div>
         </div>
         <div>
-          <Button type='primary'>SUBMIT</Button>
+        <Form.Item>
+              <Button type='primary' htmlType="submit">Submit</Button>
+            </Form.Item>
         </div>
-      </form>
+        </Form>
+}
     </div>
   )
 }

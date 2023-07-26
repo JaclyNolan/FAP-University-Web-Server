@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
-import { Input, Button, Popconfirm, Select, Table, Alert, Space } from 'antd'
+import { Input, Button, Table, Alert, Space } from 'antd'
 import classes from '../Page.module.scss'
 import axiosClient from '../../../axios-client';
 import { Link, useLocation } from 'react-router-dom';
@@ -34,13 +34,6 @@ const GradeList = () => {
         _setErrorMessage("");
         _setSuccessMessage(value);
     }
-
-    const statusLabels = {
-        0: 'F',
-        1: 'P',
-        2: 'M',
-        3: 'D',
-      };
 
     const getTableDataFromGradeData = (gradeData) => {
         console.log(gradeData);
@@ -157,28 +150,6 @@ const GradeList = () => {
         setCurrentPage(page);
     }
 
-    const deleteClassCourseHandler = (id) => {
-        (async () => {
-            setFetching(true);
-            await axiosClient.put(`/classCourses/delete-classCourse/${id}`)
-                .then((response) => {
-                    setFetching(false);
-                    setSuccessMessage('Successfully delete user with id ' + id)
-                })
-                .catch((error) => {
-                    setFetching(false);
-                    setErrorMessage(error.message);
-                })
-            if (!errorMessage) {
-                if (currentPage === 1) {
-                    fetchClassCourseData(currentPage, search, courseId, classId)
-                } else {
-                    setCurrentPage(1);
-                }
-            }
-        })()
-    }
-
     const tableColumns = [
         {
             title: 'Id',
@@ -209,7 +180,6 @@ const GradeList = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (status) => statusLabels[status] || '', // Sử dụng đối tượng
         },
         {
             title: 'score',
@@ -226,34 +196,10 @@ const GradeList = () => {
                         <i className="fas fa-edit"></i>
                     </Button>
                 </Link>
-                {/* <Popconfirm
-                    title="Delete the grade"
-                    description="Are you sure to delete this grade?"
-                    onConfirm={() => deleteUserHandler(text.id)}
-                    okText="Confirm"
-                    cancelText="Cancel"
-                >
-                    <Button danger type='primary'>
-                        <i className="fas fa-trash-alt"></i>
-                    </Button>
-                </Popconfirm> */}
             </div>
         },
 
     ]
-    // const tableData = [
-    //     {
-    //         key: '1',
-    //         studentName: 'Nguyen Van A',
-    //         class: 'BHAF123',
-    //         course: 'Programing',
-    //         status: 'in progress',
-    //         address: 'Ha Noi - Viet Nam',
-    //         actions: {
-    //             id: 1
-    //         }
-    //     }
-    // ]
     return (
         <div className={classes['list']}>
             {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
@@ -274,14 +220,14 @@ const GradeList = () => {
                                 style={{ width: 200 }}
                             />
                         </div>
-                        <div className={classes['list__nav-right__add']}>
+                        {/* <div className={classes['list__nav-right__add']}>
                             <Link to='/grade/add'>
                                 <Button type='primary'>
                                     <i className="fas fa-plus"></i>
                                     <span>Add</span>
                                 </Button>
                             </Link>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className={classes['list__filters']}>

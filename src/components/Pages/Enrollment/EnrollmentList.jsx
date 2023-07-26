@@ -265,14 +265,6 @@ const EnrollmentList = () => {
                                 style={{ width: 200 }}
                             />
                         </div>
-                        <div className={classes['list__nav-right__add']}>
-                            <Link to='/enrollment/add'>
-                                <Button type='primary'>
-                                    <i className="fas fa-plus"></i>
-                                    <span>Add</span>
-                                </Button>
-                            </Link>
-                        </div>
                     </div>
                 </div>
                 <div className={classes['list__filters']}>
