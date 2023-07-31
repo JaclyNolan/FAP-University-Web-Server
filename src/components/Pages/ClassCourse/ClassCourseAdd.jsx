@@ -94,7 +94,6 @@ const ClassCourseAdd = () => {
         .then((response) => {
           setSuccessMessage(response.data.message);
           setContentLoading(false);
-          resetForm();
           resetValue();
         })
         .catch((error) => {
