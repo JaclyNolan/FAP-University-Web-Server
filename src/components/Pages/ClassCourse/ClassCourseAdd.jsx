@@ -1,17 +1,22 @@
 import React, { useContext, useState } from 'react'
-import { Button , Alert, Form,} from 'antd'
+import { Button, Alert, Form, Select} from 'antd'
 import classes from '../Page.module.scss'
 import axiosClient from '../../../axios-client';
 import ContentContext from '../../../helpers/Context/ContentContext';
 import DebounceSelect from '../../../helpers/customs/DebounceSelect';
+
 const ClassCourseAdd = () => {
   // const handleChange = (value) => {
   //     console.log(value);
   // }
-
   const [errorMessage, _setErrorMessage] = useState("");
   const [successMessage, _setSuccessMessage] = useState("");
   const { setContentLoading } = useContext(ContentContext);
+
+  const [class_id, setClassId] = useState("");
+  const [course_id, setCourseId] = useState("");
+  const [instructor_id, setInstructorId] = useState("");
+
   const [form] = Form.useForm();
 
   const setErrorMessage = (value) => {
@@ -23,11 +28,11 @@ const ClassCourseAdd = () => {
     _setSuccessMessage(value);
   }
 
-  async function fetchClassList(searchValue) {
-    const url = '/class'
+
+  async function fetchCourseList(searchValue) {
+    const url = '/courses'
       + (searchValue !== "" ? `?page=1&keyword=${searchValue}` : '')
     console.log(url);
-
     try {
       const response = await axiosClient.get(url)
       const data = response.data.classes
@@ -41,11 +46,10 @@ const ClassCourseAdd = () => {
     }
   }
 
-  async function fetchCourseList(searchValue) {
-    const url = '/courses'
+  async function fetchClassList(searchValue) {
+    const url = '/class'
       + (searchValue !== "" ? `?page=1&keyword=${searchValue}` : '')
     console.log(url);
-
     try {
       const response = await axiosClient.get(url)
       const data = response.data.courses
@@ -59,7 +63,7 @@ const ClassCourseAdd = () => {
     }
   }
 
-  async function fetchIntructorList(searchValue) {
+  async function fetchInstructorList(searchValue) {
     const url = '/instructors'
       + (searchValue !== "" ? `?page=1&keyword=${searchValue}` : '')
     console.log(url);
@@ -77,13 +81,13 @@ const ClassCourseAdd = () => {
     }
   }
 
-  const onFinish = (fields) => {
+  const onFinish = () => {
     (async () => {
       setContentLoading(true);
       const data = {
-        class_id: fields.class_id,
-        course_id: fields.course_id,
-        instructor_id: fields.instructor_id,
+        class_id: class_id,
+        course_id: course_id,
+        instructor_id: instructor_id,
       }
       console.log(data);
       await axiosClient.post('/classCourses/add-classCourse', data)
@@ -91,6 +95,7 @@ const ClassCourseAdd = () => {
           setSuccessMessage(response.data.message);
           setContentLoading(false);
           resetForm();
+          resetValue();
         })
         .catch((error) => {
           console.log(error);
@@ -100,7 +105,7 @@ const ClassCourseAdd = () => {
     })()
   }
 
-  const resetForm = () => {
+  const resetValue = () => {
     form.resetFields(['class_id']);
     form.resetFields(['course_id']);
     form.resetFields(['instructor_id']);
@@ -119,7 +124,7 @@ const ClassCourseAdd = () => {
       scrollToFirstError
     >
       <div>
-        <p className={classes['page__title']}>Add Student</p>
+        <p className={classes['page__title']}>Add Class Course</p>
         {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
         {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
         <div className={classes['add__main']}>
@@ -130,7 +135,7 @@ const ClassCourseAdd = () => {
                 name="class_id"
                 noStyle
                 rules={[
-                  { required: true, message: 'Please search & select a class ID' }
+                  { required: true, message: 'Please search & select a Class ID' }
                 ]}>
                 <DebounceSelect
                   // value={null}
@@ -140,18 +145,18 @@ const ClassCourseAdd = () => {
               </Form.Item>
             </div>
             <div className={classes['add__form-row']}>
-              <label htmlFor="instructor">Teacher:</label>
+              <label htmlFor="instructor_id">Teacher:</label>
               <Form.Item
                 name="instructor_id"
                 noStyle
                 rules={[
-                  { required: true, message: 'Please search & select a teacher ID' }
+                  { required: true, message: 'Please search & select a Teacher ID' }
                 ]}>
                 <DebounceSelect
                   // value={null}
                   placeholder="Select Teacher ID"
                   key='instructor_id'
-                  fetchOptions={fetchIntructorList} />
+                  fetchOptions={fetchInstructorList} />
               </Form.Item>
             </div>
           </div>
@@ -174,10 +179,9 @@ const ClassCourseAdd = () => {
           </div>
         </div>
         <div>
-          <Form.Item>
-          <Button type='primary' htmlType="submit">Submit</Button>
-          <Button type="default" onClick={resetForm}>Reset</Button>
-        </Form.Item>
+          <Form.Item noStyle>
+            <Button type='primary' htmlType="submit">Submit</Button>
+          </Form.Item>
         </div>
       </div>
     </Form>
