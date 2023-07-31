@@ -14,6 +14,12 @@ const Edit = () => {
   const params = useParams();
   const user_id = params.id;
   const [isValidUserId, setIsValidUserId] = useState(false);
+  // const [userId, _setUserId] = useState("");
+  // const [username, setUsername] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [staffId, setStaffId] = useState(null);
+  // const [instructorId, setInstructorId] = useState(null);
+  // const [studentId, setStudentId] = useState(null);
   const [form] = Form.useForm();
 
   const setErrorMessage = (value) => {
@@ -138,7 +144,7 @@ const Edit = () => {
                 defaultValue={userData.instructor_id}
                 placeholder="Select Instructor ID"
                 key='instructor_id'
-                fetchOptions={fetchInstructorList} />
+                fetchOptions={fetchInstructorList}/>
             </Form.Item>
           </div>
         )

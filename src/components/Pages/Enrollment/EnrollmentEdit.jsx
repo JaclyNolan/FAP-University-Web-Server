@@ -1,75 +1,157 @@
-import React from 'react'
-import {Button, Input, Select, InputNumber, Upload, message, DatePicker} from 'antd'
+import React, { useContext, useEffect, useState } from 'react'
+import { Button, Input, Select, Form, Alert} from 'antd'
 import classes from '../Page.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
+import axiosClient from '../../../axios-client';
+import ContentContext from '../../../helpers/Context/ContentContext';
+import { useParams } from 'react-router-dom';
 const EnrollmentEdit = () => {
-    const handleChange = (value) => {
-        console.log(value);
+  const [errorMessage, _setErrorMessage] = useState("");
+  const [successMessage, _setSuccessMessage] = useState("");
+  const { setContentLoading } = useContext(ContentContext);
+  const [enrollmentData, setEnrollmentData] = useState({});
+  const params = useParams();
+  const enrollment_id = params.id;
+  const [isValidEnrollmentId, setIsValidEnrollmentId] = useState(false);
+
+  const [form] = Form.useForm();
+
+  const setErrorMessage = (value) => {
+    _setErrorMessage(value);
+    _setSuccessMessage("");
+  }
+  const setSuccessMessage = (value) => {
+    _setErrorMessage("");
+    _setSuccessMessage(value);
+  }
+
+  useEffect(() => {
+    setContentLoading(true);
+    const fetchEnrollmentsData = async () => {
+      try {
+        const url = `/enrollments/edit-enrollment/${enrollment_id}`
+        const response = await axiosClient.get(url)
+        const { student_id, student_name, email, major_name, course_name, status } = response.data.enrollment
+        setEnrollmentData({ id: enrollment_id, student_id, student_name, email, major_name, course_name, status })
+        setIsValidEnrollmentId(true);
+        setContentLoading(false);
+      } catch (error) {
+        setContentLoading(false);
+        console.log(error);
+        setErrorMessage(error.response.data.message);
+      }
     }
-    const props = {
-        name: 'file',
-        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-        headers: {
-          authorization: 'authorization-text',
-        },
-        onChange(info) {
-          if (info.file.status !== 'uploading') {
-            console.log(info.file, info.fileList);
-          }
-          if (info.file.status === 'done') {
-            message.success(`${info.file.name} file uploaded successfully`);
-          } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
-          }
-        },
-      };
+    fetchEnrollmentsData();
+  }, [])
+
+  const onFinish = (fields) => {
+    (async () => {
+      setContentLoading(true);
+      const data = {
+        status: fields.status,
+      }
+      console.log(data);
+      await axiosClient.put('/enrollments/update-enrollment/' + enrollment_id, data)
+        .then((response) => {
+          setSuccessMessage(response.data.message);
+          setContentLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorMessage(error.response.data.error);
+          setContentLoading(false);
+        })
+    })()
+  }
+
+  const onFinishFailed = (errorInfo) => {
+    setErrorMessage(errorInfo.errorFields[0].errors)
+    console.log(errorInfo);
+  }
+
   return (
     <div>
-      <p className={classes['page__title']}>Add Student</p>
-      <form className={classes['add__form']}>
-        <div className={classes['add__main']}>
+      {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
+      {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
+      {isValidEnrollmentId &&
+        <Form
+          form={form}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          initialValues={enrollmentData}
+          scrollToFirstError
+        >
+          <p className={classes['page__title']}>Add Student</p>
+          <div className={classes['add__main']}>
             <div className={classes['add__form-left']}>
-                <div className={classes['add__form-row']}>
-                    <label htmlFor="id">Enrollment ID</label>
-                    <Input id='id' disabled value={'e43'}/>
-                </div>
-                <div className={classes['add__form-row']}>
-                    <label htmlFor="sname">Student name</label>
-                    <Input id='sname' value={'Nguyen Van A'} disabled/>
-                </div>
-                <div className={classes['add__form-row']}>
-                    <label htmlFor="status">Status:</label>
-                    <Select
-                        defaultValue="Choose status"
-                        style={{ width: '100%' }}
-                        onChange={handleChange}
-                        id='status'
-                        options={[
-                        { value: 'In Progress', label: 'In Progress' },
-                        { value: 'Closed', label: 'Closed' },
-                        ]}
-                    />
-                </div>
+              <div className={classes['add__form-row']}>
+                <label htmlFor="id">Enrollment ID</label>
+                <Form.Item
+                  name="id"
+                  noStyle>
+                  <Input id='id' readOnly disabled />
+                </Form.Item>
+              </div>
+              <div className={classes['add__form-row']}>
+                <label htmlFor="student_name">Student name</label>
+                <Form.Item
+                  name="student_name"
+                  noStyle>
+                  <Input id='student_name' readOnly disabled />
+                </Form.Item>
+              </div>
+              <div className={classes['add__form-row']}>
+                <label htmlFor="status">Status:</label>
+                <Form.Item
+                  name="status"
+                  noStyle>
+                  <Select
+                    defaultValue="Choose Status"
+                    style={{ width: '100%' }}
+                    id='status'
+                    options={[
+                      { value: 0, label: 'Processing' },
+                      { value: 1, label: 'Success' },
+                      { value: 2, label: 'Failure' },
+                    ]}
+                  />
+                </Form.Item>
+              </div>
             </div>
-          <div className={classes['add__form-right']}>
-                <div className={classes['add__form-row']}>
-                    <label htmlFor="sid">Student ID</label>
-                    <Input id='sid' disabled value={'bhaf1234'}/>
-                </div>
-            <div className={classes['add__form-row']}>
-              <label htmlFor="semail">Student Email</label>
-              <Input id='semail' disabled value={'nabhaf123@fpt.edu.vn'}/>
-            </div>
-            <div className={classes['add__form-row']}>
-              <label htmlFor="course">Course</label>
-              <Input value={'Programing'} id='course' disabled/>
+            <div className={classes['add__form-right']}>
+              <div className={classes['add__form-row']}>
+                <label htmlFor="sid">Student ID</label>
+                <Form.Item
+                  name="student_id"
+                  noStyle>
+                  <Input id='student_id' readOnly disabled />
+                </Form.Item>
+              </div>
+              <div className={classes['add__form-row']}>
+                <label htmlFor="email">Student Email</label>
+                <Form.Item
+                  name="email"
+                  noStyle>
+                  <Input id='email' readOnly disabled />
+                </Form.Item>
+              </div>
+              <div className={classes['add__form-row']}>
+                <label htmlFor="course_name">Course</label>
+                <Form.Item
+                  name="course_name"
+                  noStyle>
+                  <Input id='course_name' readOnly disabled />
+                </Form.Item>
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          <Button type='primary'>SUBMIT</Button>
-        </div>
-      </form>
+          <div>
+            <Form.Item>
+              <Button type='primary' htmlType="submit">Submit</Button>
+            </Form.Item>
+          </div>
+        </Form>
+      }
     </div>
   )
 }
