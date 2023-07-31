@@ -106,6 +106,7 @@ const Edit = () => {
     fetchUserData();
   }, [])
 
+  useEffect(() => form.resetFields(), [userData]);
 
   const getInfoInputFromRole = () => {
     switch (roleId) {
@@ -122,6 +123,7 @@ const Edit = () => {
                 { required: true, message: 'Please search & select a staff ID' }
               ]}>
               <DebounceSelect
+                defaultValue={userData.staff_id}
                 placeholder="Select Staff ID"
                 fetchOptions={fetchStaffList}
                 key='staff_id' />
@@ -139,6 +141,7 @@ const Edit = () => {
                 { required: true, message: 'Please search & select a instructor ID' }
               ]}>
               <DebounceSelect
+                defaultValue={userData.instructor_id}
                 placeholder="Select Instructor ID"
                 key='instructor_id'
                 fetchOptions={fetchInstructorList}/>
@@ -156,7 +159,7 @@ const Edit = () => {
                 { required: true, message: 'Please search & select a student ID' }
               ]}>
               <DebounceSelect
-                // value={null}
+                defaultValue={userData.student_id}
                 placeholder="Select Student ID"
                 key='student_id'
                 fetchOptions={fetchStudentList} />
@@ -200,6 +203,7 @@ const Edit = () => {
     setErrorMessage(errorInfo.errorFields[0].errors)
     console.log(errorInfo);
   }
+
   return (
     <>
       {successMessage !== "" && <Alert type='success' banner message={successMessage} />}

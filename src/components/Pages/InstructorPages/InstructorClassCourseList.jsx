@@ -53,8 +53,8 @@ const InstructorClassCourseList = () => {
 
     const getTableDataFromClassCourseData = (classCourseData) => {
         console.log(classCourseData);
-        return classCourseData.map((classCourse) => ({
-            key: classCourse.class_course_id,
+        return classCourseData.map((classCourse, index) => ({
+            key: index + 1,
             course: classCourse.course.course_name,
             class: classCourse.class.class_name,
             major: classCourse.class.major.major_name,
@@ -100,6 +100,11 @@ const InstructorClassCourseList = () => {
     })
 
     const tableColumns = [
+        {
+            title: 'No',
+            dataIndex: 'key',
+            key: 'no',
+        },
         {
             title: 'Course',
             dataIndex: 'course',

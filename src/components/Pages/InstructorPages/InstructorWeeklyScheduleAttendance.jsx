@@ -33,6 +33,8 @@ const InstructorWeeklyScheduleAttendance = () => {
         {
             "class_schedule_id": 1,
             "class_course_id": 1,
+            "status": 1,
+            "submit_time": 2023-09-19 12:00:00,
             "attendances": [
                 {
                     "attendance_id": 1,
@@ -114,6 +116,7 @@ const InstructorWeeklyScheduleAttendance = () => {
             },
             studentName: attendance.class_enrollment.student.full_name,
             studentId: attendance.class_enrollment.student.student_id,
+            attendanceTime: attendance.attendance_time,
             status: {
                 status: attendance.attendance_status,
                 attendanceId: attendance.attendance_id,
@@ -143,14 +146,20 @@ const InstructorWeeklyScheduleAttendance = () => {
             key: 'studentId'
         },
         {
+            title: 'Present at',
+            dataIndex: 'attendanceTime',
+            key: 'attendanceTime',
+            render: (text) => (text ? dayjs(text).format('HH:mm:ss') : 'Not yet')
+        },
+        {
             title: '',
             dataIndex: 'status',
             key: 'status',
             render: (text) => <Form.Item name={`status_${text.attendanceId}`} initialValue={text.status}
-                rules={[{ requires: true, message: "Please select status" }]}>
+                rules={[{ required: true, message: "Please select status" }]}>
                 <Radio.Group disabled={!editMode}>
-                    <Radio value="0">Absent</Radio>
-                    <Radio value="1">Attended</Radio>
+                    <Radio value={0}>Absent</Radio>
+                    <Radio value={1}>Attended</Radio>
                 </Radio.Group>
             </Form.Item>
         },
@@ -231,15 +240,16 @@ const InstructorWeeklyScheduleAttendance = () => {
                         </Button>
                     </Form.Item>
                 ) : (
-                    <Form.Item name='viewMode'>
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                        <span> </span>
-                        <Button htmlType="button" onClick={handleEdit}>
-                            Edit
-                        </Button>
-                    </Form.Item>
+                    (scheduleAttendanceData && scheduleAttendanceData.status === 2) && <Form.Item name='viewMode'>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                    <span> </span>
+                    <Button htmlType="button" onClick={handleEdit}>
+                        Edit
+                    </Button>
+                </Form.Item>
+                    
                 )}
                 <p><b>Last Update: </b>{(scheduleAttendanceData && scheduleAttendanceData.submit_time) ? dayjs(scheduleAttendanceData.submit_time).format('HH:mm:ss DD/MM/YYYY') : 'None'}</p>
             </Form>
