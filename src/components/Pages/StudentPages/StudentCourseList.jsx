@@ -12,7 +12,7 @@ const findStatusColor = (status) => {
             return 'black'
         case 2:
             return "orange"
-        case 2:
+        case 3:
             return "dark green"
         case 4:
             return "yellow"

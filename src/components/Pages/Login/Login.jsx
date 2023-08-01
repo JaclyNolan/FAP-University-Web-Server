@@ -61,12 +61,12 @@ const Login = () => {
                 <div className={classes['login-btn']}>
                     {isFetching ? <Spin>
                         <GoogleLogin
-                            clientId="971766812836-re275ffnj3jnf9gcefunt2tavn29on7q.apps.googleusercontent.com"
+                            clientId="973842215309-addjgu3q118nr49n5flqboagti628ji6.apps.googleusercontent.com"
                             onSuccess={(credentialResponse) => onLoginSuccess(credentialResponse)}
                             onError={onLoginFailed}
                         /></Spin> :
                         <GoogleLogin
-                            clientId="971766812836-re275ffnj3jnf9gcefunt2tavn29on7q.apps.googleusercontent.com"
+                            clientId="973842215309-addjgu3q118nr49n5flqboagti628ji6.apps.googleusercontent.com"
                             onSuccess={(credentialResponse) => onLoginSuccess(credentialResponse)}
                             onError={onLoginFailed}
                         />}
