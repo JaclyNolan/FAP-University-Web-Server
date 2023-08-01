@@ -107,7 +107,6 @@ const StaffList = () => {
             address: staff.address,
             position: staff.position,
             department: staff.department,
-            position: staff.position,
             detail: {
                 id: staff.id,
                 text: 'Details'
