@@ -1,20 +1,121 @@
-import React from 'react'
-import {Input, Button, Popconfirm, Select, Table} from 'antd'
-import { Link } from 'react-router-dom'
-import Image from '../../common/Image/Image'
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { Select, Input, Button, Popconfirm, Table, Alert } from 'antd';
 import classes from '../Page.module.scss'
+import axiosClient from '../../../axios-client';
+import { Link, useLocation } from 'react-router-dom';
+import debounce from 'lodash/debounce';
+import { LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 const NewList = () => {
-    const {Search} = Input
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search)
 
-    const handleChange = () => {
-        console.log('changinggg');
-    }
-    const onSearch = () => {
+    const [tableData, setTableData] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
+    const [ isFetching, setFetching ] = useState(false);
+    const fetchRef = useRef(0);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState(searchParams.get('search') ? searchParams.get('search') : '');
+    const [status, setStatus] = useState(searchParams.get('status') ? searchParams.get('status') : 'all');
+
+    const [errorMessage, _setErrorMessage] = useState("");
+    const [successMessage, _setSuccessMessage] = useState("");
+
+    const setErrorMessage = (value) => {
+        _setErrorMessage(value);
+        _setSuccessMessage("");
     }
-    const deleteUserHandler = (id) => {
-        alert(`Deleted ${id}`)
+    const setSuccessMessage = (value) => {
+        _setErrorMessage("");
+        _setSuccessMessage(value);
     }
+
+    const statusLabels = {
+        0: 'Active',
+        1: 'Expired',
+      };
+
+    const getTableDataFromNewData = (news) => {
+        console.log(news);
+        return news.map((news) => ({
+            key: news.id,
+            title: news.title,
+            author: news.author,
+            post_date: news.post_date,
+            status: news.status,
+            actions: {
+                id: news.id
+            }
+        }))
+    }
+
+    const fetchNewData = async(currentPage, search, status) => {
+        setFetching(true);
+        const url = `/newContents?page=${currentPage}` 
+        + (status !== 'all' ? `&status=${status}` : '') 
+        + (search !== "" ? `&keyword=${search}` : ``);
+        
+        fetchRef.current += 1;
+        const fetchId = fetchRef.current;
+        await axiosClient.get(url)
+            .then((response) => {
+                if (fetchId !== fetchRef.current) return
+                const { newsContents, total_pages } = response.data;
+                setTotalPages(total_pages);
+                setTableData(getTableDataFromNewData(newsContents));
+                setFetching(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setErrorMessage(error.message);
+                setFetching(false);
+            })
+    }
+
+    useEffect(() => {
+        fetchNewData(currentPage, search, status)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, search, status]);
+
+    const handleStatusChange = (value) => {
+        setStatus(value);
+        setCurrentPage(1);
+    }
+
+    const debounceSetter = useMemo(() => {
+        const handleSearch = (e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+        }
+        return debounce(handleSearch, 700);
+    })
+
+    const handlePageChange = (page, pageSize) => {
+        setCurrentPage(page);
+    }
+    
+    const deleteNewHandler = (id) => {
+        (async () => {
+            setFetching(true);
+            await axiosClient.put(`/newContents/delete-newContent/${id}`)
+                .then((response) => {
+                    setFetching(false);
+                    setSuccessMessage('Successfully delete news with id ' + id)
+                })
+                .catch((error) => {
+                    setFetching(false);
+                    setErrorMessage(error.message);
+                })
+            if (!errorMessage) {
+                if (currentPage === 1) {
+                    fetchNewData(currentPage, search, status);
+                } else {
+                    setCurrentPage(1);
+                }
+            }
+        })()
+    }
+
     const tableColumns = [
         {
             title: 'Id',
@@ -24,29 +125,20 @@ const NewList = () => {
         {
             title: 'Title',
             dataIndex: 'title',
-            key: 'title'
-        },
-        {
-            title: 'Author',
-            dataIndex: 'author',
-            key: 'author',
+            key: 'title',
         },
         {
             title: 'Post Date',
-            dataIndex: 'postDate',
-            key: 'postDate',
+            dataIndex: 'post_date',
+            key: 'post_date',
+           // render: (text) => <Tag color={findTagColor(text.role)}>{text.text}</Tag>
         },
         {
-            title: 'status',
+            title: 'Status',
             dataIndex: 'status',
-            key: 'status'
+            key: 'status',
+            render: (status) => statusLabels[status] || '', // Sử dụng đối tượng
         },
-        {
-          title: '',
-          dataIndex: 'details',
-          key: 'details',
-          render: (text) => <Link to={`/news/details/${text.id}`}>Details</Link>
-      },
         {
             title: '',
             dataIndex: 'actions',
@@ -59,8 +151,8 @@ const NewList = () => {
                 </Link>
                 <Popconfirm
                     title="Delete the news"
-                    description="Are you sure to delete this this news?"
-                    onConfirm={() => deleteUserHandler(text.id)}
+                    description="Are you sure to delete this news?"
+                    onConfirm={() => deleteNewHandler(text.id)}
                     okText="Confirm"
                     cancelText="Cancel"
                 >
@@ -72,23 +164,11 @@ const NewList = () => {
         },
 
     ]
-    const tableData = [
-        {
-            key: '1',
-            author: 'Nguyen Van A',
-            title: 'How i get the scolarship from BTEC',
-            postDate: '01/01/2023',
-            status: 'active',
-            details: {
-              id: 1
-            },
-            actions: {
-                id: 1
-            }
-        }
-    ]
+
   return (
     <div className={classes['list']}>
+        {successMessage !== "" && <Alert type='success' banner message={successMessage} />}
+            {errorMessage !== "" && <Alert type='error' banner message={errorMessage} />}
         <p className={classes['page__title']}>News List</p>
         <div className={classes['list__main']}>
             <div className={classes['list__nav']}>
@@ -97,10 +177,16 @@ const NewList = () => {
                 </div>
                 <div className={classes['list__nav-right']}>
                     <div className={classes['list__nav-right__search']}>
-                        <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
+                    <Input
+                                prefix={isFetching ? <LoadingOutlined/> : <SearchOutlined/>}
+                                placeholder="input search text"
+                                allowClear
+                                onChange={debounceSetter}
+                                style={{ width: 200 }}
+                            />
                     </div>
                     <div className={classes['list__nav-right__add']}>
-                        <Link to='/news/add'>
+                        <Link to='/newContents/add'>
                             <Button type='primary'>
                                 <i className="fas fa-plus"></i>
                                 <span>Add</span>
@@ -111,17 +197,25 @@ const NewList = () => {
             </div>
             <div className={classes['list__filters']}>
               <Select
-                  defaultValue="Status"
-                  style={{ width: 120 }}
-                  onChange={handleChange}
-                  options={[
-                      { value: 'Active', label: 'Active' },
-                      { value: 'Expired', label: 'Expired' },
-                  ]}
-              />
+                            defaultValue={status}
+                            style={{ width: 120 }}
+                            onChange={handleStatusChange}
+                            options={[
+                                { value: 'all', label: 'Status' },
+                                { value: '0', label: 'Active' },
+                                { value: '1', label: 'Expired ' },
+                            ]}
+                        />
             </div>
             <div className={classes['list__table']}>
-                <Table columns={tableColumns} pagination={{ pageSize: 6 }} dataSource={tableData} />
+            <Table columns={tableColumns} loading={isFetching} pagination={{
+                        current: currentPage,
+                        total: totalPages * tableData.length,
+                        pageSize: tableData.length,
+                        defaultCurrent: 1,
+                        showQuickJumper: true,
+                        onChange: handlePageChange
+                    }} dataSource={tableData} />
             </div>
         </div>
     </div>
