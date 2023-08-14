@@ -325,11 +325,11 @@ export const staffSidebar = [
         items: [
             {
                 title: 'List',
-                path: '/class-course/list'
+                path: '/classcourse/list'
             },
             {
                 title: 'Add',
-                path: '/class-course/add'
+                path: '/classcourse/add'
             },
         ]
     },
@@ -338,11 +338,11 @@ export const staffSidebar = [
         items: [
             {
                 title: 'List',
-                path: '/enroll/list'
+                path: '/classenroll/list'
             },
             {
                 title: 'Add',
-                path: '/enroll/add'
+                path: '/classenroll/add'
             },
         ]
     },
@@ -379,10 +379,10 @@ export const staffSidebar = [
                 title: 'List',
                 path: '/Feedback/list'
             },
-            {
-                title: 'Add',
-                path: '/Feedback/add'
-            },
+            // {
+            //     title: 'Add',
+            //     path: '/Feedback/add'
+            // },
         ]
     },
     {
