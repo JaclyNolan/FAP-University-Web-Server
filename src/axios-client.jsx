@@ -16,6 +16,7 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use((response) => {
   return response
 }, (error) => {
+  if (!error.response) throw error;
   if (error.response.status === 401) window.location.replace('/login')
   // if (error.response.status === 404) window.location.replace('/404')
   throw error;
