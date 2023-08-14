@@ -16,7 +16,6 @@ const DetailsInstructor = () => {
   const [successMessage, _setSuccessMessage] = useState("");
   const [tableData, setTableData] = useState({});
   const [isValidInstructorId, setIsValidInstructorId] = useState(false);
-  const dayjs = require('dayjs')
 
   const setErrorMessage = (value) => {
     _setErrorMessage(value);

@@ -15,7 +15,6 @@ const DetailsStaff = () => {
   const [successMessage, _setSuccessMessage] = useState("");
   const [tableData, setTableData] = useState({});
   const [isValidStaffId, setIsValidStaffId] = useState(false);
-  const dayjs = require('dayjs')
 
   const setErrorMessage = (value) => {
     _setErrorMessage(value);

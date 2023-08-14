@@ -7,6 +7,7 @@ import ContentContext from '../../../helpers/Context/ContentContext'
 import axiosClient from '../../../axios-client'
 import { Alert, Tag } from 'antd'
 import BACKEND_SERVER_URL from '../../../helpers/constants/config';
+import dayjs from 'dayjs'
 const DetailsStudent = () => {
   const params = useParams();
   const student_id = params.id;
@@ -15,7 +16,6 @@ const DetailsStudent = () => {
   const [successMessage, _setSuccessMessage] = useState("");
   const [tableData, setTableData] = useState({});
   const [isValidStudentId, setIsValidStudentId] = useState(false);
-  const dayjs = require('dayjs')
 
   const setErrorMessage = (value) => {
     _setErrorMessage(value);
